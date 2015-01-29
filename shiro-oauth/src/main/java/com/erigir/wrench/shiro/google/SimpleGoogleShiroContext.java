@@ -1,9 +1,8 @@
 package com.erigir.wrench.shiro.google;
 
 
+import com.erigir.wrench.shiro.OAuthFilter;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
-import org.apache.shiro.cas.CasFilter;
-import org.apache.shiro.cas.CasSubjectFactory;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -23,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Holds the set of beans necessary to add Shiro security implemented via Google Authentication
+ * This is a spring configuration file!  You must add the spring dependency or this wont work.
+ *
  * Created by chrweiss on 7/12/14.
  */
 @Configuration
@@ -272,9 +272,9 @@ public class SimpleGoogleShiroContext {
      * @return
      */
     @Bean
-    public CasFilter casFilter()
+    public OAuthFilter oAuthFilter()
     {
-        CasFilter bean = new CasFilter();
+        OAuthFilter bean = new OAuthFilter();
         bean.setFailureUrl(failureUrl());
         return bean;
     }

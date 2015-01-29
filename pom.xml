@@ -23,10 +23,10 @@
 
     <properties>
         <site.name>wrench</site.name>
+        <jackson2.version>2.3.1</jackson2.version>
         <aws.version>1.9.4</aws.version>
         <shiro.version>1.2.3</shiro.version>
         <spring.version>4.0.5.RELEASE</spring.version>
-        <jackson2.version>2.3.1</jackson2.version>
         <slf4j.version>1.7.7</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
@@ -36,8 +36,8 @@
 
     <modules>
         <module>commons</module>
-        <module>shiro-oauth</module>
         <module>aws</module>
+        <module>shiro-oauth</module>
     </modules>
 
 </project>
