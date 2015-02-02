@@ -32,4 +32,17 @@ public class CurrencyUtils {
         return b.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
+    /**
+     * Null-safe add for big decimal
+     *
+     * @param b1
+     * @param b2
+     * @return
+     */
+    public static BigDecimal nsa(BigDecimal b1, BigDecimal b2) {
+        BigDecimal ib1 = (b1 == null) ? BigDecimal.ZERO : b1;
+        BigDecimal ib2 = (b2 == null) ? BigDecimal.ZERO : b2;
+        return ib1.add(ib2);
+    }
+
 }

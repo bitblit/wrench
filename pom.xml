@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.erigir</groupId>
     <artifactId>wrench</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <name>wrench</name>
     <description>Erigir Common Reusable Tools</description>
+    <url>https://github.com/bitblit/wrench</url>
     <inceptionYear>2015</inceptionYear>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/bitblit/wrench/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+    </ciManagement>
+
+    <organization>
+        <name>Erigir</name>
+        <url>http://www.erigir.com</url>
+    </organization>
+
+    <scm>
+        <url>https://github.com/bitblit/wrench</url>
+        <connection>scm:git:git@github.com:bitblit/wrench.git</connection>
+        <developerConnection>scm:git:git@github.com:bitblit/wrench.git</developerConnection>
+    </scm>
+
     <developers>
         <developer>
             <id>cweiss</id>
@@ -20,6 +41,14 @@
             </roles>
         </developer>
     </developers>
+
+    <licenses>
+        <license>
+            <name>Apache V2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <site.name>wrench</site.name>
@@ -40,4 +69,65 @@
         <module>shiro-oauth</module>
     </modules>
 
+    <!--
+   These plugins are needed so I can sign the jar(s) to send them to Maven Central, and for maven itself
+   -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
+
 </project>
+
+        <!--
+
+                   Submitting following the instructions at:
+                   http://wickedsource.org/2013/09/23/releasing-your-project-to-maven-central-guide/
+
+                -->
