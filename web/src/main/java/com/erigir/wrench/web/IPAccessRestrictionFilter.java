@@ -29,7 +29,7 @@ public class IPAccessRestrictionFilter implements Filter {
     private List<String> ipHeadersToSearch = Collections.unmodifiableList(Arrays.asList("CLIENT_IP", "X-Forwarded-For", "REMOTE_ADDR"));
     private List<SubnetUtils.SubnetInfo> ipPatterns;
     private int rejectStatusCode = 403;
-    private String rejectStatusText = "403: Not Authorized";
+    private String rejectStatusText = "403: Forbidden";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
