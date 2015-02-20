@@ -58,6 +58,8 @@
         <spring.version>4.0.5.RELEASE</spring.version>
         <slf4j.version>1.7.7</slf4j.version>
         <zk.version>7.0.3</zk.version>
+        <commons.net.version>3.3</commons.net.version>
+        <javax.servlet.version>3.0.1</javax.servlet.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
         <mytime>${maven.build.timestamp}</mytime>
@@ -69,6 +71,7 @@
         <module>aws</module>
         <module>shiro-oauth</module>
         <module>zk</module>
+        <module>web</module>
     </modules>
 
     <!--
