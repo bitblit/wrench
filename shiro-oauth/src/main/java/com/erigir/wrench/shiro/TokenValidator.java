@@ -12,5 +12,5 @@ public interface TokenValidator {
      * @throws TokenValidationException if the ticket cannot be validated.
      *
      */
-    Assertion validate(String ticket, String service) throws TicketValidationException;
+    //Assertion validate(String ticket, String service) throws TicketValidationException;
 }

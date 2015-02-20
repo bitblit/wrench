@@ -9,7 +9,7 @@ import java.util.*;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * TicketValidator that can understand validating a SAML artifact.  This includes the SOAP request/response.
+ * TicketValidator that can understand validating an OAuth token.
  *
  * @author Scott Battaglia
  * @version $Revision$ $Date$
@@ -21,7 +21,7 @@ public final class OAuthTokenValidator {
     private long tolerance = 1000L;
 
     public OAuthTokenValidator(final String casServerUrlPrefix) {
-        super(casServerUrlPrefix);
+        //super(casServerUrlPrefix);
     }
 
     protected String getUrlSuffix() {
@@ -35,12 +35,14 @@ public final class OAuthTokenValidator {
         urlParameters.put("TARGET", service);
     }
 
+
+    /*
     @Override
     protected void setDisableXmlSchemaValidation(final boolean disabled) {
         if (disabled) {
             // according to our reading of the SAML 1.1 code, this should disable the schema checking.  However, there may be a couple
             // of error messages that slip through on start up!
-            XML.parserPool.setDefaultSchemas(null, null);
+            //XML.parserPool.setDefaultSchemas(null, null);
         }
     }
 
@@ -212,7 +214,9 @@ public final class OAuthTokenValidator {
         }
     }
 
+    */
     public void setTolerance(final long tolerance) {
         this.tolerance = tolerance;
     }
+
 }

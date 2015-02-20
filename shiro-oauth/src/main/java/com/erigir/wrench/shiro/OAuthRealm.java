@@ -18,20 +18,21 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
- * This realm implementation acts as a CAS client to a CAS server for authentication and basic authorization.
+ * This realm implementation acts as a OAuth client to a OAuth server for authentication and basic authorization.
  * <p/>
- * This realm functions by inspecting a submitted {@link org.apache.shiro.cas.CasToken CasToken} (which essentially
- * wraps a CAS service ticket) and validates it against the CAS server using a configured CAS
- * {@link org.jasig.cas.client.validation.TokenValidator TokenValidator}.
+ * This realm functions by inspecting a submitted {@link com.erigir.wrench.shiro.OAuthToken OAuthToken} (which essentially
+ * wraps a OAuth service token) and validates it against the OAuth server using a configured OAuth
+ * {@link com.erigir.wrench.shiro.OAuthTokenValidator OAuthTokenValidator}.
  * <p/>
- * The {@link #getValidationProtocol() validationProtocol} is {@code CAS} by default, which indicates that a
- * a {@link org.jasig.cas.client.validation.Cas20ServiceTokenValidator Cas20ServiceTokenValidator}
- * will be used for ticket validation.  You can alternatively set
- * or {@link org.jasig.cas.client.validation.Saml11TokenValidator Saml11TokenValidator} of CAS client. It is based on
- * {@link AuthorizingRealm AuthorizingRealm} for both authentication and authorization. User id and attributes are retrieved from the CAS
- * service ticket validation response during authentication phase. Roles and permissions are computed during authorization phase (according
+ * The {@link #getValidationProtocol() validationProtocol} is {@code Google} by default, which indicates that a
+ * a {@link com.erigir.wrench.shiro.google.GoogleIdToken GoogleOAuthTokenValidator}
+ * will be used for ticket validation.  You can alternatively set a different validator.
+ * It is based on
+ * {@link AuthorizingRealm AuthorizingRealm} for both authentication and authorization. User id and attributes are retrieved from the OAuth
+ * service token validation response during authentication phase. Roles and permissions are computed during authorization phase (according
  * to the attributes previously retrieved).
  *
  * @since 1.2
@@ -74,7 +75,7 @@ public class OAuthRealm extends AuthorizingRealm {
     // names of attributes containing permissions
     private String permissionAttributeNames;
 
-    public CasRealm() {
+    public OAuthRealm() {
         setAuthenticationTokenClass(OAuthToken.class);
     }
 
@@ -91,7 +92,7 @@ public class OAuthRealm extends AuthorizingRealm {
         return this.oAuthTokenValidator;
     }
 
-    protected TokenValidator createTokenValidator() {
+    protected OAuthTokenValidator createTokenValidator() {
         String urlPrefix = getCasServerUrlPrefix();
         return new OAuthTokenValidator(urlPrefix);
     }
@@ -115,19 +116,20 @@ public class OAuthRealm extends AuthorizingRealm {
             return null;
         }
 
-        TokenValidator tokenValidator = ensureTokenValidator();
+        OAuthTokenValidator tokenValidator = ensureTokenValidator();
 
         try {
+
             // contact CAS server to validate service ticket
-            Assertion casAssertion = tokenValidator.validate(ticket, getCasService());
+            //Assertion casAssertion = tokenValidator.validate(ticket, getCasService());
             // get principal, user id and attributes
-            AttributePrincipal casPrincipal = casAssertion.getPrincipal();
-            String userId = casPrincipal.getName();
+            //AttributePrincipal casPrincipal = casAssertion.getPrincipal();
+            String userId = "TBD";//casPrincipal.getName();
             log.debug("Validate ticket : {} in CAS server : {} to retrieve user : {}", new Object[]{
                     ticket, getCasServerUrlPrefix(), userId
             });
 
-            Map<String, Object> attributes = casPrincipal.getAttributes();
+            Map<String, Object> attributes = new TreeMap<>();//casPrincipal.getAttributes();
             // refresh authentication token (user id + remember me)
             casToken.setUserId(userId);
             String rememberMeAttributeName = getRememberMeAttributeName();
@@ -140,8 +142,8 @@ public class OAuthRealm extends AuthorizingRealm {
             List<Object> principals = CollectionUtils.asList(userId, attributes);
             PrincipalCollection principalCollection = new SimplePrincipalCollection(principals, getName());
             return new SimpleAuthenticationInfo(principalCollection, ticket);
-        } catch (TicketValidationException e) {
-            throw new CasAuthenticationException("Unable to validate ticket [" + ticket + "]", e);
+        } catch (Exception e) {
+            throw new AuthenticationException("Unable to validate ticket [" + ticket + "]", e);
         }
     }
 

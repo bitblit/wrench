@@ -2,6 +2,10 @@ package com.erigir.wrench.shiro.google;
 
 
 import com.erigir.wrench.shiro.OAuthFilter;
+import com.erigir.wrench.shiro.OAuthPassThruAuthenticationFilter;
+import com.erigir.wrench.shiro.OAuthRealm;
+import com.erigir.wrench.shiro.OAuthRolesAuthorizationFilter;
+import com.erigir.wrench.shiro.OAuthSubjectFactory;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -178,13 +182,13 @@ public class SimpleGoogleShiroContext {
             factory.setUnauthorizedUrl(unauthorizedUrl());
 
             // Manually add the Filters
-            factory.getFilters().put("cas", casFilter());
+            factory.getFilters().put("oauth", oAuthFilter());
             factory.getFilters().put("roles",roleFilter());
             factory.getFilters().put("logout", logoutFilter());
             factory.getFilters().put("ssl",sslFilter());
-            factory.getFilters().put("auth",zuulPassThruAuthenticationFilter());
+            factory.getFilters().put("auth",oauthPassThruAuthenticationFilter());
             factory.getFilters().put("anon", new AnonymousFilter());
-            factory.getFilters().put("casFailure", casFailureFilter());
+            factory.getFilters().put("casFailure", oauthFailureFilter());
             factory.getFilters().put("afterLogout", logoutSuccessfulFilter());
             factory.getFilters().put("unauthorized", unauthorizedFilter());
 
@@ -201,15 +205,16 @@ public class SimpleGoogleShiroContext {
 
     }
 
+
+
     /**
      * Sets up the ZuulAuthenticationFilter - used to force unauthenticated users to Zuul
      * @return
      */
     @Bean
-    public ZuulPassThruAuthenticationFilter zuulPassThruAuthenticationFilter()
+    public OAuthPassThruAuthenticationFilter oauthPassThruAuthenticationFilter()
     {
-        com.zappos.shiro.ZuulPassThruAuthenticationFilter bean = new ZuulPassThruAuthenticationFilter();
-        bean.setZuulDynamicReturnUrlBuilder(zuulDynamicReturnUrlBuilder());
+        OAuthPassThruAuthenticationFilter bean = new OAuthPassThruAuthenticationFilter();
         String successUrl = loginSuccessUrl();
         if (successUrl!=null) {
             bean.setSuccessUrl(successUrl);
@@ -250,8 +255,8 @@ public class SimpleGoogleShiroContext {
     public SecurityManager securityManager()
     {
         DefaultWebSecurityManager bean = new DefaultWebSecurityManager();
-        bean.setSubjectFactory(casSubjectFactory());
-        bean.setRealm(casRealm());
+        bean.setSubjectFactory(oAuthSubjectFactory());
+        bean.setRealm(oauthRealm());
         bean.setCacheManager(new MemoryConstrainedCacheManager());
         return bean;
     }
@@ -284,13 +289,9 @@ public class SimpleGoogleShiroContext {
      * @return
      */
     @Bean
-    public ZuulCasRealm casRealm()
+    public OAuthRealm oauthRealm()
     {
-        ZuulCasRealm bean = new ZuulCasRealm();
-
-        bean.setRolePrefix(zuulRolePrefix());
-        bean.setValidationProtocol("SAML");
-        bean.setCasServerUrlPrefix(zuulServerPrefix());
+        OAuthRealm bean = new OAuthRealm();
 
         return bean;
     }
@@ -300,9 +301,9 @@ public class SimpleGoogleShiroContext {
      * @return
      */
     @Bean
-    public CasSubjectFactory casSubjectFactory()
+    public OAuthSubjectFactory oAuthSubjectFactory()
     {
-        CasSubjectFactory bean = new CasSubjectFactory();
+        OAuthSubjectFactory bean = new OAuthSubjectFactory();
         return bean;
     }
 
@@ -314,8 +315,7 @@ public class SimpleGoogleShiroContext {
     @Bean
     public RolesAuthorizationFilter roleFilter()
     {
-        ZuulRolesAuthorizationFilter bean = new ZuulRolesAuthorizationFilter();
-        bean.setZuulDynamicReturnUrlBuilder(zuulDynamicReturnUrlBuilder());
+        OAuthRolesAuthorizationFilter bean = new OAuthRolesAuthorizationFilter();
         return bean;
     }
 
