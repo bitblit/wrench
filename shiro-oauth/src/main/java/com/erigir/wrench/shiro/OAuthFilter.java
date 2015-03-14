@@ -31,11 +31,9 @@ import java.io.IOException;
  */
 public class OAuthFilter extends AuthenticatingFilter {
 
-    private static Logger logger = LoggerFactory.getLogger(OAuthFilter.class);
-
     // the name of the parameter service ticket in url
     private static final String TICKET_PARAMETER = "ticket";
-
+    private static Logger logger = LoggerFactory.getLogger(OAuthFilter.class);
     // the url where the application is redirected if the Oauth token validation failed (example : /mycontextpatch/oauth_error.jsp)
     private String failureUrl;
 
