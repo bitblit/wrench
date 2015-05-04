@@ -36,7 +36,7 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
     private boolean singleSortMode = true;
     /**
      * How many rows to fetch from the underlying datasource at a time - has nothing to do with
-     * how many show up on the screen since this isnt a UI number, but really should be >= average
+     * how many show up on the screen since this isnt a UI number, but really should be &gt;= average
      * screen page size so we aren't making multiple calls to the DB to show a single page
      */
     private int fetchPageSize;
@@ -147,8 +147,8 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
     /**
      * Add a sort column
      * if singleSortMode is true this also clears any existing sorts
-     * @param name
-     * @param asc
+     * @param name String containing the name of the column to sort by
+     * @param asc boolean containing true if ascending sort, false for descending
      */
     public void addSort(String name, boolean asc)
     {
