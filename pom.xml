@@ -60,6 +60,8 @@
         <zk.version>7.0.3</zk.version>
         <commons.net.version>3.3</commons.net.version>
         <javax.servlet.version>3.0.1</javax.servlet.version>
+        <junit.version>4.12</junit.version>
+        <itext.version>2.1.7</itext.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
         <mytime>${maven.build.timestamp}</mytime>
