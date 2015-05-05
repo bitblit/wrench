@@ -30,6 +30,7 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
     private FilteredPageDataSource<T,R> dataSource;
     private Map<String,Boolean> sortDefinition = new LinkedHashMap<>();
     private WeakHashMap<Integer, T> cache = new WeakHashMap<>();
+    private Integer cacheSize = null;
     /**
      * If this is true, only one field is sorted on at a time (setting a new one clears the old one)
      */
@@ -76,8 +77,11 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
 
     @Override
     public int getSize() {
-        int rval = dataSource.getFilteredCount(filter);
-        return rval;
+        if (cacheSize==null)
+        {
+            cacheSize = dataSource.getFilteredCount(filter);
+        }
+        return cacheSize;
     }
 
     @Override
@@ -113,6 +117,7 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
 
     private void forceRedraw()
     {
+        cacheSize = null;
         cache = new WeakHashMap<>();
         fireEvent(ListDataEvent.CONTENTS_CHANGED, 0, getSize());
     }
