@@ -115,7 +115,7 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
         forceRedraw();
     }
 
-    private void forceRedraw()
+    public void forceRedraw()
     {
         cacheSize = null;
         cache = new WeakHashMap<>();
