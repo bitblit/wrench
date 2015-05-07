@@ -4,14 +4,14 @@
     <parent>
         <artifactId>wrench</artifactId>
         <groupId>com.erigir</groupId>
-        <version>0.5</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-shiro-oauth</artifactId>
     <packaging>jar</packaging>
     <name>Wrench Shiro OAuth Implementation</name>
-    <version>0.5</version>
+    <version>0.6-SNAPSHOT</version>
     <description>Wrench Shiro OAuth Implementation</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
