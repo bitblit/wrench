@@ -29,7 +29,11 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
     private R filter;
     private FilteredPageDataSource<T,R> dataSource;
     private Map<String,Boolean> sortDefinition = new LinkedHashMap<>();
-    private WeakHashMap<Integer, T> cache = new WeakHashMap<>();
+
+    private Integer offset;
+
+    //private WeakHashMap<Integer, T> cache = new WeakHashMap<>();
+    private T[] cache;
     private Integer cacheSize = null;
     /**
      * If this is true, only one field is sorted on at a time (setting a new one clears the old one)
@@ -87,26 +91,22 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
     @Override
     public T getElementAt(int index) {
 
-        T rval = cache.get(index);
-        if (rval==null)
-        {
-            int startIdx = (index/fetchPageSize)*fetchPageSize;
+        if (cache == null || offset == null || index < offset || index >= offset + cache.length) {
+            // Index is outside of cache boundaries.  Fetch cache and move boundaries
+            int startIdx = (index / fetchPageSize) * fetchPageSize;
 
             LOG.debug("Cache miss at index {} - loading page from {} to {}",index,startIdx,startIdx+fetchPageSize);
             List<T> temp = dataSource.getFilteredPage(filter, sortDefinition, startIdx, fetchPageSize);
 
-            // Copy data into cache
-            for (int i=0;i<temp.size();i++)
-            {
-                cache.put(startIdx+i, temp.get(i));
-                if ((startIdx+i)==index)
-                {
-                    rval = temp.get(i);
-                }
-            }
+            cache = (T[])temp.toArray(new Object[0]);
+            offset = startIdx;
+
+            LOG.debug("Finished fetch, offset is now {}", startIdx);
+
         }
 
-        return rval;
+        int toFetch = index - offset;
+        return (toFetch < cache.length) ? cache[toFetch] : null;
     }
 
     public void setFilter(R filter) {
@@ -118,7 +118,7 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
     public void forceRedraw()
     {
         cacheSize = null;
-        cache = new WeakHashMap<>();
+        cache = null;
         fireEvent(ListDataEvent.CONTENTS_CHANGED, 0, getSize());
     }
 
