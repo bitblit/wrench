@@ -306,6 +306,10 @@ public class OauthShiroContext {
     @Bean
     public LogoutFilter logoutFilter() {
         LogoutFilter bean = new LogoutFilter();
+        if (afterLogoutUrl()!=null)
+        {
+            bean.setRedirectUrl(afterLogoutUrl());
+        }
         return bean;
     }
 
