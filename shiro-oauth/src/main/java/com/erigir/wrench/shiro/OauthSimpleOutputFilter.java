@@ -18,7 +18,7 @@ import java.io.IOException;
  * unexpected to be served, but needs an endpoint regardless - they can
  * be overridden by implementing different endpoints and adding them to the
  * bypass URL list
- * <p/>
+ *
  * Created by chrweiss on 1/2/15.
  */
 public class OauthSimpleOutputFilter implements Filter {
@@ -41,7 +41,7 @@ public class OauthSimpleOutputFilter implements Filter {
             HttpServletResponse resp = (HttpServletResponse) servletResponse;
             resp.setContentType(contentType);
 
-            String newContent = content.replaceAll("\\{contextPath\\}",servletRequest.getServletContext().getContextPath());
+            String newContent = content.replaceAll("\\{contextPath\\}", servletRequest.getServletContext().getContextPath());
 
             resp.setContentLength(newContent.length());
 

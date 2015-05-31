@@ -7,7 +7,6 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 
 /**
  * {@link org.apache.shiro.mgt.SubjectFactory Subject} implementation to be used in OAuth-enabled applications.
- *
  */
 public class OauthSubjectFactory extends DefaultWebSubjectFactory {
 

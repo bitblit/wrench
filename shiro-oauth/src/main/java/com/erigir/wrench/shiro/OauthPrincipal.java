@@ -5,8 +5,6 @@ import org.apache.shiro.subject.Subject;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -25,7 +23,7 @@ import java.util.TreeSet;
  * Created by chrweiss on 5/29/15.
  */
 public class OauthPrincipal {
-    private Map<String,Object> otherData = new TreeMap<>();
+    private Map<String, Object> otherData = new TreeMap<>();
     private String oauthProviderName;
     private Set<String> roles = new TreeSet<>();
     private Set<String> permissions = new TreeSet<>();
@@ -64,13 +62,12 @@ public class OauthPrincipal {
 
     /**
      * Helper method to extract role list from oauth principals in current session
-     * @return
+     *
+     * @return Set of strings containing all roles
      */
-    public static Set<String> oauthRoles()
-    {
+    public static Set<String> oauthRoles() {
         Set<String> rval = new TreeSet<>();
-        for (OauthPrincipal p:oauthPrincipals())
-        {
+        for (OauthPrincipal p : oauthPrincipals()) {
             rval.addAll(p.getRoles());
         }
         return rval;
@@ -78,27 +75,24 @@ public class OauthPrincipal {
 
     /**
      * Helper method to extract role list from oauth principals in current session
-     * @return
+     *
+     * @return Set of strings containing all permissions
      */
-    public static Set<String> oauthPermissions()
-    {
+    public static Set<String> oauthPermissions() {
         Set<String> rval = new TreeSet<>();
-        for (OauthPrincipal p:oauthPrincipals())
-        {
+        for (OauthPrincipal p : oauthPrincipals()) {
             rval.addAll(p.getPermissions());
         }
         return rval;
     }
 
-    public static OauthPrincipal firstOauthPrincipal()
-    {
+    public static OauthPrincipal firstOauthPrincipal() {
         Collection<OauthPrincipal> c = oauthPrincipals();
-        return (c.isEmpty())?null:c.iterator().next();
+        return (c.isEmpty()) ? null : c.iterator().next();
     }
 
-    public static Collection<OauthPrincipal> oauthPrincipals()
-    {
+    public static Collection<OauthPrincipal> oauthPrincipals() {
         Subject subject = SecurityUtils.getSubject();
-        return (subject==null)? Collections.EMPTY_LIST:subject.getPrincipals().byType(OauthPrincipal.class);
+        return (subject == null) ? Collections.EMPTY_LIST : subject.getPrincipals().byType(OauthPrincipal.class);
     }
 }

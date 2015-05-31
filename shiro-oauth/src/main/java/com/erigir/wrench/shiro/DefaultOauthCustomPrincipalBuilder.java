@@ -17,8 +17,7 @@ public class DefaultOauthCustomPrincipalBuilder implements OauthCustomPrincipalB
     private Set<String> defaultRoles = new TreeSet<>();
     private Set<String> defaultPermissions = new TreeSet<>();
 
-    public void updatePrincipal(OauthPrincipal data)
-    {
+    public void updatePrincipal(OauthPrincipal data) {
         Objects.requireNonNull(data, "The Oauth principal object must be non-null");
         Objects.requireNonNull(defaultRoles, "The defaultRoles object must be non-null");
         Objects.requireNonNull(defaultPermissions, "The defaultPermissions object must be non-null");

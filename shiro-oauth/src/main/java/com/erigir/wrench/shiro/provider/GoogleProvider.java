@@ -32,7 +32,6 @@ public class GoogleProvider implements OauthProvider {
     private static final String GOOGLE_ID_TOKEN_INFO = "https://www.googleapis.com/oauth2/v1/tokeninfo?id_token=%s";
     private static final String GOOGLE_ACCESS_TOKEN_INFO = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s";
 
-    //private GoogleOAuthCredentials credentials;
     private ObjectMapper objectMapper;
 
     @Override
@@ -40,12 +39,6 @@ public class GoogleProvider implements OauthProvider {
         return ProviderUtils.defaultProviderRegistryName(getClass());
     }
 
-    /**
-     * Handle an openid startup request
-     *
-     * @return
-     * @throws Exception
-     */
     @Override
     public String createEndpoint(String returnURL, String nonce) {
         StringBuilder sb = new StringBuilder(GOOGLE_AUTH);
@@ -55,12 +48,10 @@ public class GoogleProvider implements OauthProvider {
         sb.append("&").append("redirect_uri=").append(UTF8Encoder.encode(returnURL));
         sb.append("&").append("state=").append(UTF8Encoder.encode(nonce));
 
-        if (grantedScopes!=null && grantedScopes.size()>0)
-        {
+        if (grantedScopes != null && grantedScopes.size() > 0) {
             sb.append("&").append("scope=");
             StringBuilder sb2 = new StringBuilder();
-            for (String s:grantedScopes)
-            {
+            for (String s : grantedScopes) {
                 sb2.append(s);
                 sb2.append(" ");
             }
@@ -72,7 +63,7 @@ public class GoogleProvider implements OauthProvider {
 
     @Override
     public OauthToken createToken(ServletRequest request, ServletResponse response) {
-        HttpServletRequest req = (HttpServletRequest)request;
+        HttpServletRequest req = (HttpServletRequest) request;
 
         String state = req.getParameter("state");
         String code = req.getParameter("code");
@@ -84,12 +75,11 @@ public class GoogleProvider implements OauthProvider {
         return new OauthToken(code);
     }
 
-    public OauthPrincipal validate(OauthToken token, String serviceURL)
-    {
+    public OauthPrincipal validate(OauthToken token, String serviceURL) {
         OauthPrincipal rval = new OauthPrincipal();
 
         LinkedHashMap<String, Object> body = new LinkedHashMap<>();
-        body.put("code",token.getCredentials());
+        body.put("code", token.getCredentials());
         body.put("client_id", googleClientId);
         body.put("client_secret", googleClientSecret);
         body.put("redirect_uri", serviceURL);
@@ -103,23 +93,23 @@ public class GoogleProvider implements OauthProvider {
 
     @Override
     public void fetchUserData(OauthPrincipal principal) {
-        String accessToken = (String)principal.getOtherData().get("access_token");
-        if (accessToken!=null) {
+        String accessToken = (String) principal.getOtherData().get("access_token");
+        if (accessToken != null) {
             LOG.debug("Fetching user data from google");
             principal.getOtherData().putAll(processAccessToken(accessToken));
         }
     }
 
-    public Map<String,Object> processIdToken(String token) {
+    public Map<String, Object> processIdToken(String token) {
         return validateToken(String.format(GOOGLE_ID_TOKEN_INFO, token));
     }
 
-    public Map<String,Object> processAccessToken(String token) {
+    public Map<String, Object> processAccessToken(String token) {
         return validateToken(String.format(GOOGLE_ACCESS_TOKEN_INFO, token));
     }
 
 
-    private Map<String,Object> validateToken(String url) {
+    private Map<String, Object> validateToken(String url) {
         return ProviderUtils.httpGetUrlParseJsonBody(url, objectMapper);
     }
 

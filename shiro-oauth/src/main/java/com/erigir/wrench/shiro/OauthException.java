@@ -7,7 +7,7 @@ import java.util.TreeMap;
  * Created by chrweiss on 5/12/15.
  */
 public class OauthException extends RuntimeException {
-    private Map<String,Object> otherInformation = new TreeMap<>();
+    private Map<String, Object> otherInformation = new TreeMap<>();
     private int statusCode;
 
     public OauthException() {

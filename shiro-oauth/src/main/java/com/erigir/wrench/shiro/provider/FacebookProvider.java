@@ -13,7 +13,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -26,7 +25,7 @@ public class FacebookProvider implements OauthProvider {
     public String facebookClientId;
     public String facebookClientSecret;
     private ObjectMapper objectMapper;
-    private Set<String> grantedScopes =  new TreeSet<>(Arrays.asList("email"));
+    private Set<String> grantedScopes = new TreeSet<>(Arrays.asList("email"));
     //https://developers.facebook.com/docs/facebook-login/permissions/v2.3#reference
 
 
@@ -35,23 +34,18 @@ public class FacebookProvider implements OauthProvider {
         return ProviderUtils.defaultProviderRegistryName(getClass());
     }
 
-    public String createEndpoint(String returnUri,String nonce)
-    {
+    public String createEndpoint(String returnUri, String nonce) {
         StringBuilder sb = new StringBuilder();
         //response_type=token&
-        sb.append(String.format("https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s",facebookClientId, UTF8Encoder.encode(returnUri)));
-        if (nonce!=null)
-        {
+        sb.append(String.format("https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s", facebookClientId, UTF8Encoder.encode(returnUri)));
+        if (nonce != null) {
             sb.append("&state=").append(nonce);
         }
-        if (grantedScopes!=null && grantedScopes.size()>0)
-        {
+        if (grantedScopes != null && grantedScopes.size() > 0) {
             sb.append("&scope=");
-            for (Iterator<String> i = grantedScopes.iterator();i.hasNext();)
-            {
+            for (Iterator<String> i = grantedScopes.iterator(); i.hasNext(); ) {
                 sb.append(UTF8Encoder.encode(i.next()));
-                if (i.hasNext())
-                {
+                if (i.hasNext()) {
                     sb.append(",");
                 }
             }
@@ -60,28 +54,26 @@ public class FacebookProvider implements OauthProvider {
         return sb.toString();
     }
 
-    public OauthToken createToken(ServletRequest request, ServletResponse response)
-    {
-        HttpServletRequest r = (HttpServletRequest)request;
+    public OauthToken createToken(ServletRequest request, ServletResponse response) {
+        HttpServletRequest r = (HttpServletRequest) request;
         String code = r.getParameter("code");
         return new OauthToken(code);
     }
 
-    public OauthPrincipal validate(OauthToken token, String serviceURL)
-    {
+    public OauthPrincipal validate(OauthToken token, String serviceURL) {
         OauthPrincipal rval = new OauthPrincipal();
         String validateURL = "https://graph.facebook.com/v2.3/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s";
         String u = String.format(validateURL, facebookClientId, UTF8Encoder.encode(serviceURL), facebookClientSecret, token.getCredentials());
-        rval.getOtherData().putAll(ProviderUtils.httpGetUrlParseJsonBody(u,objectMapper));
+        rval.getOtherData().putAll(ProviderUtils.httpGetUrlParseJsonBody(u, objectMapper));
         return rval;
     }
 
     @Override
     public void fetchUserData(OauthPrincipal principal) {
-        String accessToken = (String)principal.getOtherData().get("access_token");
-        if (accessToken!=null) {
+        String accessToken = (String) principal.getOtherData().get("access_token");
+        if (accessToken != null) {
             LOG.debug("Fetching user data from Facebook");
-            String meUrl = "https://graph.facebook.com/v2.3/me?access_token="+accessToken;
+            String meUrl = "https://graph.facebook.com/v2.3/me?access_token=" + accessToken;
             principal.getOtherData().putAll(ProviderUtils.httpGetUrlParseJsonBody(meUrl, objectMapper));
         }
 
@@ -103,9 +95,8 @@ public class FacebookProvider implements OauthProvider {
         this.grantedScopes = grantedScopes;
     }
 
-    public void addGrantedScope(String scope)
-    {
-        if (scope!=null) {
+    public void addGrantedScope(String scope) {
+        if (scope != null) {
             if (grantedScopes == null) {
                 grantedScopes = new TreeSet<>();
             }

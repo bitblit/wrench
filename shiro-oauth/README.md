@@ -12,6 +12,8 @@ access_token for both Google and Facebook providers are stored in the otherData 
  the Facebook graph api can be found inside the FacebookProvider class if you care.
 
 
+This library is HEAVILY indebted to the shiro-cas library, after which it is extensively modeled.
+
 # Adding shiro-oauth to your project
 
 ## Adding the maven dependency

@@ -1,7 +1,13 @@
 package com.erigir.wrench.shiro.spring;
 
 
-import com.erigir.wrench.shiro.*;
+import com.erigir.wrench.shiro.DefaultOauthCustomPrincipalBuilder;
+import com.erigir.wrench.shiro.DynamicOauthLoginFilter;
+import com.erigir.wrench.shiro.OauthCustomPrincipalBuilder;
+import com.erigir.wrench.shiro.OauthFilter;
+import com.erigir.wrench.shiro.OauthRealm;
+import com.erigir.wrench.shiro.OauthSimpleOutputFilter;
+import com.erigir.wrench.shiro.OauthSubjectFactory;
 import com.erigir.wrench.shiro.provider.FacebookProvider;
 import com.erigir.wrench.shiro.provider.GoogleProvider;
 import com.erigir.wrench.shiro.provider.ProviderRegistry;
@@ -24,7 +30,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -49,7 +54,7 @@ public class OauthShiroContext {
     /**
      * The list of URLs to bypass security on : by default, favicon.ico, /static/**, /health-check, and the providerSelectorUrl (whatever it is)
      *
-     * @return
+     * @return List of strings
      */
     @Bean
     public List<String> bypassUrlList() {
@@ -60,7 +65,7 @@ public class OauthShiroContext {
     /**
      * Override me to add role and permission mappings
      *
-     * @return
+     * @return Map of urls to shiro restrictions
      */
     @Bean
     public Map<String, String> extraShiroUrlMappings() {
@@ -70,7 +75,7 @@ public class OauthShiroContext {
     /**
      * Where to mount the OAuth listener, defaults to shiro-oauth (leave it alone)
      *
-     * @return
+     * @return String containing the endpoing
      */
     @Bean
     public String oauthServiceEndpoint() {
@@ -80,7 +85,7 @@ public class OauthShiroContext {
     /**
      * Where to redirect on oauth failure like a bad ticket, defaults to /oauth-failure (leave it alone)
      *
-     * @return
+     * @return String containing the endpoint
      */
     @Bean
     public String failureUrl() {
@@ -91,7 +96,7 @@ public class OauthShiroContext {
      * Where you want to redirect back to after successful login (unless a target was already
      * selected by a direct access attempt).  Defaults to /index.html
      *
-     * @return
+     * @return String containing the endpoint
      */
     @Bean
     public String loginSuccessUrl() {
@@ -101,7 +106,7 @@ public class OauthShiroContext {
     /**
      * What to display if the user is logged in but lacks correct roles, defaults to /unauthorized
      *
-     * @return
+     * @return String containing the endpoint
      */
     @Bean
     public String unauthorizedUrl() {
@@ -111,7 +116,7 @@ public class OauthShiroContext {
     /**
      * Url that should be hit to initiate Single-Log-Out, defaults to /logout, leave it alone
      *
-     * @return
+     * @return String containing the endpoint
      */
     @Bean
     public String logoutUrl() {
@@ -121,7 +126,7 @@ public class OauthShiroContext {
     /**
      * Url that should be hit to initiate Single-Log-In, defaults to /login, leave it alone
      *
-     * @return
+     * @return String containing the endpoint
      */
     @Bean
     public String loginUrl() {
@@ -137,18 +142,18 @@ public class OauthShiroContext {
      * See ProviderUtils.defaultProviderRegistryName
      *
      * This URL MUST BE UNAUTHENTICATED OR NOTHING WILL WORK
-     * @return
+     *
+     * @return String containing the endpoint
      */
     @Bean
-    public String providerSelectorUrl()
-    {
+    public String providerSelectorUrl() {
         return "/oauth-provider-selector";
     }
 
     /**
      * Where to redirect to after successful logout
      *
-     * @return
+     * @return String containing the endpoint
      */
     @Bean
     public String afterLogoutUrl() {
@@ -158,7 +163,7 @@ public class OauthShiroContext {
     /**
      * SSL port - the user will be redirected here if they aren't running SSL
      *
-     * @return
+     * @return String containing the port
      */
     @Bean
     public String sslPort() {
@@ -171,7 +176,7 @@ public class OauthShiroContext {
     /**
      * Helper bean to simplify the filter chain
      *
-     * @return
+     * @return String containing the combined entry
      */
     @Bean
     public String sslConfigEntry() {
@@ -181,7 +186,7 @@ public class OauthShiroContext {
     /**
      * Builds the map from URLs to filter chains
      *
-     * @return
+     * @return Map containing the filter definition
      */
     @Bean
     public Map<String, String> filterChainDefinitionMap() {
@@ -224,7 +229,7 @@ public class OauthShiroContext {
     /**
      * Sets up the shiro filter
      *
-     * @return
+     * @return Filter object for the ShiroFilter
      */
     @Bean
     public Filter shiroFilter() {
@@ -262,7 +267,8 @@ public class OauthShiroContext {
 
     /**
      * Sets up the permissions auth filter - just need to set the login url
-     * @return
+     *
+     * @return PermissionsAuthorizationFilter
      */
     @Bean
     public PermissionsAuthorizationFilter permissionsAuthorizationFilter() {
@@ -274,7 +280,8 @@ public class OauthShiroContext {
     /**
      * Sets up the default requires-auth filter - just need to set the login url
      * (and success url, if there is one)
-     * @return
+     *
+     * @return PassThruAuthenticationFilter
      */
     @Bean
     public PassThruAuthenticationFilter passThruAuthenticationFilter() {
@@ -290,7 +297,7 @@ public class OauthShiroContext {
     /**
      * Sets up the ssl filter - forces users to ssl
      *
-     * @return
+     * @return SslFilter
      */
     @Bean
     public SslFilter sslFilter() {
@@ -301,13 +308,12 @@ public class OauthShiroContext {
     /**
      * Sets up the logout filter (implements single log-out)
      *
-     * @return
+     * @return LogoutFilter
      */
     @Bean
     public LogoutFilter logoutFilter() {
         LogoutFilter bean = new LogoutFilter();
-        if (afterLogoutUrl()!=null)
-        {
+        if (afterLogoutUrl() != null) {
             bean.setRedirectUrl(afterLogoutUrl());
         }
         return bean;
@@ -316,7 +322,7 @@ public class OauthShiroContext {
     /**
      * Sets up the security manager - hooks in the right subject factory and realms
      *
-     * @return
+     * @return SecurityManager
      */
     @Bean
     public SecurityManager securityManager() {
@@ -330,7 +336,7 @@ public class OauthShiroContext {
     /**
      * Adds the lifecyclebeanpostprocessor - only used by AOP security annotations
      *
-     * @return
+     * @return LifecycleBeanPostProcessor
      */
     @Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
@@ -341,7 +347,7 @@ public class OauthShiroContext {
     /**
      * Sets up the OauthFilter that listens for returning tokens
      *
-     * @return
+     * @return OauthFilter
      */
     @Bean
     public OauthFilter oauthFilter() {
@@ -354,7 +360,7 @@ public class OauthShiroContext {
     /**
      * Sets up the OauthRealm that can process oauth tokens
      *
-     * @return
+     * @return OauthRealm
      */
     @Bean
     public OauthRealm oauthRealm() {
@@ -368,7 +374,7 @@ public class OauthShiroContext {
     /**
      * A factory for creating subjects from oauth tokens
      *
-     * @return
+     * @return OauthSubjectFactory
      */
     @Bean
     public OauthSubjectFactory oauthSubjectFactory() {
@@ -381,7 +387,7 @@ public class OauthShiroContext {
      * (as opposed to an 'authenticated' check)
      * Needed mainly just to set the login url
      *
-     * @return
+     * @return RolesAuthorizationFilter
      */
     @Bean
     public RolesAuthorizationFilter roleFilter() {
@@ -393,7 +399,7 @@ public class OauthShiroContext {
     /**
      * Handles serving default output on oauth failure
      *
-     * @return
+     * @return OauthSimpleOutputFilter for serving default content
      */
     @Bean
     public OauthSimpleOutputFilter oauthFailureFilter() {
@@ -411,7 +417,7 @@ public class OauthShiroContext {
     /**
      * Handles serving default output on successful logout
      *
-     * @return
+     * @return OauthSimpleOutputFilter for serving default content
      */
     @Bean
     public OauthSimpleOutputFilter logoutSuccessfulFilter() {
@@ -429,7 +435,7 @@ public class OauthShiroContext {
     /**
      * Handles serving default output on insufficient roles for the requested page
      *
-     * @return
+     * @return OauthSimpleOutputFilter for serving default content
      */
     @Bean
     public OauthSimpleOutputFilter unauthorizedFilter() {
@@ -442,15 +448,13 @@ public class OauthShiroContext {
     }
 
     @Bean
-    public ObjectMapper shiroObjectMapper()
-    {
+    public ObjectMapper shiroObjectMapper() {
         ObjectMapper bean = new ObjectMapper();
         return bean;
     }
 
     @Bean
-    public DynamicOauthLoginFilter loginFilter()
-    {
+    public DynamicOauthLoginFilter loginFilter() {
         DynamicOauthLoginFilter bean = new DynamicOauthLoginFilter();
         bean.setProviderRegistry(providerRegistry());
         bean.setProviderSelectorUrl(providerSelectorUrl());
@@ -464,11 +468,11 @@ public class OauthShiroContext {
      * shiro.facebook.client.id, shiro.facebook.client.secret, shiro.facebook.client.scope (optional, default=email)
      * and/or
      * shiro.google.client.id, shiro.google.client.secret, shiro.google.client.scope (optional, default=email,openid)
-     * @return
+     *
+     * @return ProviderRegistry, which has been autoconfigured
      */
     @Bean
-    public ProviderRegistry providerRegistry()
-    {
+    public ProviderRegistry providerRegistry() {
         ProviderRegistry bean = new ProviderRegistry();
 
         // Facebook env props
@@ -482,35 +486,27 @@ public class OauthShiroContext {
         String googScope = System.getProperty("shiro.google.scope");
 
         // Setup facebook
-        if (facebookProvider!=null)
-        {
+        if (facebookProvider != null) {
             bean.addProvider(facebookProvider);
-        }
-        else if (fbClientId!=null && fbClientSecret!=null)
-        {
+        } else if (fbClientId != null && fbClientSecret != null) {
             FacebookProvider fb = new FacebookProvider();
             fb.setObjectMapper(shiroObjectMapper());
             fb.setFacebookClientId(fbClientId);
             fb.setFacebookClientSecret(fbClientSecret);
-            if (fbScope!=null)
-            {
+            if (fbScope != null) {
                 fb.setGrantedScopes(new TreeSet<String>(Arrays.asList(fbScope.split(","))));
             }
             bean.addProvider(fb);
         }
 
-        if (googleProvider!=null)
-        {
+        if (googleProvider != null) {
             bean.addProvider(googleProvider);
-        }
-        else if (googClientId!=null && googClientSecret!=null)
-        {
+        } else if (googClientId != null && googClientSecret != null) {
             GoogleProvider gp = new GoogleProvider();
             gp.setObjectMapper(shiroObjectMapper());
             gp.setGoogleClientId(googClientId);
             gp.setGoogleClientSecret(googClientSecret);
-            if (googScope!=null)
-            {
+            if (googScope != null) {
                 gp.setGrantedScopes(new TreeSet<String>(Arrays.asList(googScope.split(","))));
             }
             bean.addProvider(gp);
@@ -522,11 +518,11 @@ public class OauthShiroContext {
     /**
      * Override this with your own principal builder if you want users to have roles/privs other
      * than oauth-user and oauth:*
-     * @return
+     *
+     * @return OauthCustomPrincipalBuilder
      */
     @Bean
-    public OauthCustomPrincipalBuilder oauthCustomPrincipalBuilder()
-    {
+    public OauthCustomPrincipalBuilder oauthCustomPrincipalBuilder() {
         DefaultOauthCustomPrincipalBuilder bean = new DefaultOauthCustomPrincipalBuilder();
         bean.setDefaultPermissions(new TreeSet<String>(Arrays.asList("oauth:*")));
         bean.setDefaultRoles(new TreeSet<String>(Arrays.asList("oauth-user")));

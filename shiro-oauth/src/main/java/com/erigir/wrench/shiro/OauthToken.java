@@ -1,6 +1,5 @@
 package com.erigir.wrench.shiro;
 
-import org.apache.shiro.authc.RememberMeAuthenticationToken;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
@@ -11,18 +10,18 @@ import org.apache.shiro.authc.AuthenticationToken;
 public class OauthToken implements AuthenticationToken {
     // the token returned by the oauth server
     private String token = null;
-    
+
     // is the user in a remember me mode ?
     private boolean isRememberMe = false;
-    
+
     public OauthToken(String token) {
         this.token = token;
     }
-    
+
     public String getPrincipal() {
         return "oauth-principal";
     }
-    
+
     public String getCredentials() {
         return token;
     }
@@ -30,7 +29,7 @@ public class OauthToken implements AuthenticationToken {
     public boolean isRememberMe() {
         return isRememberMe;
     }
-    
+
     public void setRememberMe(boolean isRememberMe) {
         this.isRememberMe = isRememberMe;
     }
