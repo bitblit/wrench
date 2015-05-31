@@ -31,6 +31,15 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
     private Map<String,Boolean> sortDefinition = new LinkedHashMap<>();
 
     private Integer offset;
+    /**
+     * This is here since ZK still reserves memory for the whole list for some reason - if this is set,
+     * and the actual number of items is larger than it, then getSize() will return this, and
+     * getRealCount will return the real count of items (you can use that to display a "results too large"
+     * message on screen if you like).  Hopefully ZK can make this work (or I can figure out how I'm doing
+     * Rows on Demand wrong) to make this unnecessary
+     */
+    private Integer limitingMaximum=null;
+    private Integer realCount=null;
 
     //private WeakHashMap<Integer, T> cache = new WeakHashMap<>();
     private T[] cache;
@@ -83,7 +92,18 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
     public int getSize() {
         if (cacheSize==null)
         {
-            cacheSize = dataSource.getFilteredCount(filter);
+            int temp = dataSource.getFilteredCount(filter);
+            if (limitingMaximum==null ||  temp<limitingMaximum)
+            {
+                cacheSize = temp;
+                realCount = null;
+            }
+            else
+            {
+                LOG.debug("Actual size is {} but limiting to {}", temp, limitingMaximum);
+                cacheSize = limitingMaximum;
+                realCount = temp;
+            }
         }
         return cacheSize;
     }
@@ -95,7 +115,7 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
             // Index is outside of cache boundaries.  Fetch cache and move boundaries
             int startIdx = (index / fetchPageSize) * fetchPageSize;
 
-            LOG.debug("Cache miss at index {} - loading page from {} to {}",index,startIdx,startIdx+fetchPageSize);
+            LOG.debug("Cache miss at index {} - loading page from {} to {}",index, startIdx, startIdx + fetchPageSize);
             List<T> temp = dataSource.getFilteredPage(filter, sortDefinition, startIdx, fetchPageSize);
 
             cache = (T[])temp.toArray(new Object[0]);
@@ -171,5 +191,17 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
 
     public void setSingleSortMode(boolean singleSortMode) {
         this.singleSortMode = singleSortMode;
+    }
+
+    public Integer getLimitingMaximum() {
+        return limitingMaximum;
+    }
+
+    public void setLimitingMaximum(Integer limitingMaximum) {
+        this.limitingMaximum = limitingMaximum;
+    }
+
+    public Integer getRealCount() {
+        return realCount;
     }
 }
