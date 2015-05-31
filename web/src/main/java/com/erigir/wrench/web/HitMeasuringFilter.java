@@ -81,6 +81,7 @@ public class HitMeasuringFilter implements Filter {
     public void doReport(HttpServletResponse resp)
             throws IOException
     {
+        // TODO - this should be JSON output
         resp.setContentType("text/plain");
         PrintWriter pw = resp.getWriter();
 

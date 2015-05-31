@@ -1,20 +1,15 @@
 package com.erigir.wrench.shiro;
 
-/**
- * Created by chrweiss on 2/2/15.
- */
-
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 
 /**
- * {@link org.apache.shiro.mgt.SubjectFactory Subject} implementation to be used in CAS-enabled applications.
+ * {@link org.apache.shiro.mgt.SubjectFactory Subject} implementation to be used in OAuth-enabled applications.
  *
- * @since 1.2
  */
-public class OAuthSubjectFactory extends DefaultWebSubjectFactory {
+public class OauthSubjectFactory extends DefaultWebSubjectFactory {
 
     @Override
     public Subject createSubject(SubjectContext context) {
@@ -28,10 +23,10 @@ public class OAuthSubjectFactory extends DefaultWebSubjectFactory {
 
             AuthenticationToken token = context.getAuthenticationToken();
 
-            if (token != null && token instanceof OAuthToken) {
-                OAuthToken casToken = (OAuthToken) token;
+            if (token != null && token instanceof OauthToken) {
+                OauthToken oauthtoken = (OauthToken) token;
                 // set the authenticated flag of the context to true only if the CAS subject is not in a remember me mode
-                if (casToken.isRememberMe()) {
+                if (oauthtoken.isRememberMe()) {
                     context.setAuthenticated(false);
                 }
             }

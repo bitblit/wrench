@@ -1,41 +1,36 @@
 package com.erigir.wrench.shiro;
 
 import org.apache.shiro.authc.RememberMeAuthenticationToken;
+import org.apache.shiro.authc.AuthenticationToken;
 
 /**
- * Created by chrweiss on 1/27/15.
+ * This class represents a token for a CAS authentication (service ticket + user id + remember me).
+ *
+ * @since 1.2
  */
-public class OAuthToken implements RememberMeAuthenticationToken {
-
+public class OauthToken implements AuthenticationToken {
     // the token returned by the oauth server
     private String token = null;
-
-    // the user identifier
-    private String userId = null;
-
+    
     // is the user in a remember me mode ?
     private boolean isRememberMe = false;
-
-    public OAuthToken(String token) {
+    
+    public OauthToken(String token) {
         this.token = token;
     }
-
-    public Object getPrincipal() {
-        return userId;
+    
+    public String getPrincipal() {
+        return "oauth-principal";
     }
-
-    public Object getCredentials() {
+    
+    public String getCredentials() {
         return token;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public boolean isRememberMe() {
         return isRememberMe;
     }
-
+    
     public void setRememberMe(boolean isRememberMe) {
         this.isRememberMe = isRememberMe;
     }
