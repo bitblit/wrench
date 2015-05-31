@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
+ * Defaults to requesting email and openid rights
  * Created by chrweiss on 5/26/15.
  */
 public class GoogleProvider implements OauthProvider {
@@ -33,6 +34,11 @@ public class GoogleProvider implements OauthProvider {
 
     //private GoogleOAuthCredentials credentials;
     private ObjectMapper objectMapper;
+
+    @Override
+    public String getName() {
+        return ProviderUtils.defaultProviderRegistryName(getClass());
+    }
 
     /**
      * Handle an openid startup request

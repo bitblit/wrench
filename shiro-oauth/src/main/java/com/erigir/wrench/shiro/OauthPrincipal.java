@@ -1,5 +1,12 @@
 package com.erigir.wrench.shiro;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -53,5 +60,45 @@ public class OauthPrincipal {
 
     public void setPermissions(Set<String> permissions) {
         this.permissions = permissions;
+    }
+
+    /**
+     * Helper method to extract role list from oauth principals in current session
+     * @return
+     */
+    public static Set<String> oauthRoles()
+    {
+        Set<String> rval = new TreeSet<>();
+        for (OauthPrincipal p:oauthPrincipals())
+        {
+            rval.addAll(p.getRoles());
+        }
+        return rval;
+    }
+
+    /**
+     * Helper method to extract role list from oauth principals in current session
+     * @return
+     */
+    public static Set<String> oauthPermissions()
+    {
+        Set<String> rval = new TreeSet<>();
+        for (OauthPrincipal p:oauthPrincipals())
+        {
+            rval.addAll(p.getPermissions());
+        }
+        return rval;
+    }
+
+    public static OauthPrincipal firstOauthPrincipal()
+    {
+        Collection<OauthPrincipal> c = oauthPrincipals();
+        return (c.isEmpty())?null:c.iterator().next();
+    }
+
+    public static Collection<OauthPrincipal> oauthPrincipals()
+    {
+        Subject subject = SecurityUtils.getSubject();
+        return (subject==null)? Collections.EMPTY_LIST:subject.getPrincipals().byType(OauthPrincipal.class);
     }
 }

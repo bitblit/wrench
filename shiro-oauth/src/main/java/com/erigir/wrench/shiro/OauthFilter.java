@@ -1,6 +1,7 @@
 package com.erigir.wrench.shiro;
 
 import com.erigir.wrench.shiro.provider.OauthProvider;
+import com.erigir.wrench.shiro.provider.ProviderRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
@@ -34,7 +35,7 @@ public class OauthFilter extends AuthenticatingFilter {
     
     private static Logger LOG = LoggerFactory.getLogger(OauthFilter.class);
 
-    private List<OauthProvider> providerList;
+    private ProviderRegistry providerRegistry;
 
     // the url where the application is redirected if the Oauth token validation failed (example : /mycontextpatch/oauth_error.jsp)
     private String failureUrl;
@@ -49,7 +50,7 @@ public class OauthFilter extends AuthenticatingFilter {
      */
     @Override
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception {
-        return selectProvider().createToken(request, response);
+        return providerRegistry.fetchProviderForSession().createToken(request, response);
     }
     
     /**
@@ -62,7 +63,7 @@ public class OauthFilter extends AuthenticatingFilter {
      */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        LOG.debug("Access denied to {}, executing login", ((HttpServletRequest)request).getRequestURI());
+        LOG.debug("Access denied to {}, executing login", ((HttpServletRequest) request).getRequestURI());
         return executeLogin(request, response);
     }
     
@@ -130,13 +131,7 @@ public class OauthFilter extends AuthenticatingFilter {
         this.failureUrl = failureUrl;
     }
 
-    public void setProviderList(List<OauthProvider> providerList) {
-        this.providerList = providerList;
-    }
-
-    private OauthProvider selectProvider()
-    {
-        // TODO: Implement
-        return (providerList!=null && providerList.size()>0)?providerList.get(0):null;
+    public void setProviderRegistry(ProviderRegistry providerRegistry) {
+        this.providerRegistry = providerRegistry;
     }
 }

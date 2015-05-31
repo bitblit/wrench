@@ -11,11 +11,14 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 /**
+ * Defaults to requesting email rights
  * Created by chrweiss on 5/26/15.
  */
 public class FacebookProvider implements OauthProvider {
@@ -23,8 +26,14 @@ public class FacebookProvider implements OauthProvider {
     public String facebookClientId;
     public String facebookClientSecret;
     private ObjectMapper objectMapper;
-    private Set<String> grantedScopes = new TreeSet<>();
+    private Set<String> grantedScopes =  new TreeSet<>(Arrays.asList("email"));
     //https://developers.facebook.com/docs/facebook-login/permissions/v2.3#reference
+
+
+    @Override
+    public String getName() {
+        return ProviderUtils.defaultProviderRegistryName(getClass());
+    }
 
     public String createEndpoint(String returnUri,String nonce)
     {
@@ -72,7 +81,8 @@ public class FacebookProvider implements OauthProvider {
         String accessToken = (String)principal.getOtherData().get("access_token");
         if (accessToken!=null) {
             LOG.debug("Fetching user data from Facebook");
-            // TODO: impl principal.getOtherData().putAll(processAccessToken(accessToken));
+            String meUrl = "https://graph.facebook.com/v2.3/me?access_token="+accessToken;
+            principal.getOtherData().putAll(ProviderUtils.httpGetUrlParseJsonBody(meUrl, objectMapper));
         }
 
     }

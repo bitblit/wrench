@@ -11,6 +11,12 @@ import javax.servlet.ServletResponse;
  * Created by chrweiss on 5/26/15.
  */
 public interface OauthProvider {
+
+    /**
+     * A name for this provider, mainly for logging purposes - should be unique, often just the class name
+     */
+    String getName();
+
     /**
      * Given the URL that should be returned to after the Oauth, generate the initial browser redirect url
      * @param returnURL

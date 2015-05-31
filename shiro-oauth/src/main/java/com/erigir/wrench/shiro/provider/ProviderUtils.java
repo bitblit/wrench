@@ -30,7 +30,6 @@ public class ProviderUtils  {
     public static Map<String,Object> httpGetUrlParseJsonBody(String url, ObjectMapper objectMapper)
             throws OauthException
     {
-        Map<String,Object> rval = null;
         try
         {
             HttpURLConnection conn = (HttpURLConnection)new URL(url).openConnection();
@@ -114,4 +113,14 @@ public class ProviderUtils  {
             throw new OauthException(e);
         }
     }
+
+    public static String defaultProviderRegistryName(Class input) {
+        String rval = input.getSimpleName().toLowerCase();
+        if (rval.endsWith("provider"))
+        {
+            rval = rval.substring(0,rval.length()-"provider".length());
+        }
+        return rval;
+    }
+
 }

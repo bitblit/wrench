@@ -4,7 +4,7 @@ package com.erigir.wrench.shiro.spring;
 import com.erigir.wrench.shiro.*;
 import com.erigir.wrench.shiro.provider.FacebookProvider;
 import com.erigir.wrench.shiro.provider.GoogleProvider;
-import com.erigir.wrench.shiro.provider.OauthProvider;
+import com.erigir.wrench.shiro.provider.ProviderRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -12,16 +12,19 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
+import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 import org.apache.shiro.web.filter.authz.RolesAuthorizationFilter;
 import org.apache.shiro.web.filter.authz.SslFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,14 +40,20 @@ import java.util.TreeSet;
 public class OauthShiroContext {
     private static final Logger LOG = LoggerFactory.getLogger(OauthShiroContext.class);
 
+    @Autowired
+    private FacebookProvider facebookProvider;
+
+    @Autowired
+    private GoogleProvider googleProvider;
+
     /**
-     * The list of URLs to bypass security on : by default, favicon.ico, /static/**, and /health-check
+     * The list of URLs to bypass security on : by default, favicon.ico, /static/**, /health-check, and the providerSelectorUrl (whatever it is)
      *
      * @return
      */
     @Bean
     public List<String> bypassUrlList() {
-        List<String> bean = Arrays.asList("/favicon.ico", "/static/**", "/health-check");
+        List<String> bean = Arrays.asList("/favicon.ico", "/static/**", "/health-check", providerSelectorUrl());
         return bean;
     }
 
@@ -110,6 +119,33 @@ public class OauthShiroContext {
     }
 
     /**
+     * Url that should be hit to initiate Single-Log-In, defaults to /login, leave it alone
+     *
+     * @return
+     */
+    @Bean
+    public String loginUrl() {
+        return "/login";
+    }
+
+    /**
+     * If your site uses more than one oauth provider (eg, Facebook OR google) then this is the
+     * URL that shows all the buttons for the various providers, which should all link
+     * to {loginUrl}?p={providerName}, where providerName is the name that provider
+     * is registerd under in the provider registry.  By default this would be the simple name of the
+     * provider class minus the word "provider", lowercase (eg, FacebookProvider is in there as facebook),
+     * See ProviderUtils.defaultProviderRegistryName
+     *
+     * This URL MUST BE UNAUTHENTICATED OR NOTHING WILL WORK
+     * @return
+     */
+    @Bean
+    public String providerSelectorUrl()
+    {
+        return "/oauth-provider-selector";
+    }
+
+    /**
      * Where to redirect to after successful logout
      *
      * @return
@@ -159,6 +195,7 @@ public class OauthShiroContext {
 
         // Logout url handled by logout - afterLogout url is UNAUTHENTICATED, on purpose
         bean.put(logoutUrl(), "logout");
+        bean.put(loginUrl(), "login");
         bean.put(afterLogoutUrl(), "afterLogout");
 
         // Default unauthorized handler
@@ -204,8 +241,9 @@ public class OauthShiroContext {
             factory.getFilters().put("roles", roleFilter());
             factory.getFilters().put("perms", permissionsAuthorizationFilter());
             factory.getFilters().put("logout", logoutFilter());
+            factory.getFilters().put("login", loginFilter());
             factory.getFilters().put("ssl", sslFilter());
-            factory.getFilters().put("auth", oauthPassThruAuthenticationFilter());
+            factory.getFilters().put("auth", passThruAuthenticationFilter());
             factory.getFilters().put("anon", new AnonymousFilter());
             factory.getFilters().put("oauthFailure", oauthFailureFilter());
             factory.getFilters().put("afterLogout", logoutSuccessfulFilter());
@@ -222,26 +260,30 @@ public class OauthShiroContext {
 
     }
 
+    /**
+     * Sets up the permissions auth filter - just need to set the login url
+     * @return
+     */
     @Bean
     public PermissionsAuthorizationFilter permissionsAuthorizationFilter() {
-        OauthPermissionsAuthorizationFilter bean = new OauthPermissionsAuthorizationFilter();
-        bean.setDynamicReturnUrlBuilder(oauthDynamicReturnUrlBuilder());
+        PermissionsAuthorizationFilter bean = new PermissionsAuthorizationFilter();
+        bean.setLoginUrl(loginUrl());
         return bean;
     }
 
     /**
-     * Sets up the OauthAuthenticationFilter - used to redirect unauthenticated users to the oauth provider
-     *
+     * Sets up the default requires-auth filter - just need to set the login url
+     * (and success url, if there is one)
      * @return
      */
     @Bean
-    public OauthPassThruAuthenticationFilter oauthPassThruAuthenticationFilter() {
-        OauthPassThruAuthenticationFilter bean = new OauthPassThruAuthenticationFilter();
-        bean.setDynamicReturnUrlBuilder(oauthDynamicReturnUrlBuilder());
+    public PassThruAuthenticationFilter passThruAuthenticationFilter() {
+        PassThruAuthenticationFilter bean = new PassThruAuthenticationFilter();
         String successUrl = loginSuccessUrl();
         if (successUrl != null) {
             bean.setSuccessUrl(successUrl);
         }
+        bean.setLoginUrl(loginUrl());
         return bean;
     }
 
@@ -301,7 +343,7 @@ public class OauthShiroContext {
     public OauthFilter oauthFilter() {
         OauthFilter bean = new OauthFilter();
         bean.setFailureUrl(failureUrl());
-        bean.setProviderList(providerList());
+        bean.setProviderRegistry(providerRegistry());
         return bean;
     }
 
@@ -313,14 +355,14 @@ public class OauthShiroContext {
     @Bean
     public OauthRealm oauthRealm() {
         OauthRealm bean = new OauthRealm();
-       bean.setProviderList(providerList());
+        bean.setProviderRegistry(providerRegistry());
         bean.setOauthCustomPrincipalBuilder(oauthCustomPrincipalBuilder());
 
         return bean;
     }
 
     /**
-     * A factory for creating subjects from cas tickets
+     * A factory for creating subjects from oauth tokens
      *
      * @return
      */
@@ -333,27 +375,14 @@ public class OauthShiroContext {
     /**
      * Filter for checking if a user has a role - needed to force redirect to oauth provider on a Shiro role-check
      * (as opposed to an 'authenticated' check)
+     * Needed mainly just to set the login url
      *
      * @return
      */
     @Bean
     public RolesAuthorizationFilter roleFilter() {
-        OauthRolesAuthorizationFilter bean = new OauthRolesAuthorizationFilter();
-        bean.setDynamicReturnUrlBuilder(oauthDynamicReturnUrlBuilder());
-        return bean;
-    }
-
-    /**
-     * Shared bean for building dynamic urls based on the incoming servlet request)
-     *
-     * @return
-     */
-    @Bean
-    public OauthDynamicReturnUrlBuilder oauthDynamicReturnUrlBuilder() {
-        OauthDynamicReturnUrlBuilder bean = new OauthDynamicReturnUrlBuilder();
-        bean.setOauthRealm(oauthRealm());
-        bean.setOauthServiceEndpoint(oauthServiceEndpoint());
-        bean.setProviderList(providerList());
+        RolesAuthorizationFilter bean = new RolesAuthorizationFilter();
+        bean.setLoginUrl(loginUrl());
         return bean;
     }
 
@@ -416,28 +445,81 @@ public class OauthShiroContext {
     }
 
     @Bean
-    public FacebookProvider facebookProvider()
+    public DynamicOauthLoginFilter loginFilter()
     {
-        FacebookProvider bean = new FacebookProvider();
-        bean.setObjectMapper(shiroObjectMapper());
-        bean.addGrantedScope("email");
+        DynamicOauthLoginFilter bean = new DynamicOauthLoginFilter();
+        bean.setProviderRegistry(providerRegistry());
+        bean.setProviderSelectorUrl(providerSelectorUrl());
+        bean.setOauthServiceEndpoint(oauthServiceEndpoint());
         return bean;
     }
 
+    /**
+     * Sets up the provider registry - will use beans named "facebookProvider" and
+     * "googleProvider" if you have configured them, or if you have set these system properties:
+     * shiro.facebook.client.id, shiro.facebook.client.secret, shiro.facebook.client.scope (optional, default=email)
+     * and/or
+     * shiro.google.client.id, shiro.google.client.secret, shiro.google.client.scope (optional, default=email,openid)
+     * @return
+     */
     @Bean
-    public GoogleProvider googleProvider()
+    public ProviderRegistry providerRegistry()
     {
-        GoogleProvider bean = new GoogleProvider();
-        bean.setObjectMapper(shiroObjectMapper());
+        ProviderRegistry bean = new ProviderRegistry();
+
+        // Facebook env props
+        String fbClientId = System.getProperty("shiro.facebook.client.id");
+        String fbClientSecret = System.getProperty("shiro.facebook.client.secret");
+        String fbScope = System.getProperty("shiro.facebook.scope");
+
+        // Google env props
+        String googClientId = System.getProperty("shiro.google.client.id");
+        String googClientSecret = System.getProperty("shiro.google.client.secret");
+        String googScope = System.getProperty("shiro.google.scope");
+
+        // Setup facebook
+        if (facebookProvider!=null)
+        {
+            bean.addProvider(facebookProvider);
+        }
+        else if (fbClientId!=null && fbClientSecret!=null)
+        {
+            FacebookProvider fb = new FacebookProvider();
+            fb.setObjectMapper(shiroObjectMapper());
+            fb.setFacebookClientId(fbClientId);
+            fb.setFacebookClientSecret(fbClientSecret);
+            if (fbScope!=null)
+            {
+                fb.setGrantedScopes(new TreeSet<String>(Arrays.asList(fbScope.split(","))));
+            }
+            bean.addProvider(fb);
+        }
+
+        if (googleProvider!=null)
+        {
+            bean.addProvider(googleProvider);
+        }
+        else if (googClientId!=null && googClientSecret!=null)
+        {
+            GoogleProvider gp = new GoogleProvider();
+            gp.setObjectMapper(shiroObjectMapper());
+            gp.setGoogleClientId(googClientId);
+            gp.setGoogleClientSecret(googClientSecret);
+            if (googScope!=null)
+            {
+                gp.setGrantedScopes(new TreeSet<String>(Arrays.asList(googScope.split(","))));
+            }
+            bean.addProvider(gp);
+        }
+
         return bean;
     }
 
-    @Bean
-    public List<OauthProvider> providerList()
-    {
-        return Arrays.asList((OauthProvider)googleProvider());
-    }
-
+    /**
+     * Override this with your own principal builder if you want users to have roles/privs other
+     * than oauth-user and oauth:*
+     * @return
+     */
     @Bean
     public OauthCustomPrincipalBuilder oauthCustomPrincipalBuilder()
     {

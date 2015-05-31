@@ -1,6 +1,7 @@
 package com.erigir.wrench.shiro;
 
 import com.erigir.wrench.shiro.provider.OauthProvider;
+import com.erigir.wrench.shiro.provider.ProviderRegistry;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -40,7 +41,7 @@ public class OauthRealm extends AuthorizingRealm {
     
     private static Logger LOG = LoggerFactory.getLogger(OauthRealm.class);
 
-    private List<OauthProvider> providerList;
+    private ProviderRegistry providerRegistry;
     // this is the CAS service url of the application (example : http://host:port/mycontextpath/shiro-cas)
     private String oauthService;
     
@@ -55,12 +56,6 @@ public class OauthRealm extends AuthorizingRealm {
 
     private OauthCustomPrincipalBuilder oauthCustomPrincipalBuilder;
 
-    /**
-     * The key the dynamically created service endpoint gets stored in session under
-     */
-    private String dynamicServiceUrlKey = "__dynamicServiceUrl";
-    private String dynamicServiceNonceKey = "__dynamicServiceNonce";
-
 
     public OauthRealm() {
         setAuthenticationTokenClass(OauthToken.class);
@@ -69,12 +64,6 @@ public class OauthRealm extends AuthorizingRealm {
     @Override
     protected void onInit() {
         super.onInit();
-    }
-
-    private OauthProvider selectProvider()
-    {
-        // TODO: Implement
-        return (providerList!=null && providerList.size()>0)?providerList.get(0):null;
     }
 
     /**
@@ -93,13 +82,15 @@ public class OauthRealm extends AuthorizingRealm {
 
         try {
             // contact OAuth server to validate service ticket
-            String redirURL = (String)SecurityUtils.getSubject().getSession().getAttribute(dynamicServiceUrlKey);
+            String redirURL = (String)SecurityUtils.getSubject().getSession().getAttribute(DynamicOauthLoginFilter.DYNAMIC_RETURN_URL_KEY);
             // Choose which oauth provider to use
-            OauthProvider provider = selectProvider();
+            OauthProvider provider = providerRegistry.fetchProviderForSession();
             // Exchange the token for a access token (proves authentication as a side effect)
             OauthPrincipal reply = provider.validate(oauthToken, redirURL);
             // Fetch any other user data that was requested
             provider.fetchUserData(reply);
+            // Set the provider name, mainly for debugging
+            reply.setOauthProviderName(provider.getName());
             // If we are here, add roles/privs
             oauthCustomPrincipalBuilder.updatePrincipal(reply);
 
@@ -186,19 +177,7 @@ public class OauthRealm extends AuthorizingRealm {
         this.oauthCustomPrincipalBuilder = oauthCustomPrincipalBuilder;
     }
 
-    public String getDynamicServiceUrlKey() {
-        return dynamicServiceUrlKey;
-    }
-
-    public void setDynamicServiceUrlKey(String dynamicServiceUrlKey) {
-        this.dynamicServiceUrlKey = dynamicServiceUrlKey;
-    }
-
-    public String getDynamicServiceNonceKey() {
-        return dynamicServiceNonceKey;
-    }
-
-    public void setProviderList(List<OauthProvider> providerList) {
-        this.providerList = providerList;
+    public void setProviderRegistry(ProviderRegistry providerRegistry) {
+        this.providerRegistry = providerRegistry;
     }
 }

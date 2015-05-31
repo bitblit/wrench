@@ -1,8 +1,12 @@
 package com.erigir.wrench.shiro;
 
 
+import com.erigir.wrench.shiro.provider.OauthProvider;
+import com.erigir.wrench.shiro.provider.ProviderRegistry;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -10,8 +14,11 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * This filter acts as a switch to decide which provider to do the Oauth dance with, using the
@@ -32,10 +39,14 @@ import java.io.IOException;
 public class DynamicOauthLoginFilter implements Filter {
     private static final Logger LOG = LoggerFactory.getLogger(DynamicOauthLoginFilter.class);
 
-    private boolean enabled = true;
-    private String content = "Replace Me With Content";
-    private String contentType = "text/html";
-    private int statusCode = 200;
+    public static final String DYNAMIC_RETURN_URL_KEY = "shiro-oauth-dynamic-return-url";
+    public static final String DYNAMIC_SERVICE_NONCE_KEY = "shiro-oauth-dynamic-service-nonce";
+
+
+    private ProviderRegistry providerRegistry;
+    private String providerSelectorUrl;
+    private String oauthServiceEndpoint;
+
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -44,20 +55,70 @@ public class DynamicOauthLoginFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        if (enabled) {
-            LOG.debug("Default content");
-            HttpServletResponse resp = (HttpServletResponse) servletResponse;
-            resp.setContentType(contentType);
+        HttpServletRequest request = (HttpServletRequest)servletRequest;
+        HttpServletResponse response = (HttpServletResponse)servletResponse;
 
-            String newContent = content.replaceAll("\\{contextPath\\}",servletRequest.getServletContext().getContextPath());
-
-            resp.setContentLength(newContent.length());
-
-
-            resp.getWriter().print(newContent);
-        } else {
-            filterChain.doFilter(servletRequest, servletResponse);
+        if (providerRegistry.isEmpty())
+        {
+            throw new InvalidStateException("Misconfigured - there are no providers in the registry");
         }
+
+        OauthProvider provider = providerRegistry.singleProvider();
+        if (provider==null)
+        {
+            provider = providerRegistry.getProviderByName(request.getParameter("p"));
+        }
+        else
+        {
+            LOG.debug("There is only a single provider, using it");
+        }
+
+        if (provider==null)
+        {
+            // We are still null - need to redirect to the selector url
+            if (providerSelectorUrl==null)
+            {
+                throw new InvalidStateException("Invalid configuration - no provider selector url set");
+            }
+            LOG.debug("No provider selected, redirecting to providerSelectorUrl : {}",providerSelectorUrl);
+            response.sendRedirect(providerSelectorUrl);
+        }
+        else {
+            LOG.debug("Using provider {}",provider);
+            providerRegistry.storeProviderForSession(provider);
+            // Build the urls and store in session
+            // Nonce is just there to prevent CSRF attacks
+            String nonce = UUID.randomUUID().toString().substring(0, 8);
+            SecurityUtils.getSubject().getSession().setAttribute(DYNAMIC_SERVICE_NONCE_KEY, nonce);
+            // The URL that the oauth server will redirect back to (typically checked in the token lookup, thats
+            // why we store it in session
+            String oauthReturnUrl = buildServiceUrl(request);
+            SecurityUtils.getSubject().getSession().setAttribute(DYNAMIC_RETURN_URL_KEY, oauthReturnUrl);
+            // The URL of the oauth service for us to redirect to
+            String oauthServiceUrl = provider.createEndpoint(oauthReturnUrl, nonce);
+
+            LOG.debug("Login - redirecting to oauth server {}",oauthServiceUrl);
+            response.sendRedirect(oauthServiceUrl);
+        }
+    }
+
+    private String buildServiceUrl(ServletRequest request) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(request.getScheme());
+        sb.append("://");
+        sb.append(request.getServerName());
+        sb.append(":");
+        sb.append(request.getServerPort());
+
+        String contextPath = request.getServletContext().getContextPath();
+        contextPath = (contextPath==null)?"":contextPath;
+        sb.append(contextPath);
+
+        if (!oauthServiceEndpoint.startsWith("/") && !contextPath.endsWith("/")) {
+            sb.append("/");
+        }
+        sb.append(oauthServiceEndpoint);
+        return sb.toString();
     }
 
     @Override
@@ -65,35 +126,15 @@ public class DynamicOauthLoginFilter implements Filter {
         // Do nothing
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public void setOauthServiceEndpoint(String oauthServiceEndpoint) {
+        this.oauthServiceEndpoint = oauthServiceEndpoint;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setProviderRegistry(ProviderRegistry providerRegistry) {
+        this.providerRegistry = providerRegistry;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+    public void setProviderSelectorUrl(String providerSelectorUrl) {
+        this.providerSelectorUrl = providerSelectorUrl;
     }
 }

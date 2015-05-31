@@ -104,22 +104,36 @@ public class BootstrapTestServer {
             HttpServletResponse resp = (HttpServletResponse) servletResponse;
             PrintWriter pw = resp.getWriter();
 
-            resp.setContentType("text/plain");
-            pw.println("Hello to request to :" + req.getRequestURI());
+            resp.setContentType("text/html");
+            pw.println("Hello to request to :" + req.getRequestURI()+"<br />");
 
 
             Subject subject = SecurityUtils.getSubject();
 
-            pw.println("Subject is:" + subject);
-            //pw.println("Roles are:" + ZuulShiroUtils.subjectRoles());
-            //pw.println("Perms are:" + ZuulShiroUtils.subjectPermissions());
+            if (subject.hasRole("oauth-user"))
+            {
+                pw.println("<pre>");
+                pw.println("Subject is:" + subject);
+                pw.println("First principal type: "+OauthPrincipal.firstOauthPrincipal().getOauthProviderName());
+                pw.println("First principal other data: "+OauthPrincipal.firstOauthPrincipal().getOtherData());
+                pw.println("Roles are:" + OauthPrincipal.oauthRoles());
+                pw.println("Perms are:" + OauthPrincipal.oauthPermissions());
 
-            pw.println("Has role XXYYZZ: " + subject.hasRole("XXYYZZ"));
-            pw.println("Has role oauth-user: " + subject.hasRole("oauth-user"));
+                pw.println("Has role XXYYZZ: " + subject.hasRole("XXYYZZ"));
+                pw.println("Has role oauth-user: " + subject.hasRole("oauth-user"));
 
-            pw.println("Has perm P:A:B " + subject.isPermitted("P:A:B"));
-            pw.println("Has perm oauth:test " + subject.isPermitted("oauth:test"));
-            pw.println("Has perm oauth:t2 " + subject.isPermitted("oauth:test"));
+                pw.println("Has perm P:A:B " + subject.isPermitted("P:A:B"));
+                pw.println("Has perm oauth:test " + subject.isPermitted("oauth:test"));
+                pw.println("Has perm oauth:t2 " + subject.isPermitted("oauth:test"));
+                pw.println("</pre>");
+            }
+            else
+            {
+                pw.println("Not currently logged in. <br />");
+                pw.println("<a href=\"login?p=facebook\">Login with Facebook</a><br />");
+                pw.println("<a href=\"login?p=google\">Login with Google</a><br />");
+            }
+
 
         }
 
