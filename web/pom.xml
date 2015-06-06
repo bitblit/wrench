@@ -4,14 +4,14 @@
     <parent>
         <artifactId>wrench</artifactId>
         <groupId>com.erigir</groupId>
-        <version>0.6</version>
+        <version>0.7-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-web</artifactId>
     <packaging>jar</packaging>
     <name>Wrench Web Utilities</name>
-    <version>0.6</version>
+    <version>0.7-SNAPSHOT</version>
     <description>Wrench Web Utilities</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
@@ -60,6 +60,14 @@
             <version>${javax.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson2.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 
 
     </dependencies>

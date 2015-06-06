@@ -1,5 +1,6 @@
 package com.erigir.wrench.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
@@ -27,7 +27,15 @@ import java.util.regex.Pattern;
  *
  * A list of urls to track is maintained and checked, updated on a per request basis.  You
  * may also set a 'reportingPattern', which is a URL which if accessed will dump the current
- * contents of the system
+ * contents of the system.
+ * 
+ * If you are going to use this filter you'll need to add the following dependency:
+          &lt;dependency&gt;
+ &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+ &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
+ &lt;version&gt;${jackson.version}&lt;/version&gt;
+ &lt;/dependency&gt;
+
  *
  * Created by chrweiss on 3/13/2015.
  */
@@ -40,6 +48,8 @@ public class HitMeasuringFilter implements Filter {
 
     // If this is set, requests matching this pattern will get the status dump instead
     private Pattern reportingPattern;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -81,22 +91,10 @@ public class HitMeasuringFilter implements Filter {
     public void doReport(HttpServletResponse resp)
             throws IOException
     {
-        // TODO - this should be JSON output
-        resp.setContentType("text/plain");
-        PrintWriter pw = resp.getWriter();
-
-        pw.println("Hit Measuring Filter Report");
-        pw.println("---------------------------");
-        pw.println("Entry\t\t\tLast Hit\tHit Count\t");
-        pw.println("-----\t\t\t--------\t---------\t");
-
-        for (HitMeasuringEntry h:trackingList)
-        {
-            Date last = lastHit.get(h);
-            AtomicInteger count = hitCount.get(h);
-            pw.println(h.toString()+"\t\t\t"+last+"\t"+count+"\n");
-        }
-
+        resp.setContentType("application/json");
+        String out = objectMapper.writeValueAsString(trackingList);
+        resp.setContentLength(out.length());
+        resp.getWriter().print(out);
     }
 
     public void setTrackingList(List<HitMeasuringEntry> trackingList) {
@@ -117,5 +115,9 @@ public class HitMeasuringFilter implements Filter {
 
     public void setReportingPattern(Pattern reportingPattern) {
         this.reportingPattern = reportingPattern;
+    }
+
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 }

@@ -10,6 +10,7 @@ import com.erigir.wrench.shiro.OauthSimpleOutputFilter;
 import com.erigir.wrench.shiro.OauthSubjectFactory;
 import com.erigir.wrench.shiro.provider.FacebookProvider;
 import com.erigir.wrench.shiro.provider.GoogleProvider;
+import com.erigir.wrench.shiro.provider.OauthProvider;
 import com.erigir.wrench.shiro.provider.ProviderRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
@@ -31,6 +32,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,12 +46,6 @@ import java.util.TreeSet;
 @Configuration
 public class OauthShiroContext {
     private static final Logger LOG = LoggerFactory.getLogger(OauthShiroContext.class);
-
-    @Autowired
-    private FacebookProvider facebookProvider;
-
-    @Autowired
-    private GoogleProvider googleProvider;
 
     /**
      * The list of URLs to bypass security on : by default, favicon.ico, /static/**, /health-check, and the providerSelectorUrl (whatever it is)
@@ -475,20 +471,12 @@ public class OauthShiroContext {
     public ProviderRegistry providerRegistry() {
         ProviderRegistry bean = new ProviderRegistry();
 
-        // Facebook env props
+        // Setup facebook from props (if set)
         String fbClientId = System.getProperty("shiro.facebook.client.id");
         String fbClientSecret = System.getProperty("shiro.facebook.client.secret");
         String fbScope = System.getProperty("shiro.facebook.scope");
-
-        // Google env props
-        String googClientId = System.getProperty("shiro.google.client.id");
-        String googClientSecret = System.getProperty("shiro.google.client.secret");
-        String googScope = System.getProperty("shiro.google.scope");
-
-        // Setup facebook
-        if (facebookProvider != null) {
-            bean.addProvider(facebookProvider);
-        } else if (fbClientId != null && fbClientSecret != null) {
+        if (fbClientId != null && fbClientSecret != null) {
+            LOG.info("Auto-configuring a facebook implementation for oauth from properties");
             FacebookProvider fb = new FacebookProvider();
             fb.setObjectMapper(shiroObjectMapper());
             fb.setFacebookClientId(fbClientId);
@@ -499,9 +487,12 @@ public class OauthShiroContext {
             bean.addProvider(fb);
         }
 
-        if (googleProvider != null) {
-            bean.addProvider(googleProvider);
-        } else if (googClientId != null && googClientSecret != null) {
+        // Setup google from props (if set)
+        String googClientId = System.getProperty("shiro.google.client.id");
+        String googClientSecret = System.getProperty("shiro.google.client.secret");
+        String googScope = System.getProperty("shiro.google.scope");
+        if (googClientId != null && googClientSecret != null) {
+            LOG.info("Auto-configuring a google implementation for oauth from properties");
             GoogleProvider gp = new GoogleProvider();
             gp.setObjectMapper(shiroObjectMapper());
             gp.setGoogleClientId(googClientId);
@@ -512,7 +503,29 @@ public class OauthShiroContext {
             bean.addProvider(gp);
         }
 
+        LOG.info("Adding {} providers from bean named 'shiroOauthProviders'",shiroOauthProviders().size());
+        for (OauthProvider a:shiroOauthProviders())
+        {
+            bean.addProvider(a);
+        }
+
+        LOG.info("Total of {} oauth providers setup",bean.getProviderMap().size());
+
+        if (bean.getProviderMap().size()==0)
+        {
+            throw new IllegalStateException("Cannot continue - no providers are configured");
+        }
         return bean;
+    }
+
+    /**
+     * This is a placeholder - you should replace it with your own implementations
+     * @return
+     */
+    @Bean
+    public List<OauthProvider> shiroOauthProviders()
+    {
+        return Collections.emptyList();
     }
 
     /**
