@@ -11,6 +11,9 @@ public class UTF8Encoder {
 
     public static final String UTF8 = "UTF-8";
 
+    /**
+     * Encode the passed string into UTF8 URL
+     */
     public static String encode(String input) {
         try {
             return (input == null) ? null : URLEncoder.encode(input, UTF8);
@@ -19,6 +22,9 @@ public class UTF8Encoder {
         }
     }
 
+    /**
+     * Decode the passed string as a  UTF8 URL
+     */
     public static String decode(String input) {
         try {
             return (input == null) ? null : URLDecoder.decode(input, UTF8);

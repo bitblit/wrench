@@ -18,8 +18,8 @@ import java.util.TreeMap;
  * Date: 12/28/13
  * Time: 10:41 PM
  */
-public class FileObjectStorageService implements ObjectStorageImplementation {
-    private static final Logger LOG = LoggerFactory.getLogger(FileObjectStorageService.class);
+public class FileObjectStorageImplementation implements ObjectStorageImplementation {
+    private static final Logger LOG = LoggerFactory.getLogger(FileObjectStorageImplementation.class);
 
     private File dir;
 

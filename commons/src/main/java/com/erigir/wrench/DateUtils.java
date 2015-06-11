@@ -32,18 +32,30 @@ import java.util.zip.ZipOutputStream;
 public class DateUtils {
     private static final Logger LOG = LoggerFactory.getLogger(DateUtils.class);
 
+    /**
+     * Returns a date object that is N days ago (relative to now (ie, new Date())
+     */
     public static Date nDaysAgo(int days) {
         Calendar ago = Calendar.getInstance();
         ago.add(Calendar.DAY_OF_YEAR, -1 * days);
         return ago.getTime();
     }
 
-    public static Date yearAgo() {
-        return nDaysAgo(365);
+    /**
+     * Returns a date object that is N years ago (relative to now (ie, new Date())
+     */
+    public static Date yearsAgo(int number) {
+        Calendar ago = Calendar.getInstance();
+        ago.add(Calendar.YEAR, -1*number);
+        return ago.getTime();
+
     }
 
-    public static Date monthAgo() {
-        return nDaysAgo(31);
+    public static Date monthsAgo(int months) {
+        Calendar ago = Calendar.getInstance();
+        ago.add(Calendar.MONTH, -1 * months);
+        return ago.getTime();
+
     }
 
 }

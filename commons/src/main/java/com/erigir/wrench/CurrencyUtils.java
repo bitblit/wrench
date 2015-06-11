@@ -3,7 +3,7 @@ package com.erigir.wrench;
 import java.math.BigDecimal;
 
 /**
- * Utils for working with BigDecimals as currency
+ * Utils for working with BigDecimals as currency - basically fixing the decimal at 2
  */
 public class CurrencyUtils {
     public static final BigDecimal HUNDRED = new BigDecimal("100");
@@ -33,11 +33,7 @@ public class CurrencyUtils {
     }
 
     /**
-     * Null-safe add for big decimal
-     *
-     * @param b1
-     * @param b2
-     * @return
+     * Null-safe add for big decimal (treat null as 0)
      */
     public static BigDecimal nsa(BigDecimal b1, BigDecimal b2) {
         BigDecimal ib1 = (b1 == null) ? BigDecimal.ZERO : b1;

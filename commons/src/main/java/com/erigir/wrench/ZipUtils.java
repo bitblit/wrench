@@ -97,7 +97,6 @@ public class ZipUtils {
      *
      * @param files Map of files to zip
      * @return byte[] containing the zip file
-     * @throws IOException if something bad happens
      */
     public static byte[] createZip(Map<String, byte[]> files) {
         try {

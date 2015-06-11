@@ -32,6 +32,11 @@ import java.util.zip.ZipOutputStream;
 public class SimpleHttpUtils {
     private static final Logger LOG = LoggerFactory.getLogger(SimpleHttpUtils.class);
 
+    /**
+     * Attempts up to 'retries' times to read the contents of a URL (times out in timeoutMS if
+     * cannot read) - throws an IllegalStateException if it cannot successfully read
+     *
+     */
     public static byte[] quietFetchUrl(String urlString, int timeoutInMS, int retries) {
         int readTimeout = 25000;
         int retryCount = 0;
@@ -67,6 +72,9 @@ public class SimpleHttpUtils {
         return rval;
     }
 
+    /*
+     * Like the byte[] version, but wrapped in a String object
+     */
     public static String quietFetchUrlAsString(String urlString, int timeout, int retries) {
         return new String(quietFetchUrl(urlString, timeout, retries));
     }
