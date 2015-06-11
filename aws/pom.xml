@@ -4,14 +4,14 @@
     <parent>
         <artifactId>wrench</artifactId>
         <groupId>com.erigir</groupId>
-        <version>0.7-SNAPSHOT</version>
+        <version>0.7</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-aws</artifactId>
     <packaging>jar</packaging>
     <name>Wrench AWS Utilities</name>
-    <version>0.7-SNAPSHOT</version>
+    <version>0.7</version>
     <description>Wrench AWS Utilities</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
@@ -71,14 +71,14 @@
         <dependency>
             <groupId>com.erigir</groupId>
             <artifactId>wrench-commons</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.7</version>
         </dependency>
 
         <!-- Only certain classes depend on web, include it if you use them -->
         <dependency>
             <groupId>com.erigir</groupId>
             <artifactId>wrench-web</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.7</version>
             <scope>provided</scope>
         </dependency>
 
