@@ -32,9 +32,12 @@ public class ZipUtils {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             GZIPOutputStream gz = new GZIPOutputStream(baos);
             gz.write(input);
-            gz.flush();
+            gz.finish();
+            //baos.flush();
             baos.close();
-            return baos.toByteArray();
+            byte[] data = baos.toByteArray();
+            LOG.debug("Compressed {} to {}", input.length, data.length);
+            return data;
         }
         catch (IOException ioe)
         {
@@ -47,7 +50,9 @@ public class ZipUtils {
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(input);
             GZIPInputStream gz = new GZIPInputStream(bais);
-            return toByteArray(gz);
+            byte[] data =  toByteArray(gz);
+            LOG.debug("Decompressed {} to {}", input.length, data.length);
+            return data;
         }
         catch (IOException ioe)
         {

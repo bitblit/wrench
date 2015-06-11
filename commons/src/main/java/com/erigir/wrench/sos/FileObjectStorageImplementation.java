@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.Class;import java.lang.Exception;import java.lang.IllegalArgumentException;import java.lang.IllegalStateException;import java.lang.Override;import java.lang.String;import java.util.Date;
@@ -73,7 +74,15 @@ public class FileObjectStorageImplementation implements ObjectStorageImplementat
     @Override
     public void deleteObject(String fullKey) {
         try {
-            new File(fullKey).delete();
+            File f = new File(fullKey);
+            if (f.exists() && f.isFile())
+            {
+                f.delete();
+            }
+            else
+            {
+                LOG.warn("Tried to delete non-existing (or non-file) : {}",f);
+            }
         } catch (Exception e) {
             throw new IllegalStateException("Error deleting object " + fullKey, e);
         }
@@ -84,7 +93,13 @@ public class FileObjectStorageImplementation implements ObjectStorageImplementat
             throws IOException {
         byte[] rval = null;
         if (fullKey != null) {
-            return ZipUtils.toByteArray(new FileInputStream(fullKey));
+            try {
+                rval = ZipUtils.toByteArray(new FileInputStream(fullKey));
+            }
+            catch (FileNotFoundException fnf)
+            {
+                LOG.info("Tried to read non-exisiting file : {}",fullKey);
+            }
         }
         return rval;
     }

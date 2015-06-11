@@ -1,6 +1,7 @@
 package com.erigir.wrench.sos;
 
 import com.erigir.wrench.QuietObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class TestFileObjectStorageImplementation {
             assertEquals(load.get(e.getKey()), e.getValue());
         }
 
-        sos.deleteObject(Map.class, key);
+        sos.deleteObject(TreeMap.class, key);
 
         Map<String,String> load2 = sos.loadObject(TreeMap.class,key);
 
