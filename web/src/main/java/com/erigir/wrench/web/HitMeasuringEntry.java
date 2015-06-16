@@ -18,6 +18,10 @@ import java.util.regex.Pattern;
  */
 public class HitMeasuringEntry implements Comparable<HitMeasuringEntry>{
     private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringEntry.class);
+    public static final String URL_REPORT_KEY="url";
+    public static final String PARAMS_REPORT_KEY="params";
+    public static final String HEADERS_REPORT_KEY="headers";
+
     private Pattern uriPattern;
     private Map<String,Pattern> paramPatterns;
     private Map<String,Pattern> headerPatterns;
@@ -30,6 +34,7 @@ public class HitMeasuringEntry implements Comparable<HitMeasuringEntry>{
         this.paramPatterns = paramPatterns;
         this.headerPatterns = headerPatterns;
     }
+
 
     public boolean matches(HttpServletRequest req)
     {
@@ -134,5 +139,14 @@ public class HitMeasuringEntry implements Comparable<HitMeasuringEntry>{
         }
         sb.append(" ]");
         return sb.toString();
+    }
+
+    public Map<String,Object> toReportMap()
+    {
+        Map<String,Object> rval = new TreeMap<>();
+        rval.put(URL_REPORT_KEY,uriPattern);
+        rval.put(HEADERS_REPORT_KEY,headerPatterns);
+        rval.put(PARAMS_REPORT_KEY,paramPatterns);
+        return rval;
     }
 }

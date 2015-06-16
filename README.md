@@ -13,6 +13,9 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 
 # Release Notes
 
+## Version 0.8
+Bugfix release - JSON dump of HitMeasuringFilter didn't actually have the count and date data.  Fixed and test added
+
 ## Version 0.7
 Backwards compatible feature release
 * Added S3PropertiesReader - (Reads properties objects from an S3 location) (AWS module)
