@@ -13,6 +13,9 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 
 # Release Notes
 
+## Version 0.9
+* Added the DateTime and Percent converters to the ZK package
+
 ## Version 0.8
 Bugfix release - JSON dump of HitMeasuringFilter didn't actually have the count and date data.  Fixed and test added
 
