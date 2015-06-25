@@ -17,6 +17,7 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 Backwards compatible feature release
 * Added the DateTime and Percent converters to the ZK package
 * Added DumpDatabase to the commons/Mysql package
+* Added BackupMysqlToS3 to AWS package
 
 ## Version 0.8
 Bugfix release - JSON dump of HitMeasuringFilter didn't actually have the count and date data.  Fixed and test added
