@@ -48,6 +48,17 @@ public class OauthShiroContext {
     private static final Logger LOG = LoggerFactory.getLogger(OauthShiroContext.class);
 
     /**
+     * If set to true, the server will use the Host and X-Forwarded-Proto headers if they
+     * are available (for Nginx/other proxying) Defaults to true
+     * @return whether to use proxy headers when available
+     */
+    @Bean
+    public boolean useProxyHeaders()
+    {
+        return true;
+    }
+
+    /**
      * The list of URLs to bypass security on : by default, favicon.ico, /static/**, /health-check, and the providerSelectorUrl (whatever it is)
      *
      * @return List of strings
@@ -455,6 +466,7 @@ public class OauthShiroContext {
         bean.setProviderRegistry(providerRegistry());
         bean.setProviderSelectorUrl(providerSelectorUrl());
         bean.setOauthServiceEndpoint(oauthServiceEndpoint());
+        bean.setUseProxyHeaders(useProxyHeaders());
         return bean;
     }
 

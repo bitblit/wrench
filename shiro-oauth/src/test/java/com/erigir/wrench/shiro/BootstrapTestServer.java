@@ -31,18 +31,20 @@ public class BootstrapTestServer {
 
 
     public static void main(String[] args) throws Exception {
+        int httpsPort = 6443; //8443
+        int port = 8080;
         // Force the https port
-        System.setProperty("shiro.https.port", "8443");
+        System.setProperty("shiro.https.port", String.valueOf(httpsPort));
 
 
         // This is the minimal tomcat instance we need for embedding
         Tomcat tomcat = new Tomcat();
         // set http listen port for the default connector we get out-of-the-box
         // (there's a lot more you can customize, see the javadoc)
-        tomcat.setPort(8080);
+        tomcat.setPort(port);
 
         Connector httpsConnector = new Connector();
-        httpsConnector.setPort(8443);
+        httpsConnector.setPort(httpsPort);
         httpsConnector.setSecure(true);
         httpsConnector.setScheme("https");
         httpsConnector.setAttribute("keystoreFile", new File("shiro-oauth/src/test/config/tomcat-ssl.keystore").getAbsolutePath());

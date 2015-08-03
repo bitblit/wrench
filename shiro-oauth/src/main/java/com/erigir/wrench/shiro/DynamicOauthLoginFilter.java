@@ -39,10 +39,14 @@ public class DynamicOauthLoginFilter implements Filter {
     public static final String DYNAMIC_RETURN_URL_KEY = "shiro-oauth-dynamic-return-url";
     public static final String DYNAMIC_SERVICE_NONCE_KEY = "shiro-oauth-dynamic-service-nonce";
 
+    private String proxyHostHeader = "Host";
+    private String proxySchemeHeader = "X-Forwarded-Proto";
 
     private ProviderRegistry providerRegistry;
     private String providerSelectorUrl;
     private String oauthServiceEndpoint;
+    // If set, the return url will use the host and X-Forwarded-Proto headers
+    private boolean useProxyHeaders;
 
 
     @Override
@@ -94,11 +98,10 @@ public class DynamicOauthLoginFilter implements Filter {
 
     private String buildServiceUrl(ServletRequest request) {
         StringBuilder sb = new StringBuilder();
-        sb.append(request.getScheme());
+        HttpServletRequest req = (HttpServletRequest)request;
+        sb.append(calculateScheme(req));
         sb.append("://");
-        sb.append(request.getServerName());
-        sb.append(":");
-        sb.append(request.getServerPort());
+        sb.append(calculateHost(req));
 
         String contextPath = request.getServletContext().getContextPath();
         contextPath = (contextPath == null) ? "" : contextPath;
@@ -109,6 +112,34 @@ public class DynamicOauthLoginFilter implements Filter {
         }
         sb.append(oauthServiceEndpoint);
         return sb.toString();
+    }
+
+    private String calculateScheme(HttpServletRequest req)
+    {
+        String rval = null;
+        if (useProxyHeaders)
+        {
+            rval = req.getHeader(proxySchemeHeader);
+        }
+        if (rval==null)
+        {
+            rval = req.getScheme();
+        }
+        return rval;
+    }
+
+    private String calculateHost(HttpServletRequest req)
+    {
+        String rval = null;
+        if (useProxyHeaders)
+        {
+            rval = req.getHeader(proxyHostHeader);
+        }
+        if (rval==null)
+        {
+            rval = req.getServerName()+":"+req.getServerPort();
+        }
+        return rval;
     }
 
     @Override
@@ -126,5 +157,17 @@ public class DynamicOauthLoginFilter implements Filter {
 
     public void setProviderSelectorUrl(String providerSelectorUrl) {
         this.providerSelectorUrl = providerSelectorUrl;
+    }
+
+    public void setUseProxyHeaders(boolean useProxyHeaders) {
+        this.useProxyHeaders = useProxyHeaders;
+    }
+
+    public void setProxyHostHeader(String proxyHostHeader) {
+        this.proxyHostHeader = proxyHostHeader;
+    }
+
+    public void setProxySchemeHeader(String proxySchemeHeader) {
+        this.proxySchemeHeader = proxySchemeHeader;
     }
 }
