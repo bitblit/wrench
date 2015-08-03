@@ -16,6 +16,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -99,6 +100,7 @@ public class DynamicOauthLoginFilter implements Filter {
     private String buildServiceUrl(ServletRequest request) {
         StringBuilder sb = new StringBuilder();
         HttpServletRequest req = (HttpServletRequest)request;
+        dumpHeaders(req);
         sb.append(calculateScheme(req));
         sb.append("://");
         sb.append(calculateHost(req));
@@ -112,6 +114,19 @@ public class DynamicOauthLoginFilter implements Filter {
         }
         sb.append(oauthServiceEndpoint);
         return sb.toString();
+    }
+
+    private void dumpHeaders(HttpServletRequest req)
+    {
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("--- Headers ---");
+            for (String s: Collections.list(req.getHeaderNames()))
+            {
+                LOG.debug("{} = {}",s,req.getHeader(s));
+            }
+            LOG.debug("--- End Headers ---");
+        }
     }
 
     private String calculateScheme(HttpServletRequest req)
