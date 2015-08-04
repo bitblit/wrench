@@ -13,6 +13,11 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 
 # Release Notes
 
+## Version 0.91
+Backwards compatible feature release
+* Added the ability for shiro-oauth to read the host/scheme values from headers (eg, from Nginx proxy)
+* Added the Ape package for simplifying API development (mainly what was in Scribe before)
+
 ## Version 0.9
 Backwards compatible feature release
 * Added the DateTime and Percent converters to the ZK package

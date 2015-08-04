@@ -7,6 +7,9 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
+ * TODO: Implement in such a way that this can be integrated with Seedy so that it can be a filter at dev time
+ * and then combined and pushed to S3 at deploy time
+ *
  * Created by cweiss on 7/24/15.
  */
 public class SimpleServerSideIncludesFilter implements Filter{

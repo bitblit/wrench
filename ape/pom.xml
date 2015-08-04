@@ -8,11 +8,11 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wrench-web</artifactId>
+    <artifactId>wrench-ape</artifactId>
     <packaging>jar</packaging>
-    <name>Wrench Web Utilities</name>
+    <name>Wrench Ape - Simplifies API Construction</name>
     <version>0.91-SNAPSHOT</version>
-    <description>Wrench Web Utilities</description>
+    <description>Wrench APE</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
     <issueManagement>
@@ -36,6 +36,12 @@
     </developers>
 
     <dependencies>
+        <dependency>
+            <groupId>com.erigir</groupId>
+            <artifactId>wrench-commons</artifactId>
+            <version>0.91-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -67,6 +73,52 @@
             <version>${jackson2.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 
         <dependency>
             <groupId>junit</groupId>

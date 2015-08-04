@@ -5,7 +5,7 @@
     <groupId>com.erigir</groupId>
     <artifactId>wrench</artifactId>
     <packaging>pom</packaging>
-    <version>1.00-SNAPSHOT</version>
+    <version>0.91-SNAPSHOT</version>
     <name>wrench</name>
     <description>Erigir Common Reusable Tools</description>
     <url>https://github.com/bitblit/wrench</url>
@@ -55,7 +55,7 @@
         <jackson2.version>2.3.1</jackson2.version>
         <aws.version>1.9.4</aws.version>
         <shiro.version>1.2.3</shiro.version>
-        <spring.version>4.0.5.RELEASE</spring.version>
+        <spring.version>4.1.6.RELEASE</spring.version>
         <slf4j.version>1.7.7</slf4j.version>
         <zk.version>7.0.3</zk.version>
         <commons.net.version>3.3</commons.net.version>
@@ -75,6 +75,7 @@
         <module>aws</module>
         <module>zk</module>
         <module>web</module>
+        <module>ape</module>
         <module>shiro-oauth</module>
     </modules>
 

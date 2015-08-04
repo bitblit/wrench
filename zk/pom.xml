@@ -4,14 +4,14 @@
     <parent>
         <artifactId>wrench</artifactId>
         <groupId>com.erigir</groupId>
-        <version>1.00-SNAPSHOT</version>
+        <version>0.91-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-zk</artifactId>
     <packaging>jar</packaging>
     <name>Wrench ZK Utilities</name>
-    <version>1.00-SNAPSHOT</version>
+    <version>0.91-SNAPSHOT</version>
     <description>Wrench ZK Utilities</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
