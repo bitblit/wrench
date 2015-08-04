@@ -1,4 +1,4 @@
-package com.erigir.wrench.web.sssi;
+package com.erigir.wrench.web.simpleincludes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,8 @@ import java.io.IOException;
  *
  * Created by cweiss on 7/24/15.
  */
-public class SimpleServerSideIncludesFilter implements Filter{
-    private static final Logger LOG = LoggerFactory.getLogger(SimpleServerSideIncludesFilter.class);
+public class SimpleIncludesFilter implements Filter{
+    private static final Logger LOG = LoggerFactory.getLogger(SimpleIncludesFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -22,7 +22,7 @@ public class SimpleServerSideIncludesFilter implements Filter{
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        LOG.debug("About to do sssi filter");
+        LOG.debug("About to do simpleincludes filter");
         filterChain.doFilter(servletRequest,servletResponse);
     }
 
