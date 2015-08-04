@@ -1,9 +1,9 @@
 package com.erigir.wrench.web;
 
 import com.erigir.wrench.ape.model.Page;
-import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by chrweiss on 7/7/14.
@@ -12,7 +12,7 @@ public class Paginator {
     private int pageSize;
 
     public <T> Page<T> pagination(List<T> allItems, Integer inPage) {
-        Assert.notNull(allItems, "Items may not be null");
+        Objects.requireNonNull(allItems);
         int page = (inPage == null) ? 0 : inPage;
         int maxItems = allItems.size();
 

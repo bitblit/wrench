@@ -1,4 +1,4 @@
-package com.erigir.wrench.ape.model;
+package com.erigir.wrench.web;
 
 import java.util.List;
 
