@@ -13,6 +13,10 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 
 # Release Notes
 
+## Version 0.921
+Backwards compatible bugfix release
+* Renamed drigo to wrench-drigo to fit naming convention
+
 ## Version 0.92
 Backwards compatible feature release
 * Added SimpleIncludesProcessor to commons
