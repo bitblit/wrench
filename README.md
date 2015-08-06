@@ -13,6 +13,13 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 
 # Release Notes
 
+## Version 0.92
+Backwards compatible feature release
+* Added SimpleIncludesProcessor to commons
+* Added SimpleIncludesFilter (uses the processor) to web
+* Created the "Drigo" package, extracting all file processing that used to be in shiro-maven-plugin for reuse
+-- Note: Error in this release, Drigo should have been wrench-drigo
+
 ## Version 0.91
 Backwards compatible feature release
 * Added the ability for shiro-oauth to read the host/scheme values from headers (eg, from Nginx proxy)
