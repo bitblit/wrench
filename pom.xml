@@ -76,6 +76,7 @@
         <module>zk</module>
         <module>web</module>
         <module>ape</module>
+        <module>drigo</module>
         <module>shiro-oauth</module>
     </modules>
 

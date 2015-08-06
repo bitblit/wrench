@@ -21,6 +21,15 @@ public class SimpleIncludesProcessor {
     private String markerPrefix;
     private String markerSuffix;
 
+    public SimpleIncludesProcessor() {
+    }
+
+    public SimpleIncludesProcessor(SimpleIncludesSource source, String markerPrefix, String markerSuffix) {
+        this.source = source;
+        this.markerPrefix = markerPrefix;
+        this.markerSuffix = markerSuffix;
+    }
+
     public String processIncludes(String input)
     {
         Objects.requireNonNull(input);

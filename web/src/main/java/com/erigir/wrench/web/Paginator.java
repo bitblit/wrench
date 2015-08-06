@@ -1,7 +1,5 @@
 package com.erigir.wrench.web;
 
-import com.erigir.wrench.ape.model.Page;
-
 import java.util.List;
 import java.util.Objects;
 

@@ -1,0 +1,39 @@
+{
+  "addMetadata" : [
+    {
+      "includeRegex" : ".*\\.html",
+      "name" : "content-type",
+      "value" : "text/html; charset=utf-8"
+    },
+    {
+      "includeRegex" : ".*",
+      "name" : "cache-control",
+      "value" : "max-age=30"
+    },
+    {
+      "includeRegex" : ".*",
+      "name" : "x-amz-meta-upload-time",
+      "value" : "12345"
+    },
+    {
+      "includeRegex" : ".*/q.*",
+      "name" : "content-type",
+      "value" : "text/html; charset=utf-8"
+    }
+  ],
+  "cssCompilationIncludeRegex" : ".*\\.css",
+  "babelCompilationIncludeRegex" : ".*\\.jsx",
+  "javascriptCompilation" :
+  {
+    "includeRegex" : ".*\\.js",
+    "mode" : "CLOSURE_WHITESPACE"
+  },
+  "processIncludes" : [
+    {
+      "includeRegex" : ".*\\.html",
+      "prefix" : "<!--SI:",
+      "suffix" : ":SI-->"
+    }
+  ]
+
+}

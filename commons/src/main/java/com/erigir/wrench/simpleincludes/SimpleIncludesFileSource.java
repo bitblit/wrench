@@ -15,6 +15,13 @@ public class SimpleIncludesFileSource implements SimpleIncludesSource {
     private static final Logger LOG = LoggerFactory.getLogger(SimpleIncludesFileSource.class);
     private File includeSourceParentDirectory;
 
+    public SimpleIncludesFileSource() {
+    }
+
+    public SimpleIncludesFileSource(File includeSourceParentDirectory) {
+        this.includeSourceParentDirectory = includeSourceParentDirectory;
+    }
+
     @Override
     public String findContent(String name) {
         String rval = null;
@@ -32,6 +39,10 @@ public class SimpleIncludesFileSource implements SimpleIncludesSource {
                 LOG.warn("Error occurred trying to read file, returning null", ioe);
                 rval=null;
             }
+        }
+        else
+        {
+            LOG.warn("Requested file {}, but not found in {}", name, includeSourceParentDirectory);
         }
 
         return rval;
