@@ -156,11 +156,11 @@
             <version>${slf4j.version}</version>
         </dependency>
 
-        <!-- FIXME : I should be provided, not compile -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.1.2</version>
+            <scope>provided</scope>
         </dependency>
 
 
