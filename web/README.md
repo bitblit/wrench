@@ -53,3 +53,6 @@ Then you'll need to set the simpleIncludesSource property in your pom.xml, like 
                 </configuration>
             </plugin>
 ```xml
+
+NOTE: Wrench-Drigo also supports simple includes, which pairs with this for developing locally and then pushing to
+S3 using seedy-maven-plugin, which uses Drigo
