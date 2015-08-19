@@ -58,7 +58,7 @@ public class Drigo {
 
             if (dst.exists() && configuration.isClearTargetBeforeProcessing()) {
                 boolean wasDir = dst.isDirectory();
-                LOG.info("{} exists and clearTarget is set - deleting");
+                LOG.info("{} exists and clearTarget is set - deleting", dst);
                 dst.delete();
                 if (wasDir) {
                     dst.mkdir();

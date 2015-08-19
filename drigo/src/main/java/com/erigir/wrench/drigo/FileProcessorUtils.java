@@ -31,7 +31,7 @@ public class FileProcessorUtils {
         try {
 
             if (Exclusion.excluded(exclusionList, src)) {
-                LOG.info("Skipping {} - it is on the exclusion list");
+                LOG.info("Skipping {} - it is on the exclusion list",src);
             } else {
                 if (src.isDirectory()) {
 
