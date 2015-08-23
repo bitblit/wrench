@@ -14,7 +14,7 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 # Release Notes
 
 ## Version 1.000
-Non-Backwards compatible feature release
+NON-Backwards compatible feature release
 * Changed Ape to use servlet error handling instead of filtering - this should catch all the pesky "non-spring" errors
 and handle them correctly as JSON endpoints
 * Added ServerErrorNotifier to SNS for wrench-aws to allow simple forwarding of all uncaught exceptions to a SNS
