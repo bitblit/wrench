@@ -10,7 +10,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 /**
- * If a method in a scribe exception has this annotation, then that methods rval is used as the 'data' field in the resp
+ * If a method in a ape exception has this annotation, then that methods rval is used as the 'data' field in the resp
  * Created by chrweiss on 7/1/14.
  */
 @Target({TYPE, ANNOTATION_TYPE})

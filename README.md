@@ -13,6 +13,12 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 
 # Release Notes
 
+## Version 1.000
+Non-Backwards compatible feature release
+* Changed Ape to use servlet error handling instead of filtering - this should catch all the pesky "non-spring" errors
+and handle them correctly as JSON endpoints
+
+
 ## Version 0.921
 Backwards compatible bugfix release
 * Renamed drigo to wrench-drigo to fit naming convention

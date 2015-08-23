@@ -8,8 +8,8 @@ import com.erigir.wrench.ape.http.ApeException;
 @ApeException(
         httpStatusCode = 403,
         detailCode = 109,
-        message = "The timestamp in the X-SCRIBE-TIMESTAMP header is outside of the valid range",
-        developerMessage = "The timestamp in the X-SCRIBE-TIMESTAMP header is too far out of skew with our server - check your servers clock and the details",
+        message = "The timestamp in the X-APE-TIMESTAMP header is outside of the valid range",
+        developerMessage = "The timestamp in the X-APE-TIMESTAMP header is too far out of skew with our server - check your servers clock and the details",
         detailObjectPropertyName = "skewDescription"
 )
 public class TimestampSkewTooLargeException extends RuntimeException {

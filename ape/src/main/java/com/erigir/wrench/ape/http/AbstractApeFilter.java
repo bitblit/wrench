@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 public abstract class AbstractApeFilter implements Filter {
     private static Logger LOG = LoggerFactory.getLogger(AbstractApeFilter.class);
 
-    public static final String TIMESTAMP_NAME = "X-SCRIBE-TIMESTAMP";
+    public static final String TIMESTAMP_NAME = "X-APE-TIMESTAMP";
 
     //private ApeExceptionWriter apeExceptionWriter;
 
