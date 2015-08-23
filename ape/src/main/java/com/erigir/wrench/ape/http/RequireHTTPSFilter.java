@@ -1,6 +1,7 @@
 package com.erigir.wrench.ape.http;
 
 import com.erigir.wrench.ape.exception.HttpsRequiredException;
+import com.erigir.wrench.web.AbstractSimpleFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
  * @author cweiss
  */
 @Component(value = "requireHTTPSFilter")
-public class RequireHTTPSFilter extends AbstractApeFilter {
+public class RequireHTTPSFilter extends AbstractSimpleFilter {
     private static Logger LOG = LoggerFactory.getLogger(RequireHTTPSFilter.class);
     private List<Pattern> excludePatterns;
     private boolean allowProxyTermination = true;

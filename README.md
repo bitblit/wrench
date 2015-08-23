@@ -17,7 +17,11 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 Non-Backwards compatible feature release
 * Changed Ape to use servlet error handling instead of filtering - this should catch all the pesky "non-spring" errors
 and handle them correctly as JSON endpoints
-
+* Added ServerErrorNotifier to SNS for wrench-aws to allow simple forwarding of all uncaught exceptions to a SNS
+endpoint.  Plugs into the Ape exception handler for rethrow.
+* Updated SimpleCORSFilter to allow smart filtering of incoming origin header like I've wanted for a while (still
+defaults to allow all origins for backward(ish) compatibility.  Used to allow "no origin" header but that is in 
+violation of the spec
 
 ## Version 0.921
 Backwards compatible bugfix release

@@ -1,6 +1,7 @@
 package com.erigir.wrench.ape.http;
 
 import com.erigir.wrench.ape.exception.NoSuchVersionException;
+import com.erigir.wrench.web.AbstractSimpleFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import java.util.List;
  * @author cweiss
  */
 @Component(value = "versionCheckFilter")
-public class VersionCheckFilter extends AbstractApeFilter {
+public class VersionCheckFilter extends AbstractSimpleFilter {
     private static Logger LOG = LoggerFactory.getLogger(VersionCheckFilter.class);
     private List<Integer> validVersions;
 
@@ -31,6 +32,39 @@ public class VersionCheckFilter extends AbstractApeFilter {
 
         chain.doFilter(req, resp); // Matched a no-key regex, handle publicly
     }
+
+    public final Integer fetchVersion(String input) {
+        Integer rval = null;
+        if (input != null && input.startsWith("/v")) {
+            int split = input.indexOf("/", 2);
+            if (split != -1) {
+                String test = input.substring(2, split);
+                try {
+                    rval = new Integer(test);
+                } catch (NumberFormatException nfe) {
+                    LOG.warn("Couldn't parse version number {}", test);
+                }
+            }
+        }
+
+        return rval;
+
+    }
+
+
+
+    public final String removeVersionFromURI(String input) {
+        String rval = input;
+        Integer foundVersion = null;
+        if (input != null && input.startsWith("/v")) {
+            int split = input.indexOf("/", 2);
+            if (split != -1) {
+                rval = input.substring(split);
+            }
+        }
+        return rval;
+    }
+
 
     public void setValidVersions(List<Integer> validVersions) {
         this.validVersions = validVersions;

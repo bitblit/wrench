@@ -46,6 +46,11 @@
             <artifactId>wrench-aws</artifactId>
             <version>1.000-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.erigir</groupId>
+            <artifactId>wrench-web</artifactId>
+            <version>1.000-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
