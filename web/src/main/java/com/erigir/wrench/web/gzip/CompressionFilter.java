@@ -7,7 +7,7 @@ import java.io.IOException;
 
 /**
  * Pretty much copied from http://tutorials.jenkov.com/java-servlets/gzip-servlet-filter.html
- *
+ * <p>
  * Created by cweiss on 7/29/15.
  */
 public class CompressionFilter implements Filter {
@@ -25,10 +25,10 @@ public class CompressionFilter implements Filter {
                          FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest httpRequest  = (HttpServletRequest)  request;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        if ( acceptsGZipEncoding(httpRequest) ) {
+        if (acceptsGZipEncoding(httpRequest)) {
             httpResponse.addHeader("Content-Encoding", "gzip");
             GZipServletResponseWrapper gzipResponse =
                     new GZipServletResponseWrapper(httpResponse);

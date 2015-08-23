@@ -4,7 +4,6 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.erigir.wrench.mysql.DumpDatabase;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
@@ -21,7 +20,7 @@ import java.util.zip.GZIPOutputStream;
 
 /**
  * A bean that, when triggered, backs up the referenced mysql database to an s3 bucket
- *
+ * <p>
  * Created by chrweiss on 6/24/15.
  */
 public class BackupMysqlToS3 {
@@ -47,8 +46,7 @@ public class BackupMysqlToS3 {
         b.backupDatabase();
     }
 
-    public void backupDatabase()
-    {
+    public void backupDatabase() {
         Objects.requireNonNull(dbUsername);
         Objects.requireNonNull(dbPassword);
         Objects.requireNonNull(dbName);
@@ -88,8 +86,7 @@ public class BackupMysqlToS3 {
 
             sw.stop();
             LOG.info("Complete: backing up database {} to S3 in {}", dbName, sw);
-        } catch (IOException ioe)
-        {
+        } catch (IOException ioe) {
             throw new RuntimeException("Error dumping database", ioe);
         }
     }

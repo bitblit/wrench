@@ -4,29 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 /**
  * A couple of simplistic functions for doing HTTP connections without a full HTTPclient dependency
- *
+ * <p>
  * cweiss : 1/23/12 6:08 PM
  */
 public class SimpleHttpUtils {
@@ -35,7 +19,6 @@ public class SimpleHttpUtils {
     /**
      * Attempts up to 'retries' times to read the contents of a URL (times out in timeoutMS if
      * cannot read) - throws an IllegalStateException if it cannot successfully read
-     *
      */
     public static byte[] quietFetchUrl(String urlString, int timeoutInMS, int retries) {
         int readTimeout = 25000;

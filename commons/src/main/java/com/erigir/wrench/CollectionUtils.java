@@ -7,7 +7,7 @@ import java.util.Properties;
 
 /**
  * Utils for working with java collections
- *
+ * <p>
  * NOTE - May replace these with streaming in JDK 8
  */
 public class CollectionUtils {

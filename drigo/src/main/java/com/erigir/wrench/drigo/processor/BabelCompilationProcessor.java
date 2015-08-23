@@ -2,11 +2,9 @@ package com.erigir.wrench.drigo.processor;
 
 import com.erigir.wrench.drigo.DrigoException;
 import com.erigir.wrench.drigo.DrigoResults;
-import com.yahoo.platform.yui.compressor.CssCompressor;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -32,10 +30,10 @@ import java.io.IOException;
 public class BabelCompilationProcessor extends AbstractFileProcessor {
 
     @Override
-    public boolean innerProcess( File src, File dst, DrigoResults results)
+    public boolean innerProcess(File src, File dst, DrigoResults results)
             throws DrigoException, IOException {
         try {
-            String[] args = new String[]{"babel", src.getAbsolutePath(),"--compact","true","--comments","false"};
+            String[] args = new String[]{"babel", src.getAbsolutePath(), "--compact", "true", "--comments", "false"};
             Process p = Runtime.getRuntime().exec(args);
             p.waitFor();
 
@@ -44,9 +42,7 @@ public class BabelCompilationProcessor extends AbstractFileProcessor {
             fw.write(output);
             fw.close();
 
-        }
-        catch (InterruptedException ie)
-        {
+        } catch (InterruptedException ie) {
             // do nothing
         }
 

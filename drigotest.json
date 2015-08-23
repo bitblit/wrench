@@ -1,39 +1,37 @@
 {
-  "addMetadata" : [
+  "addMetadata": [
     {
-      "includeRegex" : ".*\\.html",
-      "name" : "content-type",
-      "value" : "text/html; charset=utf-8"
+      "includeRegex": ".*\\.html",
+      "name": "content-type",
+      "value": "text/html; charset=utf-8"
     },
     {
-      "includeRegex" : ".*",
-      "name" : "cache-control",
-      "value" : "max-age=30"
+      "includeRegex": ".*",
+      "name": "cache-control",
+      "value": "max-age=30"
     },
     {
-      "includeRegex" : ".*",
-      "name" : "x-amz-meta-upload-time",
-      "value" : "12345"
+      "includeRegex": ".*",
+      "name": "x-amz-meta-upload-time",
+      "value": "12345"
     },
     {
-      "includeRegex" : ".*/q.*",
-      "name" : "content-type",
-      "value" : "text/html; charset=utf-8"
+      "includeRegex": ".*/q.*",
+      "name": "content-type",
+      "value": "text/html; charset=utf-8"
     }
   ],
-  "cssCompilationIncludeRegex" : ".*\\.css",
-  "babelCompilationIncludeRegex" : ".*\\.jsx",
-  "javascriptCompilation" :
-  {
-    "includeRegex" : ".*\\.js",
-    "mode" : "CLOSURE_WHITESPACE"
+  "cssCompilationIncludeRegex": ".*\\.css",
+  "babelCompilationIncludeRegex": ".*\\.jsx",
+  "javascriptCompilation": {
+    "includeRegex": ".*\\.js",
+    "mode": "CLOSURE_WHITESPACE"
   },
-  "processIncludes" : [
+  "processIncludes": [
     {
-      "includeRegex" : ".*\\.html",
-      "prefix" : "<!--SI:",
-      "suffix" : ":SI-->"
+      "includeRegex": ".*\\.html",
+      "prefix": "<!--SI:",
+      "suffix": ":SI-->"
     }
   ]
-
 }

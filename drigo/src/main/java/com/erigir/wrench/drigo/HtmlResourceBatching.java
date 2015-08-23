@@ -24,11 +24,11 @@ import java.util.List;
 /**
  * Finds all resources that match the include regex, and combines them into a single file,
  * outputfilename
- *
+ * <p>
  * Then, finds any files matching replaceInHtmlRegex, and finds and comments in them of the form:
  * &lt;!--{flagName}--&gt;&lt;/!--END-{flagName}--&gt;
  * and replaces them with replaceText
- *
+ * <p>
  * Created by chrweiss on 9/23/14.
  */
 public class HtmlResourceBatching {

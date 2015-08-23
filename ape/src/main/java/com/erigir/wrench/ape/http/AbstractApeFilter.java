@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Root class for scribe filters
+ * Root class for ape filters
  *
  * @author cweiss
  */
@@ -29,27 +29,27 @@ public abstract class AbstractApeFilter implements Filter {
 
     public static final String TIMESTAMP_NAME = "X-SCRIBE-TIMESTAMP";
 
-    private ApeExceptionWriter scribeExceptionWriter;
+    //private ApeExceptionWriter apeExceptionWriter;
 
 
     @Override
     public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) arg0;
         HttpServletResponse resp = (HttpServletResponse) arg1;
-        try {
+   ///     try {
             innerFilter(request, resp, arg2);
-        } catch (Exception ex) {
-            if (scribeExceptionWriter == null) {
+      /*  } catch (Exception ex) {
+            if (apeExceptionWriter == null) {
                 LOG.error("This is bad, filter {} doesn't have an exception writer set - rethrowing exception", getClass().getName(), ex);
                 throw ex;
             } else {
-                scribeExceptionWriter.writeExceptionToResponse(request, resp, ex);
+                apeExceptionWriter.writeExceptionToResponse(request, resp, ex);
             }
         }
 
         if (resp.getStatus() >= 400) {
             LOG.warn("Warning - webserver is serving a standard error page (we shouldn't have reached here with a status {}) url is {}", resp.getStatus(), request.getRequestURI());
-        }
+        }*/
     }
 
     public abstract void innerFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
@@ -75,9 +75,11 @@ public abstract class AbstractApeFilter implements Filter {
         return rval;
     }
 
-    public void setScribeExceptionWriter(ApeExceptionWriter scribeExceptionWriter) {
-        this.scribeExceptionWriter = scribeExceptionWriter;
+    /*
+    public void setApeExceptionWriter(ApeExceptionWriter apeExceptionWriter) {
+        this.apeExceptionWriter = apeExceptionWriter;
     }
+*/
 
     public Long getSubmittedTimestamp(HttpServletRequest req) {
         String field = getHeaderOrParam(req, TIMESTAMP_NAME);

@@ -1,7 +1,5 @@
 package com.erigir.wrench.drigo.processor;
 
-import com.erigir.wrench.ZipUtils;
-import com.erigir.wrench.drigo.DrigoException;
 import com.erigir.wrench.drigo.DrigoResults;
 import com.erigir.wrench.simpleincludes.SimpleIncludesFileSource;
 import com.erigir.wrench.simpleincludes.SimpleIncludesProcessor;
@@ -9,7 +7,10 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Copyright 2014 Christopher Weiss

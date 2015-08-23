@@ -10,43 +10,32 @@ import java.io.File;
  */
 public class DrigoCLI {
     public static void main(String[] args) {
-        try
-        {
+        try {
             ObjectMapper om = new ObjectMapper();
-            om.configure(SerializationFeature.INDENT_OUTPUT,true);
+            om.configure(SerializationFeature.INDENT_OUTPUT, true);
 
-            if (args.length==2)
-            {
+            if (args.length == 2) {
                 File config = new File(args[0]);
                 File src = new File(args[1]);
-                if (!config.exists() || config.isDirectory())
-                {
+                if (!config.exists() || config.isDirectory()) {
                     System.out.println("Config must exist and be a file");
 
-                }
-                else if (!src.exists())
-                {
+                } else if (!src.exists()) {
                     System.out.println("Source must exist");
-                }
-                else
-                {
+                } else {
                     DrigoConfiguration conf = om.readValue(config, DrigoConfiguration.class);
                     conf.setSrc(src);
                     Drigo drigo = new Drigo();
                     DrigoResults res = drigo.execute(conf);
                     String sRes = om.writeValueAsString(res);
-                    System.out.println("Results: \n\n"+sRes);
+                    System.out.println("Results: \n\n" + sRes);
 
                 }
 
-            }
-            else
-            {
+            } else {
                 System.out.println("Usage: DrigoCLI {config file} {src}");
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

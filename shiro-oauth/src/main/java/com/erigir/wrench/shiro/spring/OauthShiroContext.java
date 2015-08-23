@@ -1,13 +1,7 @@
 package com.erigir.wrench.shiro.spring;
 
 
-import com.erigir.wrench.shiro.DefaultOauthCustomPrincipalBuilder;
-import com.erigir.wrench.shiro.DynamicOauthLoginFilter;
-import com.erigir.wrench.shiro.OauthCustomPrincipalBuilder;
-import com.erigir.wrench.shiro.OauthFilter;
-import com.erigir.wrench.shiro.OauthRealm;
-import com.erigir.wrench.shiro.OauthSimpleOutputFilter;
-import com.erigir.wrench.shiro.OauthSubjectFactory;
+import com.erigir.wrench.shiro.*;
 import com.erigir.wrench.shiro.provider.FacebookProvider;
 import com.erigir.wrench.shiro.provider.GoogleProvider;
 import com.erigir.wrench.shiro.provider.OauthProvider;
@@ -26,18 +20,11 @@ import org.apache.shiro.web.filter.authz.SslFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Holds the set of beans necessary to add Shiro security implemented via OAuth
@@ -50,11 +37,11 @@ public class OauthShiroContext {
     /**
      * If set to true, the server will use the Host and X-Forwarded-Proto headers if they
      * are available (for Nginx/other proxying) Defaults to true
+     *
      * @return whether to use proxy headers when available
      */
     @Bean
-    public boolean useProxyHeaders()
-    {
+    public boolean useProxyHeaders() {
         return true;
     }
 
@@ -147,7 +134,7 @@ public class OauthShiroContext {
      * is registerd under in the provider registry.  By default this would be the simple name of the
      * provider class minus the word "provider", lowercase (eg, FacebookProvider is in there as facebook),
      * See ProviderUtils.defaultProviderRegistryName
-     *
+     * <p>
      * This URL MUST BE UNAUTHENTICATED OR NOTHING WILL WORK
      *
      * @return String containing the endpoint
@@ -515,16 +502,14 @@ public class OauthShiroContext {
             bean.addProvider(gp);
         }
 
-        LOG.info("Adding {} providers from bean named 'shiroOauthProviders'",shiroOauthProviders().size());
-        for (OauthProvider a:shiroOauthProviders())
-        {
+        LOG.info("Adding {} providers from bean named 'shiroOauthProviders'", shiroOauthProviders().size());
+        for (OauthProvider a : shiroOauthProviders()) {
             bean.addProvider(a);
         }
 
-        LOG.info("Total of {} oauth providers setup",bean.getProviderMap().size());
+        LOG.info("Total of {} oauth providers setup", bean.getProviderMap().size());
 
-        if (bean.getProviderMap().size()==0)
-        {
+        if (bean.getProviderMap().size() == 0) {
             throw new IllegalStateException("Cannot continue - no providers are configured");
         }
         return bean;
@@ -532,11 +517,11 @@ public class OauthShiroContext {
 
     /**
      * This is a placeholder - you should replace it with your own implementations
+     *
      * @return
      */
     @Bean
-    public List<OauthProvider> shiroOauthProviders()
-    {
+    public List<OauthProvider> shiroOauthProviders() {
         return Collections.emptyList();
     }
 

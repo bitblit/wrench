@@ -3,21 +3,9 @@ package com.erigir.wrench;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import java.io.*;
+import java.util.*;
+import java.util.zip.*;
 
 /**
  * cweiss : 1/23/12 6:08 PM
@@ -26,8 +14,7 @@ public class ZipUtils {
     private static final Logger LOG = LoggerFactory.getLogger(ZipUtils.class);
     private static final String ZIP_FILE_NAME = "data.dat";
 
-    public static byte[] zipData(byte[] input)
-    {
+    public static byte[] zipData(byte[] input) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             GZIPOutputStream gz = new GZIPOutputStream(baos);
@@ -38,25 +25,20 @@ public class ZipUtils {
             byte[] data = baos.toByteArray();
             LOG.debug("Compressed {} to {}", input.length, data.length);
             return data;
-        }
-        catch (IOException ioe)
-        {
-            throw new RuntimeException("Error processing to zip",ioe);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Error processing to zip", ioe);
         }
     }
 
-    public static byte[] unzipData(byte[] input)
-    {
+    public static byte[] unzipData(byte[] input) {
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(input);
             GZIPInputStream gz = new GZIPInputStream(bais);
-            byte[] data =  toByteArray(gz);
+            byte[] data = toByteArray(gz);
             LOG.debug("Decompressed {} to {}", input.length, data.length);
             return data;
-        }
-        catch (IOException ioe)
-        {
-            throw new RuntimeException("Error processing from zip",ioe);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Error processing from zip", ioe);
         }
     }
 
@@ -128,8 +110,7 @@ public class ZipUtils {
         }
     }
 
-    public static byte[] toByteArray(InputStream is)
-    {
+    public static byte[] toByteArray(InputStream is) {
         Objects.requireNonNull(is, "Cannot pass a null input stream");
         try {
             BufferedInputStream bis = null;
@@ -145,10 +126,8 @@ public class ZipUtils {
                 read = bis.read();
             }
             return baos.toByteArray();
-        }
-        catch (IOException ioe)
-        {
-            throw new RuntimeException("Error processing input stream",ioe);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Error processing input stream", ioe);
         }
     }
 

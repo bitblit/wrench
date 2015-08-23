@@ -16,7 +16,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by chrweiss on 6/13/15.
@@ -26,8 +27,7 @@ public class TestHitMeasuringFilter {
 
     @Test
     public void testHitIncrementing()
-            throws Exception
-    {
+            throws Exception {
         HitMeasuringFilter filter = new HitMeasuringFilter();
         HttpServletRequest mockReq = createMock(HttpServletRequest.class);
         expect(mockReq.getRequestURI()).andReturn("/t1").anyTimes();
@@ -48,19 +48,18 @@ public class TestHitMeasuringFilter {
         filter.setReportingPattern(Pattern.compile("/report"));
 
         HitMeasuringEntry hme1 = new HitMeasuringEntry(Pattern.compile("/t1"), Collections.EMPTY_MAP, Collections.EMPTY_MAP);
-        HitMeasuringEntry hme2 =  new HitMeasuringEntry(Pattern.compile("/t2"), Collections.EMPTY_MAP, Collections.EMPTY_MAP);
+        HitMeasuringEntry hme2 = new HitMeasuringEntry(Pattern.compile("/t2"), Collections.EMPTY_MAP, Collections.EMPTY_MAP);
 
         filter.setTrackingList(Arrays.asList(hme1, hme2));
 
-        for (int i=0;i<3;i++)
-        {
+        for (int i = 0; i < 3; i++) {
             filter.doFilter(mockReq, mockResp, mockFilterChain);
         }
 
-        List<Map<String,Object>> report = filter.generateReport();
+        List<Map<String, Object>> report = filter.generateReport();
 
         //LOG.info("Report : \n{}", report);
-        Map<String,Object> vals = report.get(0);
+        Map<String, Object> vals = report.get(0);
         assertNotNull(vals);
         assertEquals(vals.get(HitMeasuringFilter.HIT_COUNT_REPORT_KEY), 3);
 

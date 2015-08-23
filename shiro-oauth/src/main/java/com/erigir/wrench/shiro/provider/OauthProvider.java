@@ -21,7 +21,7 @@ public interface OauthProvider {
      * Given the URL that should be returned to after the Oauth, generate the initial browser redirect url
      *
      * @param returnURL String containing the url to return to, post-oauth
-     * @param nonce String containing a random nonce to use
+     * @param nonce     String containing a random nonce to use
      * @return String containing the oauth server url to redirect to
      */
     String createEndpoint(String returnURL, String nonce);
@@ -30,7 +30,7 @@ public interface OauthProvider {
      * When the oauth server redirects back to your server, it will have some request parameter that holds
      * the token - this function extracts it and places it inside the oauth token object.
      *
-     * @param request ServletRequest to extract token string from
+     * @param request  ServletRequest to extract token string from
      * @param response ServletResponse (typically unused)
      * @return OauthToken containing the oauth token extracted
      */
@@ -39,7 +39,7 @@ public interface OauthProvider {
     /**
      * This function makes a secondary call to the server, exchanging the oauth token for an access token
      *
-     * @param token String token from the oauth server to validate
+     * @param token      String token from the oauth server to validate
      * @param serviceURL String containing the original url sent to the oauth server (often needed for validation)
      * @return OauthPrincipal containing the validation data (typically the access_token, if any)
      * @throws OauthException on validation failure

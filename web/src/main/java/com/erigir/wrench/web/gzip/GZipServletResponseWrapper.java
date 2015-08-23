@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 class GZipServletResponseWrapper extends HttpServletResponseWrapper {
 
     private GZipServletOutputStream gzipOutputStream = null;
-    private PrintWriter printWriter      = null;
+    private PrintWriter printWriter = null;
 
     public GZipServletResponseWrapper(HttpServletResponse response)
             throws IOException {
@@ -44,28 +44,28 @@ class GZipServletResponseWrapper extends HttpServletResponseWrapper {
     public void flushBuffer() throws IOException {
 
         //PrintWriter.flush() does not throw exception
-        if(this.printWriter != null) {
+        if (this.printWriter != null) {
             this.printWriter.flush();
         }
 
         IOException exception1 = null;
-        try{
-            if(this.gzipOutputStream != null) {
+        try {
+            if (this.gzipOutputStream != null) {
                 this.gzipOutputStream.flush();
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             exception1 = e;
         }
 
         IOException exception2 = null;
         try {
             super.flushBuffer();
-        } catch(IOException e){
+        } catch (IOException e) {
             exception2 = e;
         }
 
-        if(exception1 != null) throw exception1;
-        if(exception2 != null) throw exception2;
+        if (exception1 != null) throw exception1;
+        if (exception2 != null) throw exception2;
     }
 
     @Override
@@ -90,7 +90,7 @@ class GZipServletResponseWrapper extends HttpServletResponseWrapper {
         if (this.printWriter == null) {
             this.gzipOutputStream = new GZipServletOutputStream(
                     getResponse().getOutputStream());
-            this.printWriter      = new PrintWriter(new OutputStreamWriter(
+            this.printWriter = new PrintWriter(new OutputStreamWriter(
                     this.gzipOutputStream, getResponse().getCharacterEncoding()));
         }
         return this.printWriter;

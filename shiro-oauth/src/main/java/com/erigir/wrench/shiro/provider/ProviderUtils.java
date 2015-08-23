@@ -23,7 +23,7 @@ public class ProviderUtils {
     /**
      * Basically does an HTTP GET on a URL and parses the body as JSON if its a 200, throws exception otherwise
      *
-     * @param url String containing the url to request
+     * @param url          String containing the url to request
      * @param objectMapper an objectMapper to parse the returned JSON
      * @return Map containing the parsed json
      * @throws OauthException on io or other error
@@ -55,8 +55,8 @@ public class ProviderUtils {
      * Converts the body data into post format and does a post, parses the response as JSON.
      * If the order of the parameters matters to you, use a linked hash map
      *
-     * @param bodyData Map containing any fields you want in the body
-     * @param url String containing the url to request
+     * @param bodyData     Map containing any fields you want in the body
+     * @param url          String containing the url to request
      * @param objectMapper an objectMapper to parse the returned JSON
      * @return Map containing the parsed json
      * @throws OauthException on io or other error

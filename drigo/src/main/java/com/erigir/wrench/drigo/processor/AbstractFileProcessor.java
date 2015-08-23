@@ -25,9 +25,8 @@ import java.io.IOException;
  **/
 public abstract class AbstractFileProcessor implements FileProcessor {
 
-    public boolean process(File src, DrigoResults results)
-    {
-        log().info("Applying {} to {}" , getClass().getSimpleName() , src.getName());
+    public boolean process(File src, DrigoResults results) {
+        log().info("Applying {} to {}", getClass().getSimpleName(), src.getName());
 
         try {
             if (!src.exists() || !src.isFile()) {
@@ -68,8 +67,7 @@ public abstract class AbstractFileProcessor implements FileProcessor {
         }
     }
 
-    public Logger log()
-    {
+    public Logger log() {
         return LoggerFactory.getLogger(getClass());
     }
 

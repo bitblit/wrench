@@ -2,11 +2,14 @@
     max-width: 92rem;
     padding: 2rem;
     margin: 0 auto;
-    font-size: 1.4rem; }
+    font-size: 1.4rem;
+}
 
 #header .wrap {
-    padding: 0 2rem; }
+    padding: 0 2rem;
+}
 
 #footer {
     max-width: 96rem;
-    margin: 0 auto; }
+    margin: 0 auto;
+}

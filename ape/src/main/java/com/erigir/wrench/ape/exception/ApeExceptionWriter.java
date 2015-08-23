@@ -15,7 +15,9 @@ import org.springframework.web.util.NestedServletException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Basically making this a seperate class so I can use it in both the filter and the exception handler
@@ -51,7 +53,16 @@ public class ApeExceptionWriter {
             }
 
             resp.setStatus(sed.getHttpStatusCode());
-            objectMapper.writeValue(resp.getOutputStream(), new ApeResponse<ApeErrorData>(sed, sed.getHttpStatusCode()));
+            resp.setContentType("application/json");
+
+            // If gzip has already been set, use it
+            OutputStream os = resp.getOutputStream();
+            if ("gzip".equalsIgnoreCase(resp.getHeader("Content-Encoding")))
+            {
+                os = new GZIPOutputStream(os);
+            }
+
+            objectMapper.writeValue(os, new ApeResponse<ApeErrorData>(sed, sed.getHttpStatusCode()));
         } catch (Exception e) {
             LOG.error("Really bad!  Error when trying to write error", e);
         }

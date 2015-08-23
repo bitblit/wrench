@@ -13,7 +13,7 @@ import java.util.TreeMap;
  * Holds all the providers in the system, and adds some functionality to make them
  * easy to find by name.  It auto-registers the ones already in the package, but others can be added
  * easily enough by calling "add"
- *
+ * <p>
  * Created by chrweiss on 5/30/15.
  */
 public class ProviderRegistry {

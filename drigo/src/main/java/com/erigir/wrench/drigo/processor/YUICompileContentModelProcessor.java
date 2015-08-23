@@ -28,7 +28,7 @@ import java.io.IOException;
 public class YUICompileContentModelProcessor extends AbstractFileProcessor {
 
     @Override
-    public boolean innerProcess( File src, File dst, DrigoResults results)
+    public boolean innerProcess(File src, File dst, DrigoResults results)
             throws DrigoException, IOException {
         // Run the yahoo compiler
         CssCompressor css = new CssCompressor(new FileReader(src));

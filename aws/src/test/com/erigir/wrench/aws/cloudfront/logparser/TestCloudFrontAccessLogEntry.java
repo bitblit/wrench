@@ -1,9 +1,7 @@
 package com.erigir.wrench.aws.cloudfront.logparser;
 
 import com.erigir.wrench.aws.cloudfront.logparser.handler.ChainHandler;
-import com.erigir.wrench.aws.cloudfront.logparser.handler.DateFilter;
 import com.erigir.wrench.aws.cloudfront.logparser.handler.FieldCounter;
-import com.erigir.wrench.aws.cloudfront.logparser.handler.SimplePrintWriterHandler;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -12,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -27,19 +24,18 @@ public class TestCloudFrontAccessLogEntry {
     @Test
     @Ignore
     public void testFromLine()
-            throws Exception
-    {
+            throws Exception {
         CloudFrontAccessLogEntry entry = new CloudFrontAccessLogEntry(TEST_ACCESS_ENTRY_1);
 
         assertEquals(entry.field(CloudFrontAccessLogField.DATE), "2015-03-12");
-        assertEquals(entry.field(CloudFrontAccessLogField.TIME),"14:33:29");
+        assertEquals(entry.field(CloudFrontAccessLogField.TIME), "14:33:29");
         assertEquals(entry.field(CloudFrontAccessLogField.EDGE_LOCATION), "LAX3");
         assertEquals(entry.field(CloudFrontAccessLogField.SC_BYTES), "6096");
         assertEquals(entry.field(CloudFrontAccessLogField.IP), "1.2.3.4");
-        assertEquals(entry.field(CloudFrontAccessLogField.METHOD),"GET");
+        assertEquals(entry.field(CloudFrontAccessLogField.METHOD), "GET");
         assertEquals(entry.field(CloudFrontAccessLogField.CS_HOST), "dvx8hnr8jwtp3.cloudfront.net");
-        assertEquals(entry.field(CloudFrontAccessLogField.URI_STEM),"/index.html");
-        assertEquals(entry.field(CloudFrontAccessLogField.STATUS),"200");
+        assertEquals(entry.field(CloudFrontAccessLogField.URI_STEM), "/index.html");
+        assertEquals(entry.field(CloudFrontAccessLogField.STATUS), "200");
         assertEquals(entry.field(CloudFrontAccessLogField.REFERER), "https://test.com/");
         assertEquals(entry.field(CloudFrontAccessLogField.USER_AGENT), "Mozilla/5.0%2520(iPhone;%2520CPU%2520iPhone%2520OS%25208_1_3%2520like%2520Mac%2520OS%2520X)%2520AppleWebKit/600.1.4%2520(KHTML,%2520like%2520Gecko)%2520Version/8.0%2520Mobile/12B466%2520Safari/600.1.4");
         assertEquals(entry.field(CloudFrontAccessLogField.URI_QUERY), "-");
@@ -50,15 +46,14 @@ public class TestCloudFrontAccessLogEntry {
         assertEquals(entry.field(CloudFrontAccessLogField.HOST_HEADER), "test.com");
         assertEquals(entry.field(CloudFrontAccessLogField.PROTOCOL), "https");
         assertEquals(entry.field(CloudFrontAccessLogField.CS_BYTES), "351");
-        assertEquals(entry.field(CloudFrontAccessLogField.TIME_TAKEN),"0.313");
+        assertEquals(entry.field(CloudFrontAccessLogField.TIME_TAKEN), "0.313");
 
 
     }
 
     @Test
     public void deleteMe()
-            throws Exception
-    {
+            throws Exception {
         ChainHandler handler = new ChainHandler();
         //handler.addHandler(new RawRegexFilter("."));
 
@@ -73,13 +68,11 @@ public class TestCloudFrontAccessLogEntry {
 
         PrintWriter pw = new PrintWriter(new FileWriter("test.txt"));
 
-        for (Map.Entry<String,Integer> e:fc.getCounts().entrySet())
-        {
-            pw.println(e.getKey()+" = "+e.getValue()+"\n");
+        for (Map.Entry<String, Integer> e : fc.getCounts().entrySet()) {
+            pw.println(e.getKey() + " = " + e.getValue() + "\n");
         }
 
         pw.close();
-
 
 
         //new FileWriter("test.txt").write("Counts: \n\n"+fc.getCounts().toString());

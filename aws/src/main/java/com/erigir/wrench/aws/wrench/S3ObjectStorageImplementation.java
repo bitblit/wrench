@@ -1,11 +1,7 @@
 package com.erigir.wrench.aws.wrench;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*;
 import com.erigir.wrench.sos.ObjectStorageImplementation;
 import com.erigir.wrench.sos.StoredObjectMetadata;
 import org.apache.commons.codec.binary.Base64;
@@ -33,7 +29,7 @@ public class S3ObjectStorageImplementation implements ObjectStorageImplementatio
 
     @Override
     public String toFullKey(Class clazz, String key) {
-        return StringUtils.trimToEmpty(prefix)+clazz.getName() + "/" + key;
+        return StringUtils.trimToEmpty(prefix) + clazz.getName() + "/" + key;
     }
 
     @Override
@@ -64,7 +60,7 @@ public class S3ObjectStorageImplementation implements ObjectStorageImplementatio
         LOG.info("Fetching all data for class {}", type);
         Long start = System.currentTimeMillis();
 
-        String fullPrefix = StringUtils.trimToEmpty(prefix)+type.getName();
+        String fullPrefix = StringUtils.trimToEmpty(prefix) + type.getName();
         int prefixLength = fullPrefix.length() + 1;
 
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest().
@@ -85,7 +81,7 @@ public class S3ObjectStorageImplementation implements ObjectStorageImplementatio
             }
         }
 
-        LOG.info("Fetched {} summaries in {} ms", rval.size(), System.currentTimeMillis()-start);
+        LOG.info("Fetched {} summaries in {} ms", rval.size(), System.currentTimeMillis() - start);
 
         return rval;
     }

@@ -97,13 +97,10 @@ public class Drigo {
             }
 
             LOG.info("Running simpleIncludes");
-            if (configuration.getProcessIncludes() !=null)
-            {
-                for (ProcessIncludes pi:configuration.getProcessIncludes())
-                {
+            if (configuration.getProcessIncludes() != null) {
+                for (ProcessIncludes pi : configuration.getProcessIncludes()) {
                     DrigoSimpleIncludesProcessor dsi = new DrigoSimpleIncludesProcessor(pi.getPrefix(), pi.getSuffix());
-                    for (File f:findMatchingFiles(dst, Pattern.compile(pi.getIncludeRegex())))
-                    {
+                    for (File f : findMatchingFiles(dst, Pattern.compile(pi.getIncludeRegex()))) {
                         dsi.process(f, rval);
                     }
                 }
@@ -163,20 +160,17 @@ public class Drigo {
             }
 
             LOG.info("Checking GZIP compression");
-            if (configuration.getFileCompressionIncludeRegex() != null ) {
+            if (configuration.getFileCompressionIncludeRegex() != null) {
                 GZipFileProcessor gzfp = new GZipFileProcessor();
                 applyProcessorToFileList(findMatchingFiles(dst, configuration.getFileCompressionIncludeRegex()), gzfp, rval);
                 LOG.info("GZIP compression saved " + GZipFileProcessor.totalSaved + " bytes in total");
             }
 
             LOG.info("Applying add metadata");
-            if (configuration.getAddMetadata()!=null)
-            {
-                for (AddMetadata a :configuration.getAddMetadata())
-                {
+            if (configuration.getAddMetadata() != null) {
+                for (AddMetadata a : configuration.getAddMetadata()) {
                     List<File> l = findMatchingFiles(dst, a.getIncludeRegexPattern());
-                    for (File f:l)
-                    {
+                    for (File f : l) {
                         rval.addMetadata(f, a.getName(), a.getValue());
                     }
 

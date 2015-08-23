@@ -2,13 +2,12 @@
  Library for the playground page
  **/
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     // Do something here
 });
 
 
-function test2()
-{
+function test2() {
     alert("You called test 2");
 }

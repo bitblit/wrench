@@ -61,13 +61,11 @@ public class DrigoResults {
         this.endTime = endTime;
     }
 
-    public long getElapsedTime()
-    {
-        return (endTime>0)?(endTime-startTime):System.currentTimeMillis() - startTime;
+    public long getElapsedTime() {
+        return (endTime > 0) ? (endTime - startTime) : System.currentTimeMillis() - startTime;
     }
 
-    public String toString()
-    {
-        return "[DrigoResults: "+metadata+" in "+getElapsedTime()+" ms]";
+    public String toString() {
+        return "[DrigoResults: " + metadata + " in " + getElapsedTime() + " ms]";
     }
 }

@@ -7,7 +7,6 @@ import javax.servlet.ServletOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by cweiss on 7/29/15.

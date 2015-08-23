@@ -1,11 +1,13 @@
 html {
     -webkit-text-size-adjust: none;
-    /* Prevent font scaling in landscape */ }
+    /* Prevent font scaling in landscape */
+}
 
 html, body {
     margin: 0;
     padding: 0;
     font-size: 62.5%;
-    font-family: "Avenir-Roman", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    font-family: "Avenir-Roman", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 
 

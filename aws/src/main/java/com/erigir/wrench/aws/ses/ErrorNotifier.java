@@ -1,12 +1,7 @@
 package com.erigir.wrench.aws.ses;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.model.Body;
-import com.amazonaws.services.simpleemail.model.Content;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
-import com.amazonaws.services.simpleemail.model.SendEmailResult;
+import com.amazonaws.services.simpleemail.model.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -14,11 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -51,7 +42,7 @@ public class ErrorNotifier {
         for (String key : Collections.list(req.getAttributeNames())) {
             Object val = req.getAttribute(key);
             if (val != null) {
-                Object outVal = (Throwable.class.isAssignableFrom(val.getClass())) ? ExceptionUtils.getStackTrace((Throwable)val) : val;
+                Object outVal = (Throwable.class.isAssignableFrom(val.getClass())) ? ExceptionUtils.getStackTrace((Throwable) val) : val;
                 reqAttr.put(key, outVal);
             }
         }

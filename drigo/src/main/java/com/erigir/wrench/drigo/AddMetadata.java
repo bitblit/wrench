@@ -67,9 +67,8 @@ public class AddMetadata {
         this.value = value;
     }
 
-    public Pattern getIncludeRegexPattern()
-    {
-        return (includeRegex==null)?null:Pattern.compile(includeRegex);
+    public Pattern getIncludeRegexPattern() {
+        return (includeRegex == null) ? null : Pattern.compile(includeRegex);
     }
 
 }

@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 class SimpleIncludesServletResponseWrapper extends HttpServletResponseWrapper {
 
     private SimpleIncludesServletOutputStream simpleIncludesServletOutputStream = null;
-    private PrintWriter printWriter      = null;
+    private PrintWriter printWriter = null;
     private SimpleIncludesProcessor simpleIncludesProcessor;
 
     public SimpleIncludesServletResponseWrapper(HttpServletResponse response, SimpleIncludesProcessor processor)
@@ -48,28 +48,28 @@ class SimpleIncludesServletResponseWrapper extends HttpServletResponseWrapper {
     public void flushBuffer() throws IOException {
 
         //PrintWriter.flush() does not throw exception
-        if(this.printWriter != null) {
+        if (this.printWriter != null) {
             this.printWriter.flush();
         }
 
         IOException exception1 = null;
-        try{
-            if(this.simpleIncludesServletOutputStream != null) {
+        try {
+            if (this.simpleIncludesServletOutputStream != null) {
                 this.simpleIncludesServletOutputStream.flush();
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             exception1 = e;
         }
 
         IOException exception2 = null;
         try {
             super.flushBuffer();
-        } catch(IOException e){
+        } catch (IOException e) {
             exception2 = e;
         }
 
-        if(exception1 != null) throw exception1;
-        if(exception2 != null) throw exception2;
+        if (exception1 != null) throw exception1;
+        if (exception2 != null) throw exception2;
     }
 
     @Override
@@ -80,7 +80,7 @@ class SimpleIncludesServletResponseWrapper extends HttpServletResponseWrapper {
         }
         if (this.simpleIncludesServletOutputStream == null) {
             this.simpleIncludesServletOutputStream = new SimpleIncludesServletOutputStream(
-                    getResponse().getOutputStream(),simpleIncludesProcessor);
+                    getResponse().getOutputStream(), simpleIncludesProcessor);
         }
         return this.simpleIncludesServletOutputStream;
     }
@@ -93,8 +93,8 @@ class SimpleIncludesServletResponseWrapper extends HttpServletResponseWrapper {
         }
         if (this.printWriter == null) {
             this.simpleIncludesServletOutputStream = new SimpleIncludesServletOutputStream(
-                    getResponse().getOutputStream(),simpleIncludesProcessor);
-            this.printWriter      = new PrintWriter(new OutputStreamWriter(
+                    getResponse().getOutputStream(), simpleIncludesProcessor);
+            this.printWriter = new PrintWriter(new OutputStreamWriter(
                     this.simpleIncludesServletOutputStream, getResponse().getCharacterEncoding()));
         }
         return this.printWriter;

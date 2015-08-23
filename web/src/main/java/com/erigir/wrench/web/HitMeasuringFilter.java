@@ -5,50 +5,39 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 /**
  * This filter keeps track of how many times a url has been hit, and when it was hit last.
- *
+ * <p>
  * A list of urls to track is maintained and checked, updated on a per request basis.  You
  * may also set a 'reportingPattern', which is a URL which if accessed will dump the current
  * contents of the system.
- * 
+ * <p>
  * If you are going to use this filter you'll need to add the following dependency:
-          &lt;dependency&gt;
- &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
- &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
- &lt;version&gt;${jackson.version}&lt;/version&gt;
- &lt;/dependency&gt;
-
- *
+ * &lt;dependency&gt;
+ * &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+ * &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
+ * &lt;version&gt;${jackson.version}&lt;/version&gt;
+ * &lt;/dependency&gt;
+ * <p>
+ * <p>
  * Created by chrweiss on 3/13/2015.
  */
 public class HitMeasuringFilter implements Filter {
     private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringFilter.class);
 
-    public static final String DEFINITION_REPORT_KEY="definition";
+    public static final String DEFINITION_REPORT_KEY = "definition";
 
-    public static final String LAST_HIT_DATE_REPORT_KEY="last-hit-date";
-    public static final String HIT_COUNT_REPORT_KEY="hit-count";
+    public static final String LAST_HIT_DATE_REPORT_KEY = "last-hit-date";
+    public static final String HIT_COUNT_REPORT_KEY = "hit-count";
 
     private List<HitMeasuringEntry> trackingList = new LinkedList<>();
 
@@ -60,10 +49,9 @@ public class HitMeasuringFilter implements Filter {
 
     private ObjectMapper objectMapper = buildDefaultObjectMapper();
 
-    private ObjectMapper buildDefaultObjectMapper()
-    {
+    private ObjectMapper buildDefaultObjectMapper() {
         ObjectMapper rval = new ObjectMapper();
-        rval.configure(SerializationFeature.INDENT_OUTPUT,true);
+        rval.configure(SerializationFeature.INDENT_OUTPUT, true);
         return rval;
     }
 
@@ -74,27 +62,22 @@ public class HitMeasuringFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest req = (HttpServletRequest)servletRequest;
+        HttpServletRequest req = (HttpServletRequest) servletRequest;
 
-        for (HitMeasuringEntry h:trackingList)
-        {
-            if (h.matches(req))
-            {
+        for (HitMeasuringEntry h : trackingList) {
+            if (h.matches(req)) {
                 lastHit.put(h, new Date());
                 AtomicInteger a = hitCount.get(h);
-                a = (a==null)?new AtomicInteger(0):a;
+                a = (a == null) ? new AtomicInteger(0) : a;
                 a.incrementAndGet();
-                hitCount.put(h,a);
+                hitCount.put(h, a);
             }
         }
 
-        if (reportingPattern!=null  && reportingPattern.matcher(req.getRequestURI()).matches())
-        {
-            doReport((HttpServletResponse)servletResponse);
-        }
-        else
-        {
-            filterChain.doFilter(servletRequest,servletResponse);
+        if (reportingPattern != null && reportingPattern.matcher(req.getRequestURI()).matches()) {
+            doReport((HttpServletResponse) servletResponse);
+        } else {
+            filterChain.doFilter(servletRequest, servletResponse);
         }
 
     }
@@ -105,29 +88,24 @@ public class HitMeasuringFilter implements Filter {
     }
 
     public void doReport(HttpServletResponse resp)
-            throws IOException
-    {
+            throws IOException {
         resp.setContentType("application/json");
         String out = objectMapper.writeValueAsString(generateReport());
         resp.setContentLength(out.length());
         resp.getWriter().print(out);
     }
 
-    public List<Map<String,Object>> generateReport()
-    {
-        List<Map<String,Object>> rval = new LinkedList<>();
+    public List<Map<String, Object>> generateReport() {
+        List<Map<String, Object>> rval = new LinkedList<>();
 
-        for (HitMeasuringEntry h:trackingList)
-        {
-            Map<String,Object> next = new TreeMap<>();
-            next.put(DEFINITION_REPORT_KEY,h.toReportMap());
-            if (lastHit.get(h)!=null)
-            {
-                next.put(LAST_HIT_DATE_REPORT_KEY,lastHit.get(h));
+        for (HitMeasuringEntry h : trackingList) {
+            Map<String, Object> next = new TreeMap<>();
+            next.put(DEFINITION_REPORT_KEY, h.toReportMap());
+            if (lastHit.get(h) != null) {
+                next.put(LAST_HIT_DATE_REPORT_KEY, lastHit.get(h));
             }
-            if (hitCount.get(h)!=null)
-            {
-                next.put(HIT_COUNT_REPORT_KEY,hitCount.get(h).get());
+            if (hitCount.get(h) != null) {
+                next.put(HIT_COUNT_REPORT_KEY, hitCount.get(h).get());
             }
             rval.add(next);
         }
@@ -138,8 +116,7 @@ public class HitMeasuringFilter implements Filter {
 
     public void setTrackingList(List<HitMeasuringEntry> trackingList) {
         this.trackingList = trackingList;
-        if (trackingList==null)
-        {
+        if (trackingList == null) {
             this.trackingList = Collections.EMPTY_LIST;
         }
     }
