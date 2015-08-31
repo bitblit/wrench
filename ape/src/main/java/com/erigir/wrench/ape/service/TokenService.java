@@ -4,14 +4,13 @@ import com.erigir.wrench.QuietObjectMapper;
 import com.erigir.wrench.ZipUtils;
 import com.erigir.wrench.ape.exception.InvalidTokenException;
 import com.erigir.wrench.ape.model.CustomerToken;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
+import org.apache.commons.codec.binary.Base32;
+
 import java.util.Map;
 import java.util.Objects;
-import java.util.TreeMap;
 
 /**
  * Created by cweiss on 7/18/15.
@@ -19,6 +18,7 @@ import java.util.TreeMap;
 public class TokenService {
     private String encryptionKey;
     private QuietObjectMapper objectMapper;
+    private Base32 base32 = new Base32();
     private static final String CIPHER = "AES";
 
     public String createToken(String keyValue, Long expires, Map<String,Object> otherData)
@@ -36,7 +36,7 @@ public class TokenService {
             Cipher nCipher = Cipher.getInstance(CIPHER);
             nCipher.init(Cipher.ENCRYPT_MODE, keySpec);
 
-            return new String(Base64.getEncoder().encode(nCipher.doFinal(compressed)));
+            return base32.encodeAsString(nCipher.doFinal(compressed));
         } catch (Exception e) {
             throw new IllegalStateException("Shouldnt happen, error on encode: (key size was " + encryptionKey.length() + " and msg size was " + raw.length() + ") " + e, e);
         }
@@ -58,7 +58,7 @@ public class TokenService {
         byte[] zippedData;
         try
         {
-            byte[] encryptedText = Base64.getDecoder().decode(token.getBytes());
+            byte[] encryptedText = base32.decode(token.getBytes());
             SecretKeySpec keySpec = new SecretKeySpec(encryptionKey.getBytes(), CIPHER);
             Cipher nCipher = Cipher.getInstance(CIPHER);
             nCipher.init(Cipher.DECRYPT_MODE, keySpec);

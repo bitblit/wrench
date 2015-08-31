@@ -4,12 +4,7 @@ import com.erigir.wrench.ZipUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.Class;import java.lang.Exception;import java.lang.IllegalArgumentException;import java.lang.IllegalStateException;import java.lang.Override;import java.lang.String;import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
@@ -36,13 +31,12 @@ public class FileObjectStorageImplementation implements ObjectStorageImplementat
     }
 
     @Override
-    public void storeBytes(String fullKey, byte[] zipped) {
+    public void storeBytes(String fullKey, InputStream zipped) {
         if (zipped != null && fullKey != null) {
             try {
-                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(fullKey));
-                bos.write(zipped);
-                bos.flush();
-                bos.close();
+                FileOutputStream fos = new FileOutputStream(fullKey);
+                SimpleObjectStorageService.copyStream(zipped, fos);
+                fos.close();
             } catch (Exception e) {
                 throw new IllegalArgumentException("Error storing object", e);
             }
@@ -89,12 +83,12 @@ public class FileObjectStorageImplementation implements ObjectStorageImplementat
     }
 
     @Override
-    public byte[] readBytes(String fullKey)
+    public InputStream readBytes(String fullKey)
             throws IOException {
-        byte[] rval = null;
+        InputStream rval = null;
         if (fullKey != null) {
             try {
-                rval = ZipUtils.toByteArray(new FileInputStream(fullKey));
+                rval = new BufferedInputStream(new FileInputStream(fullKey));
             }
             catch (FileNotFoundException fnf)
             {

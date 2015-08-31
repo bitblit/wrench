@@ -18,7 +18,7 @@ import java.util.TreeMap;
         detailObjectPropertyName = "errorMap"
 )
 public class DataValidationException extends RuntimeException {
-    private Map<String, String> errorMap;
+    private Map<String, String> errorMap = new TreeMap<>();
 
     public DataValidationException(BindingResult errors) {
         super();
@@ -39,6 +39,12 @@ public class DataValidationException extends RuntimeException {
 
         return rval;
     }
+
+    public void addError(String name, String value)
+    {
+        this.errorMap.put(name, value);
+    }
+
 
     public Map<String, String> getErrorMap() {
         return errorMap;

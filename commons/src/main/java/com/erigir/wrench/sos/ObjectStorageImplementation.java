@@ -1,5 +1,6 @@
 package com.erigir.wrench.sos;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +15,10 @@ public interface ObjectStorageImplementation {
 
     String toFullKey(Class clazz, String key);
 
-    void storeBytes(String fullKey, byte[] bytes)
+    void storeBytes(String fullKey, InputStream bytes)
             throws Exception;
 
-    byte[] readBytes(String fullKey)
+    InputStream readBytes(String fullKey)
             throws Exception;
 
     <T> Map<String, StoredObjectMetadata> listObjects(Class<T> type);

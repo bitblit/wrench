@@ -1,6 +1,7 @@
 package com.erigir.wrench.ape.http;
 
 import com.erigir.wrench.ape.exception.ApeExceptionWriter;
+import com.erigir.wrench.ape.exception.DataValidationException;
 import com.erigir.wrench.ape.exception.NoSuchResourceException;
 import com.erigir.wrench.ape.http.ApeErrorHandlerControl;
 import com.erigir.wrench.aws.sns.ServerErrorNotifier;
@@ -15,6 +16,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -35,10 +37,21 @@ public class ApeErrorHandlerControl {
     errorHandler(HttpServletRequest req, HttpServletResponse resp)
     {
         Exception main = (Exception) req.getAttribute("javax.servlet.error.exception");
+        int currentStatus = resp.getStatus();
         if (main==null)
         {
-            LOG.warn("Someone requested the error handler directly.  Faking a 404");
-            main = new NoSuchResourceException();
+            if (currentStatus==400)
+            {
+                // This is typically caused by Spring not being able to parse the supplied
+                // body into the needed object.  Fake that instead
+                LOG.warn("No exception and status 400 - treating as spring parse error");
+                main = new DataValidationException(Collections.singletonMap("request-body","bad or mismatched json"));
+            }
+            else
+            {
+                LOG.warn("Someone requested the error handler directly.  Faking a 404");
+                main = new NoSuchResourceException();
+            }
         }
 
         try {

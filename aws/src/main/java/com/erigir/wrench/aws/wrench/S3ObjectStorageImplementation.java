@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -33,7 +34,7 @@ public class S3ObjectStorageImplementation implements ObjectStorageImplementatio
     }
 
     @Override
-    public void storeBytes(String fullPath, byte[] zipped) {
+    public void storeBytes(String fullPath, InputStream zipped) {
         if (zipped != null && fullPath != null) {
             try {
 
@@ -41,14 +42,14 @@ public class S3ObjectStorageImplementation implements ObjectStorageImplementatio
                 //userMeta.put("className", clazz.getName());
 
                 ObjectMetadata omd = new ObjectMetadata();
-                omd.setContentLength(zipped.length);
+                //omd.setContentLength(zipped.length);
                 omd.setContentType("application/x-zip-json");
                 omd.setContentMD5(new String(Base64.encodeBase64(DigestUtils.md5(zipped))));
                 omd.setUserMetadata(userMeta);
 
                 LOG.info("Storing object to :{}", new Object[]{fullPath});
 
-                s3.putObject(bucketName, fullPath, new ByteArrayInputStream(zipped), omd);
+                s3.putObject(bucketName, fullPath, zipped, omd);
             } catch (Exception e) {
                 throw new IllegalArgumentException("Error storing object", e);
             }
@@ -98,14 +99,14 @@ public class S3ObjectStorageImplementation implements ObjectStorageImplementatio
     }
 
     @Override
-    public byte[] readBytes(String fullPath) {
-        byte[] rval = null;
+    public InputStream readBytes(String fullPath) {
+        InputStream rval = null;
         if (fullPath != null) {
             try {
                 LOG.info("Attempting to load : {}", fullPath);
                 S3Object o = s3.getObject(bucketName, fullPath);
                 if (o != null) {
-                    rval = IOUtils.toByteArray(o.getObjectContent());
+                    rval = o.getObjectContent();
                 }
             } catch (Exception e) {
                 LOG.warn("Error loading object", e);
