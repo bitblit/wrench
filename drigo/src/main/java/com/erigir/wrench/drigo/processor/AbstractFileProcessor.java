@@ -52,9 +52,16 @@ public abstract class AbstractFileProcessor implements FileProcessor {
         }
     }
 
+    /**
+     * Return false if the file was modified
+     * @param src
+     * @param dst
+     * @param results
+     * @return
+     * @throws IOException
+     */
     public abstract boolean innerProcess(File src, File dst, DrigoResults results)
             throws IOException;
-
 
     public void logDeltaIfExists(File src, File dst)
             throws IOException {

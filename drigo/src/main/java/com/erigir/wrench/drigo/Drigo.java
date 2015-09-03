@@ -106,6 +106,15 @@ public class Drigo {
                 }
             }
 
+            LOG.info("Running replacement");
+            if (configuration.getProcessReplace() != null) {
+                ProcessReplace pr = configuration.getProcessReplace();
+                DrigoReplaceProcessor drp = new DrigoReplaceProcessor(pr.getPrefix(),pr.getSuffix(),pr.getReplace());
+                for (File f : findMatchingFiles(dst, Pattern.compile(pr.getIncludeRegex()))) {
+                    drp.process(f, rval);
+                }
+            }
+
             // Now, do any batching
             LOG.info("Doing HTML resource batching");
             if (configuration.getHtmlResourceBatching() != null) {
@@ -159,6 +168,12 @@ public class Drigo {
                 }
             }
 
+            LOG.info("Checking HTML compression");
+            if (configuration.getHtmlCompression() != null) {
+                HtmlCompressionProcessor hfp = new HtmlCompressionProcessor();
+                applyProcessorToFileList(findMatchingFiles(dst, configuration.getHtmlCompression()), hfp, rval);
+            }
+
             LOG.info("Checking GZIP compression");
             if (configuration.getFileCompressionIncludeRegex() != null) {
                 GZipFileProcessor gzfp = new GZipFileProcessor();
@@ -175,6 +190,12 @@ public class Drigo {
                     }
 
                 }
+            }
+
+            LOG.info("Generation MD5 Signatures");
+            if (configuration.getMd5GenerationIncludeRegex() != null) {
+                MD5GeneratingFileProcessor md5fp = new MD5GeneratingFileProcessor();
+                applyProcessorToFileList(findMatchingFiles(dst, configuration.getMd5GenerationIncludeRegex()), md5fp, rval);
             }
 
 

@@ -47,11 +47,14 @@ public class DrigoConfiguration {
     private Pattern fileCompressionIncludeRegex;
     private Pattern cssCompilationIncludeRegex;
     private Pattern babelCompilationIncludeRegex;
+    private Pattern md5GenerationIncludeRegex;
     private JavascriptCompilation javascriptCompilation;
     private List<ValidationSetting> validation;
     private List<RenameMapping> renameMappings;
     private List<Exclusion> exclusions;
     private List<ProcessIncludes> processIncludes;
+    private ProcessReplace processReplace;
+    private Pattern htmlCompression;
 
     public List<ProcessIncludes> getProcessIncludes() {
         return processIncludes;
@@ -155,5 +158,29 @@ public class DrigoConfiguration {
 
     public void setBabelCompilationIncludeRegex(Pattern babelCompilationIncludeRegex) {
         this.babelCompilationIncludeRegex = babelCompilationIncludeRegex;
+    }
+
+    public Pattern getMd5GenerationIncludeRegex() {
+        return md5GenerationIncludeRegex;
+    }
+
+    public void setMd5GenerationIncludeRegex(Pattern md5GenerationIncludeRegex) {
+        this.md5GenerationIncludeRegex = md5GenerationIncludeRegex;
+    }
+
+    public ProcessReplace getProcessReplace() {
+        return processReplace;
+    }
+
+    public void setProcessReplace(ProcessReplace processReplace) {
+        this.processReplace = processReplace;
+    }
+
+    public Pattern getHtmlCompression() {
+        return htmlCompression;
+    }
+
+    public void setHtmlCompression(Pattern htmlCompression) {
+        this.htmlCompression = htmlCompression;
     }
 }

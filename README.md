@@ -13,6 +13,15 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 
 # Release Notes
 
+## Version 1.002
+Backwards compatible feature release
+* Added new implementation for SimpleIncludesProcessor that maps patterns to strings (match the right, replace with the
+left)
+* Added replacer based on that implementation into Drigo (DrigoReplaceProcessor)
+* Added MD5 handling to Drigo
+* Added HTML compression to Drigo
+
+
 ## Version 1.001
 NON-Backwards compatible feature release
 -- Only not-backwards compatible if you created ObjectStorageImplementations for SOS - everything else is backwards 
