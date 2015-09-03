@@ -4,14 +4,14 @@
     <parent>
         <artifactId>wrench</artifactId>
         <groupId>com.erigir</groupId>
-        <version>1.002-SNAPSHOT</version>
+        <version>1.002</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-ape</artifactId>
     <packaging>jar</packaging>
     <name>Wrench Ape - Simplifies API Construction</name>
-    <version>1.002-SNAPSHOT</version>
+    <version>1.002</version>
     <description>Wrench APE</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
@@ -39,17 +39,17 @@
         <dependency>
             <groupId>com.erigir</groupId>
             <artifactId>wrench-commons</artifactId>
-            <version>1.002-SNAPSHOT</version>
+            <version>1.002</version>
         </dependency>
         <dependency>
             <groupId>com.erigir</groupId>
             <artifactId>wrench-aws</artifactId>
-            <version>1.002-SNAPSHOT</version>
+            <version>1.002</version>
         </dependency>
         <dependency>
             <groupId>com.erigir</groupId>
             <artifactId>wrench-web</artifactId>
-            <version>1.002-SNAPSHOT</version>
+            <version>1.002</version>
         </dependency>
 
         <dependency>
