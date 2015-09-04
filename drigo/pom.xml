@@ -5,11 +5,11 @@
     <parent>
         <artifactId>wrench</artifactId>
         <groupId>com.erigir</groupId>
-        <version>1.003</version>
+        <version>1.004-SNAPSHOT</version>
     </parent>
 
     <artifactId>wrench-drigo</artifactId>
-    <version>1.003</version>
+    <version>1.004-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Drigo</name>
@@ -157,7 +157,7 @@
         <dependency>
             <groupId>com.erigir</groupId>
             <artifactId>wrench-commons</artifactId>
-            <version>1.003</version>
+            <version>1.004-SNAPSHOT</version>
         </dependency>
 
         <dependency>
