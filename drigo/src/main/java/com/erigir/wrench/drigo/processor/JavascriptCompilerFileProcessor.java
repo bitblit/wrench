@@ -45,7 +45,7 @@ public class JavascriptCompilerFileProcessor extends AbstractFileProcessor {
 
     public boolean innerProcess(File src, File dst, DrigoResults results) throws DrigoException, IOException {
         CompilationLevel level = fromMode();
-        LOG.debug("ClosureCompile at level {} on :{}", level, src);
+        LOG.trace("ClosureCompile at level {} on :{}", level, src);
         String out = compile(level, getDefaultExterns(), Arrays.asList(SourceFile.fromFile(src)));
         IOUtils.write(out, new FileOutputStream(dst));
         return true;

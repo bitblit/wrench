@@ -34,7 +34,7 @@ public class MD5GeneratingFileProcessor extends AbstractFileProcessor {
         byte[] md5 = DigestUtils.md5(new FileInputStream(src));
         String md5Hex = Hex.encodeHexString(md5);
         String md5Base64 = Base64.getEncoder().encodeToString(md5);
-        LOG.debug("For file {}, md5hex: {} base64:{}", src, md5Hex, md5Base64);
+        LOG.trace("For file {}, md5hex: {} base64:{}", src, md5Hex, md5Base64);
         results.addMetadata(src, "md5-hex", md5Hex);
         results.addMetadata(src, "md5-base64", md5Base64);
 

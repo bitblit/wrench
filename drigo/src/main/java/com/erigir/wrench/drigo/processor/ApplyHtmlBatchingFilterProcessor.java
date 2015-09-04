@@ -43,7 +43,7 @@ public class ApplyHtmlBatchingFilterProcessor extends AbstractFileProcessor {
         String startTag = "<!--" + batching.getFlagName() + "-->";
         String endTag = "<!--END:" + batching.getFlagName() + "-->";
 
-        LOG.info("Searching " + src.getName() + " for " + startTag + " to " + endTag);
+        LOG.trace("Searching {} for {} to {}" , src.getName() , startTag , endTag);
         int startIdx = contents.indexOf(startTag);
 
         int count = 0;
@@ -61,7 +61,7 @@ public class ApplyHtmlBatchingFilterProcessor extends AbstractFileProcessor {
         IOUtils.write(contents, os);
         IOUtils.closeQuietly(os);
 
-        LOG.info("Found " + count + " instances");
+        LOG.trace("Found {} instances",count);
 
         return true;
     }

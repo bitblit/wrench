@@ -69,6 +69,7 @@ public class Drigo {
 
             // We start out by copying all of the files that arent excluded
             // Copy all files over
+            LOG.info("Making precopies of target folders");
             FileProcessorUtils.copyFolder(src, dst, configuration.getExclusions());
 
             LOG.info("Checking rename mappings");
@@ -124,7 +125,7 @@ public class Drigo {
 
                     if (matching.size() > 0) {
                         File toOutput = new File(dst, h.getOutputFileName());
-                        LOG.info("Creating output file : " + toOutput);
+                        LOG.trace("Creating output file : " + toOutput);
                         h.combine(matching, toOutput);
 
                         List<File> htmlToFilter = new LinkedList<>();
@@ -132,7 +133,7 @@ public class Drigo {
                             ApplyHtmlBatchingFilterProcessor ap = new ApplyHtmlBatchingFilterProcessor(h);
                             applyProcessorToFileList(findMatchingFiles(dst, Pattern.compile(h.getReplaceInHtmlRegex())), ap, rval);
                         } else {
-                            LOG.info("Not performing html replacement");
+                            LOG.trace("Not performing html replacement");
                         }
                     } else {
                         LOG.info("HTMLBatcher didn't find any files matching : " + h.getIncludeRegex() + ", skipping");
@@ -172,6 +173,7 @@ public class Drigo {
             if (configuration.getHtmlCompression() != null) {
                 HtmlCompressionProcessor hfp = new HtmlCompressionProcessor();
                 applyProcessorToFileList(findMatchingFiles(dst, configuration.getHtmlCompression()), hfp, rval);
+                LOG.info("HTML Compression saved "+HtmlCompressionProcessor.totalSaved+" bytes in total");
             }
 
             LOG.info("Checking GZIP compression");
@@ -212,7 +214,7 @@ public class Drigo {
         assert (src != null && processor != null);
 
         for (File f : src) {
-            LOG.info("Applying {} to {}", processor.getClass().getName(), src);
+            LOG.trace("Applying {} to {}", processor.getClass().getName(), src);
             processor.process(f, results);
             String current = results.fetchMetadata(f, DrigoResults.APPLIED_KEY);
             current = (current == null) ? processor.getClass().getSimpleName() : current + " " + processor.getClass().getSimpleName();
@@ -223,7 +225,7 @@ public class Drigo {
     public List<File> findMatchingFiles(File src, Pattern pattern) {
         List<File> rval = new LinkedList<>();
         findMatchingFiles(src, pattern, rval);
-        LOG.info("Found " + rval.size() + " files matching pattern " + pattern + " : " + rval);
+        LOG.debug("Found {} files matching pattern {}", rval.size(), pattern);
         return rval;
     }
 

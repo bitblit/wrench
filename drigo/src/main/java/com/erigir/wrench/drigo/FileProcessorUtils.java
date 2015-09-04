@@ -31,14 +31,14 @@ public class FileProcessorUtils {
         try {
 
             if (Exclusion.excluded(exclusionList, src)) {
-                LOG.info("Skipping {} - it is on the exclusion list", src);
+                LOG.trace("Skipping {} - it is on the exclusion list", src);
             } else {
                 if (src.isDirectory()) {
 
                     //if directory not exists, create it
                     if (!dest.exists()) {
                         dest.mkdir();
-                        LOG.info("Directory copied from {} to {}", src, dest);
+                        LOG.trace("Directory copied from {} to {}", src, dest);
                     }
 
                     //list all the directory contents
@@ -79,7 +79,7 @@ public class FileProcessorUtils {
         Pattern p = Pattern.compile(regex);
         boolean rval = (p.matcher(f.getAbsolutePath()).matches());
 
-        LOG.debug("Tested {} against {} returning {}", f.getName(), regex, rval);
+        LOG.trace("Tested {} against {} returning {}", f.getName(), regex, rval);
         return rval;
     }
 

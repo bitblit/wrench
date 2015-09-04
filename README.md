@@ -13,6 +13,10 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 
 # Release Notes
 
+## Version 1.003
+Backwards compatible feature release
+* Drigo's logging was pretty over the top - moved a lot of it down to trace level and cleaned up some
+
 ## Version 1.002
 Backwards compatible feature release
 * Added new implementation for SimpleIncludesProcessor that maps patterns to strings (match the right, replace with the
