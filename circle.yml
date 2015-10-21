@@ -4,4 +4,4 @@ machine:
       oraclejdk8
 dependencies:
  override: 
-  - mvn install -DskipTests   
+  - mvn install -DskipTests -Dgpg.skip=true  
