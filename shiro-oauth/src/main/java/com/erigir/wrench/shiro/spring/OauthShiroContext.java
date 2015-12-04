@@ -33,6 +33,7 @@ import java.util.*;
 @Configuration
 public class OauthShiroContext {
     private static final Logger LOG = LoggerFactory.getLogger(OauthShiroContext.class);
+    private static final String NO_SSL_FLAG="NO_SSL";
 
     /**
      * If set to true, the server will use the Host and X-Forwarded-Proto headers if they
@@ -163,7 +164,14 @@ public class OauthShiroContext {
     public String sslPort() {
         String port = System.getProperty("shiro.https.port");
         port = (port == null) ? "443" : port;
-        LOG.info("Shiro will use HTTPS redirect to port {}", port);
+        if (NO_SSL_FLAG.equalsIgnoreCase(port))
+        {
+            LOG.warn("WARNING : SHIRO IS CONFIGURED TO NOT USE SSL!");
+        }
+        else
+        {
+            LOG.info("Shiro will use HTTPS redirect to port {}", port);
+        }
         return port;
     }
 
@@ -175,6 +183,16 @@ public class OauthShiroContext {
     @Bean
     public String sslConfigEntry() {
         return "ssl[" + sslPort() + "]";
+    }
+
+    private String addSSL(String value)
+    {
+        String rval = value;
+        if (value!=null && !NO_SSL_FLAG.equalsIgnoreCase(sslPort()))
+        {
+            rval = value+", "+sslConfigEntry();
+        }
+        return rval;
     }
 
     /**
@@ -189,7 +207,7 @@ public class OauthShiroContext {
         // Order is important here!
 
         // oauth url handled by oauth
-        bean.put("/" + oauthServiceEndpoint(), sslConfigEntry() + ", oauth");
+        bean.put("/" + oauthServiceEndpoint(), addSSL("oauth"));
         bean.put(failureUrl(), "oauthFailure");
 
         // Logout url handled by logout - afterLogout url is UNAUTHENTICATED, on purpose
@@ -209,11 +227,11 @@ public class OauthShiroContext {
 
         // Add any explicit mappings (with ssl added)
         for (Map.Entry<String, String> e : extraShiroUrlMappings().entrySet()) {
-            bean.put(e.getKey(), e.getValue() + ", " + sslConfigEntry());
+            bean.put(e.getKey(), addSSL(e.getValue()));
         }
 
         // Everything else caught by the auth filter
-        bean.put("/**", "auth, " + sslConfigEntry());
+        bean.put("/**", addSSL("auth"));
 
         LOG.debug("The final shiro URL mapping set is : {}", bean);
 

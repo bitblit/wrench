@@ -13,6 +13,11 @@ date (calculate difference) : use JodaTime or JDK 1.8 and use Days.daysBetween
 
 # Release Notes
 
+## Version 1.1.x
+* Switched to CircleCI construction and Semantic Versioning (http://semver.org/)
+* Updated AWS library version
+* Initial creation of the LambdaDescriptor annotation (nothing supporting it yet though)
+
 ## Version 1.003
 Backwards compatible feature release
 * Drigo's logging was pretty over the top - moved a lot of it down to trace level and cleaned up some

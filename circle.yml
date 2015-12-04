@@ -5,3 +5,11 @@ machine:
 dependencies:
  override: 
   - mvn install -DskipTests -Dgpg.skip=true  
+
+
+# Using this means that it'll only deploy to artifactory if a release tag is pushed
+deployment:
+ release:
+ tag: /release-.*/
+    commands:
+ - mvn -s build_server_maven_settings.xml -Dgpg.passphrase=${GPG_PASSPHRASE} -DskipTests javadoc:jar source:jar deploy
