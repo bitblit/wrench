@@ -16,6 +16,8 @@ public class DateUtils {
 
     /**
      * Returns a date object that is N days ago (relative to now (ie, new Date())
+     * @param days int number of days to set in the past
+     * @return Date containing the date that many days ago
      */
     public static Date nDaysAgo(int days) {
         Calendar ago = Calendar.getInstance();
@@ -25,14 +27,21 @@ public class DateUtils {
 
     /**
      * Returns a date object that is N years ago (relative to now (ie, new Date())
+     * @param years int number of years to set in the past
+     * @return Date containing the date that many days ago
      */
-    public static Date yearsAgo(int number) {
+    public static Date yearsAgo(int years) {
         Calendar ago = Calendar.getInstance();
-        ago.add(Calendar.YEAR, -1 * number);
+        ago.add(Calendar.YEAR, -1 * years);
         return ago.getTime();
 
     }
 
+    /**
+     * Returns a date object that is N years ago (relative to now (ie, new Date())
+     * @param months int number of years to set in the past
+     * @return Date containing the date that many days ago
+     */
     public static Date monthsAgo(int months) {
         Calendar ago = Calendar.getInstance();
         ago.add(Calendar.MONTH, -1 * months);

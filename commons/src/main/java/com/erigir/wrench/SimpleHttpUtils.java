@@ -19,6 +19,11 @@ public class SimpleHttpUtils {
     /**
      * Attempts up to 'retries' times to read the contents of a URL (times out in timeoutMS if
      * cannot read) - throws an IllegalStateException if it cannot successfully read
+     * NOTE: This function properly handles Content-Encoding: GZIP
+     * @param urlString String containing the URL to fetch
+     * @param timeoutInMS int containing the # of ms to wait for the url
+     * @param retries int containing the number of times to retry reading the url
+     * @return byte[] containing the body from the HTTP request
      */
     public static byte[] quietFetchUrl(String urlString, int timeoutInMS, int retries) {
         int readTimeout = 25000;

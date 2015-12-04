@@ -11,7 +11,7 @@
     <artifactId>wrench-web</artifactId>
     <packaging>jar</packaging>
     <name>Wrench Web Utilities</name>
-    <version>1.004-SNAPSHOT</version>
+    <version>1.1.${BUILD_NUMBER}</version>
     <description>Wrench Web Utilities</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>

@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
  * &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
  * &lt;version&gt;${jackson.version}&lt;/version&gt;
  * &lt;/dependency&gt;
- * <p>
- * <p>
+ * &lt;p&gt;
+ * &lt;p&gt;
  * Created by chrweiss on 3/13/2015.
  */
 public class HitMeasuringFilter implements Filter {

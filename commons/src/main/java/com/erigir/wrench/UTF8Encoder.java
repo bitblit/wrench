@@ -13,6 +13,8 @@ public class UTF8Encoder {
 
     /**
      * Encode the passed string into UTF8 URL
+     * @param input String to encode
+     * @return String containing the encoded value
      */
     public static String encode(String input) {
         try {
@@ -24,6 +26,8 @@ public class UTF8Encoder {
 
     /**
      * Decode the passed string as a  UTF8 URL
+     * @param input String to decode
+     * @return String containing the decoded value
      */
     public static String decode(String input) {
         try {

@@ -62,8 +62,12 @@ public class JavascriptCompilerFileProcessor extends AbstractFileProcessor {
     }
 
     /**
+     * Compiles javascript using the closure compiler (or possibly others in the future)
+     * @param level CompilationLevel to compile at
+     * @param externs List&lt;SourceFile&gt; to treat as externs for the compilation
      * @param input JavaScript source code to compile.
-     * @return The compiled version of the code.
+     * @return String containing the compiled version of the code.
+     * @throws IOException on read/write failure
      */
     public final String compile(CompilationLevel level, List<SourceFile> externs, List<SourceFile> input)
             throws IOException {
