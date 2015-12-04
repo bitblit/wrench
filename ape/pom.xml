@@ -10,9 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-ape</artifactId>
     <packaging>jar</packaging>
-    <name>Wrench Ape - Simplifies API Construction</name>
+    <name>Wrench Ape</name>
     <version>1.1.${BUILD_NUMBER}</version>
-    <description>Wrench APE</description>
+    <description>A library to simplify API construction atop Spring MVC</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
     <issueManagement>

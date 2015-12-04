@@ -12,9 +12,9 @@
     <version>1.1.${BUILD_NUMBER}</version>
     <packaging>jar</packaging>
 
-    <name>Drigo</name>
+    <name>Wrench Drigo</name>
 
-    <description>Drigo is an extensible library for transforming files</description>
+    <description>An extensible library for transforming files</description>
     <url>https://github.com/bitblit/Wrench</url>
     <inceptionYear>2015</inceptionYear>
     <issueManagement>

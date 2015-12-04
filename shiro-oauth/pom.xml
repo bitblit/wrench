@@ -10,9 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-shiro-oauth</artifactId>
     <packaging>jar</packaging>
-    <name>Wrench Shiro OAuth Implementation</name>
+    <name>Wrench Shiro OAuth</name>
     <version>1.1.${BUILD_NUMBER}</version>
-    <description>Wrench Shiro OAuth Implementation</description>
+    <description>An extensible implementation of Apache Shiro that uses OAuth as its source with a provided
+    Spring MVC configuration</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
     <issueManagement>

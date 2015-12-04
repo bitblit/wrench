@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
     <name>Wrench AWS Utilities</name>
     <version>1.1.${BUILD_NUMBER}</version>
-    <description>Wrench AWS Utilities</description>
+    <description>A set of utility classes to simplify common operations on Amazon Web Services</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
     <issueManagement>

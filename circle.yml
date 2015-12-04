@@ -13,3 +13,9 @@ deployment:
    tag: /release-.*/
    commands:
    - mvn -s build_server_maven_settings.xml -Dgpg.passphrase=${GPG_PASSPHRASE} -DskipTests javadoc:jar source:jar deploy
+
+test:
+ post:
+  - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+  - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+
