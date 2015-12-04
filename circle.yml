@@ -2,9 +2,10 @@ machine:
   java:
     version:
       oraclejdk8
+
 dependencies:
  override: 
-  - mvn install -DskipTests -Dgpg.skip=true  
+  - mvn --fail-never dependency:go-offline || true
 
 test:
  post:
@@ -18,5 +19,3 @@ deployment:
    tag: /release-.*/
    commands:
    - mvn -s build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -DskipTests javadoc:jar source:jar deploy
-
-
