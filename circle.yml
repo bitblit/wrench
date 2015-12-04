@@ -6,16 +6,17 @@ dependencies:
  override: 
   - mvn install -DskipTests -Dgpg.skip=true  
 
+test:
+ post:
+  - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+  - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+
 
 # Using this means that it'll only deploy to artifactory if a release tag is pushed
 deployment:
  release:
    tag: /release-.*/
    commands:
-   - mvn -s build_server_maven_settings.xml -Dgpg.passphrase=${GPG_PASSPHRASE} -DskipTests javadoc:jar source:jar deploy
+   - mvn -s build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -DskipTests javadoc:jar source:jar deploy
 
-test:
- post:
-  - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-  - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
 
