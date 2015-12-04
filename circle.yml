@@ -18,4 +18,4 @@ deployment:
  release:
    tag: /release-.*/
    commands:
-   - mvn -s build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -DskipTests javadoc:jar source:jar deploy
+   - mvn -X -s build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -DskipTests javadoc:jar source:jar deploy
