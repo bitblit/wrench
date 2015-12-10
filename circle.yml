@@ -18,4 +18,17 @@ deployment:
  release:
    tag: /release-.*/
    commands:
-   - mvn javadoc:jar source:jar deploy -Prun-its -s build_server_maven_settings.xml
+   - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/pubring.gpg circleci/pubring.gpg.enc
+   - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg circleci/secring.gpg.enc
+   - mvn --settings circleci/build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
+   - rm $HOME/pubring.gpg
+   - rm $HOME/secring.gpg
+   # Will add this later once I figure out how on circleCI
+   # - mvn -s build_server_maven_settings.xml site:site
+   # - git checkout gh-pages
+   # - cp -R target/site/* .
+   # - git add .
+   # - git config --global user.email "build@erigir.com"
+   # - git config --global user.name "CircleCI Build Server (Push by $CIRCLE_USERNAME)"
+   # - git commit -a -m "Updating documentation"
+   # - git push origin gh-pages
