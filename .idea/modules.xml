@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/wrench.iml" filepath="$PROJECT_DIR$/wrench.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ape/wrench-ape.iml" filepath="$PROJECT_DIR$/ape/wrench-ape.iml" />
+      <module fileurl="file://$PROJECT_DIR$/aws/wrench-aws.iml" filepath="$PROJECT_DIR$/aws/wrench-aws.iml" />
+      <module fileurl="file://$PROJECT_DIR$/commons/wrench-commons.iml" filepath="$PROJECT_DIR$/commons/wrench-commons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/drigo/wrench-drigo.iml" filepath="$PROJECT_DIR$/drigo/wrench-drigo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shiro-oauth/wrench-shiro-oauth.iml" filepath="$PROJECT_DIR$/shiro-oauth/wrench-shiro-oauth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web/wrench-web.iml" filepath="$PROJECT_DIR$/web/wrench-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zk/wrench-zk.iml" filepath="$PROJECT_DIR$/zk/wrench-zk.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,13 @@
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/gzip/GZipServletResponseWrapper.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/gzip/GZipServletOutputStream.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/Paginator.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/IPAccessRestrictionFilter.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/simpleincludes/SimpleIncludesServletResponseWrapper.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/HitMeasuringFilter.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/simpleincludes/SimpleIncludesFilter.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/Canonicalizer.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/gzip/CompressionFilter.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/simpleincludes/SimpleIncludesServletOutputStream.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/AbstractSimpleFilter.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/HitMeasuringEntry.java
+/Users/cweiss1271/workspace/wrench/web/src/main/java/com/erigir/wrench/web/Page.java

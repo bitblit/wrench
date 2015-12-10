@@ -1,0 +1,17 @@
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/OauthException.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/OauthCustomPrincipalBuilder.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/provider/GoogleProvider.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/OauthSubjectFactory.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/OauthPrincipal.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/OauthRealm.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/OauthSimpleOutputFilter.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/provider/ProviderRegistry.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/spring/OauthShiroContext.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/provider/FacebookProvider.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/provider/OauthProvider.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/provider/ProviderUtils.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/OauthFilter.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/DefaultOauthCustomPrincipalBuilder.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/OauthToken.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/DynamicOauthLoginFilter.java
+/Users/cweiss1271/workspace/wrench/shiro-oauth/src/main/java/com/erigir/wrench/shiro/OauthAuthenticationException.java

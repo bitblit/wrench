@@ -1,0 +1,17 @@
+com/erigir/wrench/shiro/OauthSimpleOutputFilter.class
+com/erigir/wrench/shiro/DynamicOauthLoginFilter.class
+com/erigir/wrench/shiro/provider/ProviderUtils.class
+com/erigir/wrench/shiro/OauthCustomPrincipalBuilder.class
+com/erigir/wrench/shiro/OauthAuthenticationException.class
+com/erigir/wrench/shiro/spring/OauthShiroContext.class
+com/erigir/wrench/shiro/OauthToken.class
+com/erigir/wrench/shiro/OauthRealm.class
+com/erigir/wrench/shiro/OauthPrincipal.class
+com/erigir/wrench/shiro/DefaultOauthCustomPrincipalBuilder.class
+com/erigir/wrench/shiro/provider/GoogleProvider.class
+com/erigir/wrench/shiro/OauthException.class
+com/erigir/wrench/shiro/OauthSubjectFactory.class
+com/erigir/wrench/shiro/provider/FacebookProvider.class
+com/erigir/wrench/shiro/provider/ProviderRegistry.class
+com/erigir/wrench/shiro/OauthFilter.class
+com/erigir/wrench/shiro/provider/OauthProvider.class
