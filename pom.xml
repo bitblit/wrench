@@ -5,7 +5,7 @@
     <groupId>com.erigir</groupId>
     <artifactId>wrench</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.${BUILD_NUMBER}</version>
+    <version>1.0.${BUILD_NUMBER}</version>
     <name>wrench</name>
     <description>Erigir Common Reusable Tools</description>
     <url>https://github.com/bitblit/wrench</url>
