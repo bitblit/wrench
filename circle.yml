@@ -20,7 +20,7 @@ deployment:
    tag: /release-.*/
    commands:
    # Create the version number
-   export NEW_VERSION_NUMBER=$CIRCLE_BRANCH+$BUILD_NUMBER
+   export NEW_VERSION_NUMBER=$CIRCLE_TAG+$BUILD_NUMBER
    echo "The new version number is $NEW_VERSION_NUMBER"
 
    # Decrypt the keyrings
