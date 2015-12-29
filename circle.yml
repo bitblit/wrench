@@ -19,11 +19,15 @@ deployment:
  release:
    tag: /release-.*/
    commands:
+   # Create the version number
+   export NEW_VERSION_NUMBER=$CIRCLE_BRANCH+$BUILD_NUMBER
+   echo "The new version number is $NEW_VERSION_NUMBER"
+
    # Decrypt the keyrings
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/pubring.gpg circleci/pubring.gpg.enc
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg circleci/secring.gpg.enc
    # Run the maven release plugin to set the version numbers correctly
-   - mvn release:prepare -B -DautoVersionSubmodules=true -DreleaseVersion=$CIRCLE_BRANCH+$BUILD_NUMBER
+   - mvn release:prepare -B -DautoVersionSubmodules=true -DreleaseVersion=$NEW_VERSION_NUMBER
    # Build and upload
    - mvn --settings circleci/build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
    - rm $HOME/pubring.gpg
