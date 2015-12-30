@@ -19,10 +19,11 @@ deployment:
  release:
    tag: /release-.*/
    commands:
-
    # Decrypt the keyrings
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/pubring.gpg circleci/pubring.gpg.enc
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg circleci/secring.gpg.enc
+   # Filter the pom files to actually have the version number in it
+   - find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/\$\{BUILD_NUMBER\}/$BUILD_NUMBER/ {} \;
    # Run the maven release plugin to set the version numbers correctly
    #- mvn release:update-versions -B -DautoVersionSubmodules=true -DreleaseVersion=${CIRCLE_TAG:8}.$BUILD_NUMBER
    # Build and upload
