@@ -23,8 +23,8 @@ deployment:
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg circleci/secring.gpg.enc
    # Filter the pom files to actually have the version number in it
    - find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/\$\{BUILD_NUMBER\}/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
-   # Run the maven release plugin to set the version numbers correctly
-   #- mvn release:update-versions -B -DautoVersionSubmodules=true -DreleaseVersion=${CIRCLE_TAG:8}.$BUILD_NUMBER
+   # This is actually significantly easier than trying to use the maven release plugin when you wont be pushing to master,
+   # and when the tagging has already happened
    # Build and upload
    - mvn --settings circleci/build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
    - rm $HOME/pubring.gpg
@@ -38,6 +38,3 @@ deployment:
    # - git config --global user.name "CircleCI Build Server (Push by $CIRCLE_USERNAME)"
    # - git commit -a -m "Updating documentation"
    # - git push origin gh-pages
-
-   #find . -type f -regex ".*/pom\.xml" -exec cp sed s/${BUILD_NUMBER}/$BUILD_NUMBER/ {} {} ;
-   # pom.xml
