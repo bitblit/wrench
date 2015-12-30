@@ -1,9 +1,13 @@
 ## Release Notes
 
-## Version 1.0.x
+## Version 1.1.0
 * Switched to CircleCI construction and Semantic Versioning (http://semver.org/)
 * Updated AWS library version
 * Added the AWS-Lambda passthrough object to Ape
+
+## Version 1.0.28
+DO NOT USE THIS RELEASE
+* This was an attempt at semantic versioning that failed - the POM is corrupt
 
 ## Version 1.003
 Backwards compatible feature release
