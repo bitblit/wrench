@@ -12,7 +12,7 @@ test:
  post:
   - mkdir -p $CIRCLE_TEST_REPORTS/junit/
   - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-
+se
 
 # Using this means that it'll only deploy to artifactory if a release tag is pushed
 deployment:
@@ -38,3 +38,6 @@ deployment:
    # - git config --global user.name "CircleCI Build Server (Push by $CIRCLE_USERNAME)"
    # - git commit -a -m "Updating documentation"
    # - git push origin gh-pages
+
+   #find . -type f -regex ".*/pom\.xml" -exec cp sed s/${BUILD_NUMBER}/$BUILD_NUMBER/ {} {} ;
+   # pom.xml
