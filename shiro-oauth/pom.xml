@@ -4,14 +4,14 @@
     <parent>
         <artifactId>wrench</artifactId>
         <groupId>com.erigir</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.4+${BUILD_NUMBER}</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-shiro-oauth</artifactId>
     <packaging>jar</packaging>
     <name>Wrench Shiro OAuth</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.4+${BUILD_NUMBER}</version>
     <description>An extensible implementation of Apache Shiro that uses OAuth as its source with a provided
     Spring MVC configuration</description>
     <url>http://www.erigir.com/Wrench</url>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.erigir</groupId>
             <artifactId>wrench-commons</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.4+${BUILD_NUMBER}</version>
         </dependency>
 
         <dependency>
