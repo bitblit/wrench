@@ -24,7 +24,7 @@ deployment:
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/pubring.gpg circleci/pubring.gpg.enc
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg circleci/secring.gpg.enc
    # Run the maven release plugin to set the version numbers correctly
-   - mvn --settings circleci/build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME release:prepare -B -DautoVersionSubmodules=true -DreleaseVersion=${CIRCLE_TAG:8}.$BUILD_NUMBER
+   - mvn release:update-versions -B -DautoVersionSubmodules=true -DreleaseVersion=${CIRCLE_TAG:8}.$BUILD_NUMBER
    # Build and upload
    - mvn --settings circleci/build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
    - rm $HOME/pubring.gpg
