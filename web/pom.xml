@@ -4,14 +4,14 @@
     <parent>
         <artifactId>wrench</artifactId>
         <groupId>com.erigir</groupId>
-        <version>${BUILD_NUMBER}</version>
+        <version>LOCAL-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-web</artifactId>
     <packaging>jar</packaging>
     <name>Wrench Web Utilities</name>
-    <version>${BUILD_NUMBER}</version>
+    <version>LOCAL-SNAPSHOT</version>
     <description>A set of utility classes for simplifying common tasks around reading and serving HTTP/HTML</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.erigir</groupId>
             <artifactId>wrench-commons</artifactId>
-            <version>${BUILD_NUMBER}</version>
+            <version>LOCAL-SNAPSHOT</version>
         </dependency>
 
         <dependency>

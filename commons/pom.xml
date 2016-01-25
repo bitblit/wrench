@@ -4,14 +4,14 @@
     <parent>
         <artifactId>wrench</artifactId>
         <groupId>com.erigir</groupId>
-        <version>${BUILD_NUMBER}</version>
+        <version>LOCAL-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-commons</artifactId>
     <packaging>jar</packaging>
     <name>Wrench Common Utilities</name>
-    <version>${BUILD_NUMBER}</version>
+    <version>LOCAL-SNAPSHOT</version>
     <description>A set of generally useful Java classes</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>

@@ -1,5 +1,10 @@
 ## Release Notes
 
+## Version 1.1.1
+Backwards compatible feature release
+* Added FakeAPIFilter to wrench-web
+* Switched default version number to LOCAL-SNAPSHOT so it will work when depended on locally 
+
 ## Version 1.1.0
 * Switched to CircleCI construction and Semantic Versioning (http://semver.org/)
 * Updated AWS library version

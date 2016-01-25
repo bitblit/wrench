@@ -22,7 +22,7 @@ deployment:
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/pubring.gpg circleci/pubring.gpg.enc
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg circleci/secring.gpg.enc
    # Filter the pom files to actually have the version number in it
-   - find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/\$\{BUILD_NUMBER\}/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
+   - find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/LOCAL-SNAPSHOT/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
    # This is actually significantly easier than trying to use the maven release plugin when you wont be pushing to master,
    # and when the tagging has already happened
    # Build and upload
