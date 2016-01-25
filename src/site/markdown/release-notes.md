@@ -4,6 +4,7 @@
 Backwards compatible feature release
 * Added FakeAPIFilter to wrench-web
 * Switched default version number to LOCAL-SNAPSHOT so it will work when depended on locally 
+* Updating AWS library version to 1.10.49
 
 ## Version 1.1.0
 * Switched to CircleCI construction and Semantic Versioning (http://semver.org/)
