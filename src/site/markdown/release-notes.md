@@ -1,5 +1,15 @@
 ## Release Notes
 
+## Version 1.1.2
+Backwards compatible feature release
+* Added AllowSelfSignHTTPS to commons
+* Added MemoryAppender/LoggingRingBuffer to commons
+* Added SystemClock to commons
+* Added ExtendedQuietObjectMapper to commons
+* Added DynamoCachedObject to aws/dynamo
+* Updating AWS library version to 1.10.56
+
+
 ## Version 1.1.1
 Backwards compatible feature release
 * Added FakeAPIFilter to wrench-web
