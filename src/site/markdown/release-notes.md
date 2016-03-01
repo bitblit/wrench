@@ -1,5 +1,10 @@
 ## Release Notes
 
+## Version 1.1.3
+Backwards compatible feature release
+* Extracted interface from DynamoCachedObject to AWSCachedObject
+* Added implementation of S3CachedObject for things that are too big for DynamoDB
+
 ## Version 1.1.2
 Backwards compatible feature release
 * Added AllowSelfSignHTTPS to commons
