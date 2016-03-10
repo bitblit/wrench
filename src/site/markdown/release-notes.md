@@ -1,5 +1,10 @@
 ## Release Notes
 
+## Version 1.1.4
+Backwards compatible feature release
+* Extended SimpleHttpUtils to allow POST
+* Extended SimpleHttpUtils to allow fetching headers and status code in addition to body contents
+
 ## Version 1.1.3
 Backwards compatible feature release
 * Extracted interface from DynamoCachedObject to AWSCachedObject
