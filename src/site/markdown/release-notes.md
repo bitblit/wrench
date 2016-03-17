@@ -1,5 +1,10 @@
 ## Release Notes
 
+## Version 1.1.5
+Backwards compatible feature release
+* Extended SimpleHttpUtils to allow PUT and DELETE
+* Extended SimpleHttpUtils to allow fetching the details of the latest error
+
 ## Version 1.1.4
 Backwards compatible feature release
 * Extended SimpleHttpUtils to allow POST

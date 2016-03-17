@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -18,6 +19,12 @@ import java.util.zip.GZIPInputStream;
  */
 public class SimpleHttpUtils {
     private static final Logger LOG = LoggerFactory.getLogger(SimpleHttpUtils.class);
+    private static HttpTx LATEST_ERROR = null;
+
+    public static HttpTx latestError()
+    {
+        return LATEST_ERROR;
+    }
 
     public static byte[] quietFetchUrl(String urlString, int timeoutInMS, int retries) {
         HttpTx tx = quietFetchUrlDetails(urlString, timeoutInMS, retries);
@@ -25,12 +32,25 @@ public class SimpleHttpUtils {
     }
 
     public static HttpTx postDataToURL(String sUrl,  Map<String,String> headers, byte[] data) {
+        return httpRequestWithBody(sUrl,"POST",headers,data);
+    }
+
+    public static HttpTx putDataToURL(String sUrl,  Map<String,String> headers, byte[] data) {
+        return httpRequestWithBody(sUrl,"PUT",headers,data);
+    }
+
+    public static HttpTx sendDeleteToURL(String sUrl,  Map<String,String> headers, byte[] data) {
+        return httpRequestWithBody(sUrl,"DELETE",headers,data);
+    }
+
+    public static HttpTx httpRequestWithBody(String sUrl,  String method, Map<String,String> headers, byte[] data) {
         HttpTx rval = null;
+        HttpURLConnection connection=null;
         try {
             LOG.info("Sending {} bytes to {}, hash={}", new Object[]{data.length, sUrl});
 
             URL u = new URL(sUrl);
-            HttpURLConnection connection = (HttpURLConnection) u.openConnection();
+            connection = (HttpURLConnection) u.openConnection();
             connection.setConnectTimeout(2500); // 2.5 seconds to connect
             connection.setReadTimeout(25000); // 25 seconds to read
             connection.addRequestProperty("Accept-Encoding", "gzip");
@@ -38,7 +58,7 @@ public class SimpleHttpUtils {
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setInstanceFollowRedirects(false);
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod(method);
             for (Map.Entry<String,String> e:headers.entrySet())
             {
                 connection.setRequestProperty(e.getKey(), e.getValue());
@@ -62,9 +82,31 @@ public class SimpleHttpUtils {
 
         } catch (Exception e) {
             LOG.error("Error during post", e);
+            updateLatestError(connection);
             rval = null;
         }
         return rval;
+    }
+
+    private static void updateLatestError(HttpURLConnection connection)
+    {
+        if (connection!=null) {
+            try {
+                HttpTx update = new HttpTx();
+                update.setStatus(connection.getResponseCode());
+                update.setHeaders(convertHeaders(connection.getHeaderFields()));
+                byte[] bodyData = ZipUtils.toByteArray(connection.getErrorStream());
+                if ("gzip".equals(connection.getHeaderField("Content-Encoding"))) {
+                    int pre = bodyData.length;
+                    bodyData = ZipUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(bodyData)));
+                    LOG.trace("Decomp {} to {}", pre, bodyData.length);
+                }
+                update.setBodyContents(bodyData);
+                LATEST_ERROR = update;
+            } catch (IOException ioe) {
+                LOG.warn("Bad - got an IOException while trying to update the latest error");
+            }
+        }
     }
 
     /**
@@ -80,12 +122,13 @@ public class SimpleHttpUtils {
         int readTimeout = 25000;
         int retryCount = 0;
         HttpTx rval = null;
+        HttpURLConnection connection = null;
 
         while (rval == null && retryCount < retries) {
             try {
                 retryCount++;
                 URL url = new URL(urlString);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection = (HttpURLConnection) url.openConnection();
                 connection.setConnectTimeout(2500); // 2.5 seconds to connect
                 connection.setReadTimeout(readTimeout);
                 connection.addRequestProperty("Accept-Encoding", "gzip");
@@ -105,7 +148,7 @@ public class SimpleHttpUtils {
                 rval.setStatus(connection.getResponseCode());
             } catch (Exception e) {
                 LOG.info("Failed reading {} - try {} of {}", new Object[]{urlString, retryCount, retries});
-
+                updateLatestError(connection);
             }
         }
         if (rval == null) {
