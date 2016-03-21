@@ -69,8 +69,8 @@ public class SimpleHttpUtils {
             connection.getOutputStream().write(data);
             connection.getOutputStream().flush();
 
-            byte[] bodyData = ZipUtils.toByteArray(connection.getInputStream());
-            if ("gzip".equals(connection.getHeaderField("Content-Encoding"))) {
+            byte[] bodyData = (connection.getInputStream()==null)?new byte[0]:ZipUtils.toByteArray(connection.getInputStream());
+            if (bodyData.length>0 && "gzip".equals(connection.getHeaderField("Content-Encoding"))) {
                 int pre = bodyData.length;
                 bodyData = ZipUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(bodyData)));
                 LOG.trace("Decomp {} to {}", pre, bodyData.length);
@@ -95,7 +95,7 @@ public class SimpleHttpUtils {
                 HttpTx update = new HttpTx();
                 update.setStatus(connection.getResponseCode());
                 update.setHeaders(convertHeaders(connection.getHeaderFields()));
-                byte[] bodyData = ZipUtils.toByteArray(connection.getErrorStream());
+                byte[] bodyData = (connection.getErrorStream()==null)?new byte[0]:ZipUtils.toByteArray(connection.getErrorStream());
                 if ("gzip".equals(connection.getHeaderField("Content-Encoding"))) {
                     int pre = bodyData.length;
                     bodyData = ZipUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(bodyData)));
@@ -134,10 +134,10 @@ public class SimpleHttpUtils {
                 connection.addRequestProperty("Accept-Encoding", "gzip");
                 connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:20.0) Gecko/20100101 Firefox/20.0");
 
-                byte[] bodyData = ZipUtils.toByteArray(connection.getInputStream());
+                byte[] bodyData = (connection.getInputStream()==null)?new byte[0]:ZipUtils.toByteArray(connection.getInputStream());
 
 
-                if ("gzip".equals(connection.getHeaderField("Content-Encoding"))) {
+                if (bodyData.length>0 && "gzip".equals(connection.getHeaderField("Content-Encoding"))) {
                     int pre = bodyData.length;
                     bodyData = ZipUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(bodyData)));
                     LOG.debug("Decomp {} to {}", pre, bodyData.length);

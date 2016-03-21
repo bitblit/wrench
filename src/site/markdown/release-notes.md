@@ -1,5 +1,9 @@
 ## Release Notes
 
+# Version 1.1.6
+Backwords compatible bugfix release
+* Fixed error with null pointer exception in simplehttputils when there is no error stream
+
 ## Version 1.1.5
 Backwards compatible feature release
 * Extended SimpleHttpUtils to allow PUT and DELETE
