@@ -9,9 +9,3 @@ This always builds locally as "LOCAL-SNAPSHOT".  If you are developing it in tan
 project to LOCAL-SNAPSHOT.  CircleCI replaces LOCAL-SNAPSHOT with the release from the tag when performing a 
 release.
 
-## Performing releases
-
-Mainly to aid my own failing memory here:
-
-git tag -a release-{number} (eg git tag -a release-1.1.2)
-git push origin master --tags

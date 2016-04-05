@@ -46,6 +46,7 @@ public class SimpleHttpUtils {
     public static HttpTx httpRequestWithBody(String sUrl,  String method, Map<String,String> headers, byte[] data) {
         HttpTx rval = null;
         HttpURLConnection connection=null;
+
         try {
             LOG.info("Sending {} bytes to {}, hash={}", new Object[]{data.length, sUrl});
 
@@ -84,6 +85,10 @@ public class SimpleHttpUtils {
             LOG.error("Error during post", e);
             updateLatestError(connection);
             rval = null;
+        }
+        finally
+        {
+            cleanupConnection(connection);
         }
         return rval;
     }
@@ -136,7 +141,6 @@ public class SimpleHttpUtils {
 
                 byte[] bodyData = (connection.getInputStream()==null)?new byte[0]:ZipUtils.toByteArray(connection.getInputStream());
 
-
                 if (bodyData.length>0 && "gzip".equals(connection.getHeaderField("Content-Encoding"))) {
                     int pre = bodyData.length;
                     bodyData = ZipUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(bodyData)));
@@ -149,6 +153,10 @@ public class SimpleHttpUtils {
             } catch (Exception e) {
                 LOG.info("Failed reading {} - try {} of {}", new Object[]{urlString, retryCount, retries});
                 updateLatestError(connection);
+            }
+            finally
+            {
+                cleanupConnection(connection);
             }
         }
         if (rval == null) {
@@ -176,6 +184,49 @@ public class SimpleHttpUtils {
      */
     public static String quietFetchUrlAsString(String urlString, int timeout, int retries) {
         return new String(quietFetchUrl(urlString, timeout, retries));
+    }
+
+    /**
+     * Shuts down the underlying connection and releases all its resources
+     * I'm well aware that the following code shuts down everything, including occasionally
+     * the underlying TCP connection that would otherwise be cached and/or kept alive
+     * (see http 1.1 keepalive).  This object isn't meant for performance object caching -
+     * if you need that use the excellent HttpClient library.  This library is for very
+     * simplistic url reading, like you would in a thick client situation
+     * @param connection HTTPUrlConnection to close
+     */
+    private static void cleanupConnection(HttpURLConnection connection)
+    {
+        if (connection!=null) {
+            try {
+                if (connection.getInputStream() != null) {
+                    connection.getInputStream().close();
+                }
+            }
+            catch (IOException ioe)
+            {
+                LOG.warn("Error trying to close input stream",ioe);
+            }
+            try {
+                if (connection.getDoOutput()==true && connection.getOutputStream() != null) {
+                    connection.getOutputStream().close();
+                }
+            }
+            catch (IOException ioe)
+            {
+                LOG.warn("Error trying to close output stream",ioe);
+            }
+            try {
+                if (connection.getErrorStream() != null) {
+                    connection.getErrorStream().close();
+                }
+            }
+            catch (IOException ioe)
+            {
+                LOG.warn("Error trying to close error stream",ioe);
+            }
+            connection.disconnect();
+        }
     }
 
     public static class HttpTx

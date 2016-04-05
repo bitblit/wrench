@@ -1,5 +1,10 @@
 ## Release Notes
 
+# Version 1.1.7
+Backwards compatible bugfix/feature release
+* Better cleanup of connections used by SimpleHttpUtils
+* Added InstanceInfo for ec2 instances in the AWS package
+
 # Version 1.1.6
 Backwords compatible bugfix release
 * Fixed error with null pointer exception in simplehttputils when there is no error stream
