@@ -1,5 +1,9 @@
 ## Release Notes
 
+# Version 1.1.8
+Backwards compatible bugfix/feature release
+* Small tweak to cleanup of connections used by SimpleHttpUtils
+
 # Version 1.1.7
 Backwards compatible bugfix/feature release
 * Better cleanup of connections used by SimpleHttpUtils

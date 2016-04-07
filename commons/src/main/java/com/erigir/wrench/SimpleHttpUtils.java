@@ -205,25 +205,7 @@ public class SimpleHttpUtils {
             }
             catch (IOException ioe)
             {
-                LOG.warn("Error trying to close input stream",ioe);
-            }
-            try {
-                if (connection.getDoOutput()==true && connection.getOutputStream() != null) {
-                    connection.getOutputStream().close();
-                }
-            }
-            catch (IOException ioe)
-            {
-                LOG.warn("Error trying to close output stream",ioe);
-            }
-            try {
-                if (connection.getErrorStream() != null) {
-                    connection.getErrorStream().close();
-                }
-            }
-            catch (IOException ioe)
-            {
-                LOG.warn("Error trying to close error stream",ioe);
+                LOG.trace("Error trying to close input stream",ioe);
             }
             connection.disconnect();
         }
