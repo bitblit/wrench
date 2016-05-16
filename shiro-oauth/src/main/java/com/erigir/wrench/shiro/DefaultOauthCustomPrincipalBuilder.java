@@ -9,7 +9,7 @@ import java.util.TreeSet;
  * oauth authenticated users - modify this to handle your own cases.  You
  * can use this class if you want EVERY person who gets authenticated to
  * have the same roles and privileges (or if you only care about authentication)
- *
+ * <p>
  * Created by chrweiss on 5/29/15.
  */
 public class DefaultOauthCustomPrincipalBuilder implements OauthCustomPrincipalBuilder {

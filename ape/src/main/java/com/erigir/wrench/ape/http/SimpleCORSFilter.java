@@ -11,18 +11,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
  * @author cweiss
- *
  */
 public class SimpleCORSFilter extends AbstractSimpleFilter {
     private static Logger LOG = LoggerFactory.getLogger(SimpleCORSFilter.class);
     // By default accepts all servers
     private Set<Pattern> allowedOrigins = new HashSet<>(Arrays.asList(Pattern.compile(".*")));
-    private AllowOriginMode allowOriginMode=AllowOriginMode.SAME_AS_ORIGIN;
+    private AllowOriginMode allowOriginMode = AllowOriginMode.SAME_AS_ORIGIN;
     private String corsAllowMethods;
     private Integer corsMaxAge;
     private String corsAllowHeaders;
@@ -57,12 +58,9 @@ public class SimpleCORSFilter extends AbstractSimpleFilter {
     }
 
     private void addCorsHeaders(HttpServletResponse response, String origin) {
-        if (origin==null)
-        {
+        if (origin == null) {
             LOG.trace("Not setting CORS headers, null origin");
-        }
-        else
-        {
+        } else {
             response.setHeader("Access-Control-Allow-Origin", origin);
             response.setHeader("Access-Control-Allow-Methods", corsAllowMethods);
             response.setHeader("Access-Control-Max-Age", String.valueOf(corsMaxAge));
@@ -90,24 +88,18 @@ public class SimpleCORSFilter extends AbstractSimpleFilter {
         this.allowOriginMode = allowOriginMode;
     }
 
-    public enum AllowOriginMode
-    {
+    public enum AllowOriginMode {
         WILDCARD_ALLOW_NO_ORIGIN,
         WILDCARD,
         SAME_AS_ORIGIN;
 
-        public String createAcceptOrigin(String sourceOrigin, Set<Pattern> acceptedOrigins)
-        {
+        public String createAcceptOrigin(String sourceOrigin, Set<Pattern> acceptedOrigins) {
             String rval = null;
-            if (this==WILDCARD_ALLOW_NO_ORIGIN)
-            {
+            if (this == WILDCARD_ALLOW_NO_ORIGIN) {
                 rval = "*"; // no point in checking the origin
-            }
-            else
-            {
-                if (SimpleCORSFilter.matchesAtLeastOne(acceptedOrigins, sourceOrigin))
-                {
-                    rval = (this==WILDCARD)?"*":sourceOrigin;
+            } else {
+                if (SimpleCORSFilter.matchesAtLeastOne(acceptedOrigins, sourceOrigin)) {
+                    rval = (this == WILDCARD) ? "*" : sourceOrigin;
                 }
             }
 

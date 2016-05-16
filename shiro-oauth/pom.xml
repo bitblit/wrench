@@ -13,7 +13,8 @@
     <name>Wrench Shiro OAuth</name>
     <version>LOCAL-SNAPSHOT</version>
     <description>An extensible implementation of Apache Shiro that uses OAuth as its source with a provided
-    Spring MVC configuration</description>
+        Spring MVC configuration
+    </description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
     <issueManagement>

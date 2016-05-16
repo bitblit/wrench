@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * RingBuffer to store logging output from MemoryAppender for consumption inside the program.
- *
+ * <p>
  * Created by cweiss on 2/14/16.
  */
 public class LoggingRingBuffer {
@@ -16,6 +16,13 @@ public class LoggingRingBuffer {
 
     private LoggingRingBuffer() {
         super();
+    }
+
+    public static void setRingSize(int newSize) {
+        LoggingRingBuffer.RING_SIZE = newSize;
+
+        // In case its a down adjustment
+        INST.fitRingToSize();
     }
 
     public void addItem(Object item) {
@@ -28,16 +35,7 @@ public class LoggingRingBuffer {
 
     }
 
-    public static void setRingSize(int newSize)
-    {
-        LoggingRingBuffer.RING_SIZE=newSize;
-
-        // In case its a down adjustment
-        INST.fitRingToSize();
-    }
-
-    private void fitRingToSize()
-    {
+    private void fitRingToSize() {
         // TODO: this could be a lot more efficent
         while (buffer.size() > RING_SIZE) {
             buffer.remove(buffer.size() - 1);

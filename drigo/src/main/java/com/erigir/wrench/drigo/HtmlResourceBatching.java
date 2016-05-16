@@ -101,6 +101,26 @@ public class HtmlResourceBatching {
         this.fileSeparator = fileSeparator;
     }
 
+    public void combine(List<File> src, File output)
+            throws DrigoException {
+        try {
+            OutputStream os = new FileOutputStream(output);
+            for (int i = 0; i < src.size(); i++) {
+                File f = src.get(i);
+                if (i > 0 && fileSeparator != null) {
+                    os.write(fileSeparator.getBytes());
+                }
+                IOUtils.copy(new FileInputStream(f), os);
+            }
+
+            IOUtils.closeQuietly(os);
+        } catch (IOException ioe) {
+            throw new DrigoException("Error combining", ioe);
+
+        }
+    }
+
+
     public static enum ReplaceTextWrapper {
         NONE("", ""),
         JAVASCRIPT("<script src=\"", "\"></script>"),
@@ -122,26 +142,6 @@ public class HtmlResourceBatching {
             return sb.toString();
         }
 
-    }
-
-
-    public void combine(List<File> src, File output)
-            throws DrigoException {
-        try {
-            OutputStream os = new FileOutputStream(output);
-            for (int i = 0; i < src.size(); i++) {
-                File f = src.get(i);
-                if (i > 0 && fileSeparator != null) {
-                    os.write(fileSeparator.getBytes());
-                }
-                IOUtils.copy(new FileInputStream(f), os);
-            }
-
-            IOUtils.closeQuietly(os);
-        } catch (IOException ioe) {
-            throw new DrigoException("Error combining", ioe);
-
-        }
     }
 
 

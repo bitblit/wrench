@@ -21,12 +21,12 @@ public class ValidationSetting {
     private ValidationType type;
     private String includeRegex;
 
-    public void setType(ValidationType type) {
-        this.type = type;
-    }
-
     public ValidationType getType() {
         return type;
+    }
+
+    public void setType(ValidationType type) {
+        this.type = type;
     }
 
     public String getIncludeRegex() {

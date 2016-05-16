@@ -22,8 +22,7 @@ public class SimplePrintWriterHandler implements CloudFrontAccessLogHandler {
 
     @Override
     public boolean handleCloudFrontAccessLogEntry(CloudFrontAccessLogEntry entry) {
-        if (writer==null)
-        {
+        if (writer == null) {
             throw new IllegalStateException("You must set the writer before starting processing");
         }
         writer.println(entry.field(CloudFrontAccessLogField.RAW));

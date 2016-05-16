@@ -110,7 +110,7 @@ public class Drigo {
             LOG.info("Running replacement");
             if (configuration.getProcessReplace() != null) {
                 ProcessReplace pr = configuration.getProcessReplace();
-                DrigoReplaceProcessor drp = new DrigoReplaceProcessor(pr.getPrefix(),pr.getSuffix(),pr.getReplace());
+                DrigoReplaceProcessor drp = new DrigoReplaceProcessor(pr.getPrefix(), pr.getSuffix(), pr.getReplace());
                 for (File f : findMatchingFiles(dst, Pattern.compile(pr.getIncludeRegex()))) {
                     drp.process(f, rval);
                 }
@@ -173,7 +173,7 @@ public class Drigo {
             if (configuration.getHtmlCompression() != null) {
                 HtmlCompressionProcessor hfp = new HtmlCompressionProcessor();
                 applyProcessorToFileList(findMatchingFiles(dst, configuration.getHtmlCompression()), hfp, rval);
-                LOG.info("HTML Compression saved "+HtmlCompressionProcessor.totalSaved+" bytes in total");
+                LOG.info("HTML Compression saved " + HtmlCompressionProcessor.totalSaved + " bytes in total");
             }
 
             LOG.info("Checking GZIP compression");

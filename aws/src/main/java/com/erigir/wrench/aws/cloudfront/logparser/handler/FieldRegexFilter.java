@@ -1,11 +1,9 @@
 package com.erigir.wrench.aws.cloudfront.logparser.handler;
 
-import com.erigir.wrench.QuietUtils;
 import com.erigir.wrench.aws.cloudfront.logparser.CloudFrontAccessLogEntry;
 import com.erigir.wrench.aws.cloudfront.logparser.CloudFrontAccessLogField;
 import com.erigir.wrench.aws.cloudfront.logparser.CloudFrontAccessLogHandler;
 
-import java.util.Date;
 import java.util.regex.Pattern;
 
 /**

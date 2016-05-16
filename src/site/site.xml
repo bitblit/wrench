@@ -31,9 +31,11 @@
         <menu ref="reports" inherit="top"/>
         <menu ref="modules"/>
         <menu name="Notes">
-            <item href="release-notes.html" name="Release Notes" />
-            <item href="http://wickedsource.org/2013/09/23/releasing-your-project-to-maven-central-guide/" name="Doing Maven releases" />
-            <item href="https://help.github.com/articles/creating-project-pages-manually/" name="Publishing pages on Github" />
+            <item href="release-notes.html" name="Release Notes"/>
+            <item href="http://wickedsource.org/2013/09/23/releasing-your-project-to-maven-central-guide/"
+                  name="Doing Maven releases"/>
+            <item href="https://help.github.com/articles/creating-project-pages-manually/"
+                  name="Publishing pages on Github"/>
         </menu>
     </body>
 </project>

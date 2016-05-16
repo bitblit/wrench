@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * Created by cweiss on 8/4/15.
  */
 public class SimpleIncludesPatternMapSource implements SimpleIncludesSource {
-    private LinkedHashMap<Pattern,String> data;
+    private LinkedHashMap<Pattern, String> data;
 
     public SimpleIncludesPatternMapSource() {
     }
@@ -28,16 +28,14 @@ public class SimpleIncludesPatternMapSource implements SimpleIncludesSource {
 
         String rval = null;
 
-        for (Iterator<Map.Entry<Pattern, String>> i =data.entrySet().iterator();i.hasNext() && rval==null;)
-        {
+        for (Iterator<Map.Entry<Pattern, String>> i = data.entrySet().iterator(); i.hasNext() && rval == null; ) {
             Map.Entry<Pattern, String> e = i.next();
-            if (e.getKey().matcher(name).matches())
-            {
+            if (e.getKey().matcher(name).matches()) {
                 rval = e.getValue();
             }
         }
 
-        rval = (rval==null)?"":rval;
+        rval = (rval == null) ? "" : rval;
         return rval;
     }
 

@@ -11,7 +11,7 @@ import java.util.*;
  * Takes as input a contacts export from google contacts
  * (use outlook format), and fixes the "everything in the notes field"
  * problem
- *
+ * <p>
  * Created by cweiss on 8/8/15.
  */
 public class ContactFixer {
@@ -22,36 +22,29 @@ public class ContactFixer {
     //private List<String> headers;
     //private List<Map<String,String>> data;
 
-    public static void main(String[] args) {
-        if (args.length!=2)
-        {
-            System.out.println("Usage: ContactFixer {src} {dst}");
-        }
-        try
-        {
-            ContactFixer inst = new ContactFixer(new File(args[0]),new File(args[1]));
-            inst.process();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public ContactFixer(File src, File dst)
-    {
+    public ContactFixer(File src, File dst) {
         super();
         this.src = src;
         this.dst = dst;
-        if (src==null || dst==null || !src.exists() || !src.isFile())
-        {
+        if (src == null || dst == null || !src.exists() || !src.isFile()) {
             throw new IllegalArgumentException("Src and Dst may not be null, and src must exist and be a file");
         }
     }
 
+    public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Usage: ContactFixer {src} {dst}");
+        }
+        try {
+            ContactFixer inst = new ContactFixer(new File(args[0]), new File(args[1]));
+            inst.process();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void process()
-            throws IOException
-    {
+            throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(src));
         FileWriter fw = new FileWriter(dst);
 
@@ -63,26 +56,22 @@ public class ContactFixer {
 
         out.printRecord(headers);
 
-        LOG.info("Header:{}",parser.getHeaderMap());
+        LOG.info("Header:{}", parser.getHeaderMap());
 
         LOG.info("Found {} records", list.size());
         for (CSVRecord record : list) {
-            Map<String,String> rMap = record.toMap();
+            Map<String, String> rMap = record.toMap();
             String notes = rMap.get("Notes");
-            if (notes!=null && notes.length()>0)
-            {
+            if (notes != null && notes.length() > 0) {
                 List<String> lines = new LinkedList<>(Arrays.asList(notes.split("\n")));
                 boolean notesModified = false;
-                for (Iterator<String> i = lines.iterator();i.hasNext();)
-                {
+                for (Iterator<String> i = lines.iterator(); i.hasNext(); ) {
                     String val = i.next();
                     int idx = val.indexOf(":");
-                    if (idx!=-1)
-                    {
-                        String inHVal = val.substring(0,idx);
-                        String nVal = val.substring(idx+1).trim();
-                        if (nVal.length()>0 && headers.contains(inHVal) && !"Notes".equals(inHVal))
-                        {
+                    if (idx != -1) {
+                        String inHVal = val.substring(0, idx);
+                        String nVal = val.substring(idx + 1).trim();
+                        if (nVal.length() > 0 && headers.contains(inHVal) && !"Notes".equals(inHVal)) {
                             if (headers.contains(inHVal)) {
                                 String curVal = rMap.get(inHVal);
                                 if (!curVal.equals(nVal)) {
@@ -96,20 +85,16 @@ public class ContactFixer {
                                 }
                                 //LOG.info("Found match field {} in row {} old:{} new: {}", inHVal, record.getRecordNumber(), curVal, nVal);
                                 //LOG.info("Old map:{}", record.toMap());
-                            }
-                            else
-                            {
+                            } else {
                                 LOG.info("Nomatch field found: {}", inHVal);
                             }
                         }
                     }
 
                 }
-                if (notesModified)
-                {
+                if (notesModified) {
                     StringBuffer sb = new StringBuffer();
-                    for (String s:lines)
-                    {
+                    for (String s : lines) {
                         sb.append(s).append("\n");
                     }
                     rMap.put("Notes", sb.toString().trim());
@@ -138,22 +123,18 @@ public class ContactFixer {
         }
 
 
-
-
         br.close();
         out.close();
 
 
     }
 
-    private String[] toOutput(Map<String,String> data, List<String> headers)
-    {
+    private String[] toOutput(Map<String, String> data, List<String> headers) {
         String[] rval = new String[headers.size()];
-        for (int i=0;i<headers.size();i++)
-        {
+        for (int i = 0; i < headers.size(); i++) {
             String hName = headers.get(i);
             String dVal = data.get(hName);
-            rval[i]=dVal;
+            rval[i] = dVal;
         }
         return rval;
     }

@@ -40,8 +40,7 @@ public class DataValidationException extends RuntimeException {
         return rval;
     }
 
-    public void addError(String name, String value)
-    {
+    public void addError(String name, String value) {
         this.errorMap.put(name, value);
     }
 

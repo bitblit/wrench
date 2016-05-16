@@ -19,9 +19,9 @@ import java.io.IOException;
  */
 @Component(value = "checkTimestampSkewFilter")
 public class CheckTimestampSkewFilter extends AbstractSimpleFilter {
+    public static final String TIMESTAMP_NAME = "X-APE-TIMESTAMP";
     private static Logger LOG = LoggerFactory.getLogger(CheckTimestampSkewFilter.class);
     private long maxTimestampSkew = 1000 * 60 * 5; // Default 5 minutes
-    public static final String TIMESTAMP_NAME = "X-APE-TIMESTAMP";
 
     @Override
     public void innerFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {

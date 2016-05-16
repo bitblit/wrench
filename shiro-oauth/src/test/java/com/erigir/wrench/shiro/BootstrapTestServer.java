@@ -11,12 +11,7 @@ import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import javax.servlet.Filter;
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -107,17 +102,16 @@ public class BootstrapTestServer {
             PrintWriter pw = resp.getWriter();
 
             resp.setContentType("text/html");
-            pw.println("Hello to request to :" + req.getRequestURI()+"<br />");
+            pw.println("Hello to request to :" + req.getRequestURI() + "<br />");
 
 
             Subject subject = SecurityUtils.getSubject();
 
-            if (subject.hasRole("oauth-user"))
-            {
+            if (subject.hasRole("oauth-user")) {
                 pw.println("<pre>");
                 pw.println("Subject is:" + subject);
-                pw.println("First principal type: "+OauthPrincipal.firstOauthPrincipal().getOauthProviderName());
-                pw.println("First principal other data: "+OauthPrincipal.firstOauthPrincipal().getOtherData());
+                pw.println("First principal type: " + OauthPrincipal.firstOauthPrincipal().getOauthProviderName());
+                pw.println("First principal other data: " + OauthPrincipal.firstOauthPrincipal().getOtherData());
                 pw.println("Roles are:" + OauthPrincipal.oauthRoles());
                 pw.println("Perms are:" + OauthPrincipal.oauthPermissions());
 
@@ -128,9 +122,7 @@ public class BootstrapTestServer {
                 pw.println("Has perm oauth:test " + subject.isPermitted("oauth:test"));
                 pw.println("Has perm oauth:t2 " + subject.isPermitted("oauth:test"));
                 pw.println("</pre>");
-            }
-            else
-            {
+            } else {
                 pw.println("Not currently logged in. <br />");
                 pw.println("<a href=\"login?p=facebook\">Login with Facebook</a><br />");
                 pw.println("<a href=\"login?p=google\">Login with Google</a><br />");

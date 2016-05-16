@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by chrweiss on 3/16/15.

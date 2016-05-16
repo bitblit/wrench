@@ -33,7 +33,7 @@ import java.util.*;
 @Configuration
 public class OauthShiroContext {
     private static final Logger LOG = LoggerFactory.getLogger(OauthShiroContext.class);
-    private static final String NO_SSL_FLAG="NO_SSL";
+    private static final String NO_SSL_FLAG = "NO_SSL";
 
     /**
      * If set to true, the server will use the Host and X-Forwarded-Proto headers if they
@@ -164,12 +164,9 @@ public class OauthShiroContext {
     public String sslPort() {
         String port = System.getProperty("shiro.https.port");
         port = (port == null) ? "443" : port;
-        if (NO_SSL_FLAG.equalsIgnoreCase(port))
-        {
+        if (NO_SSL_FLAG.equalsIgnoreCase(port)) {
             LOG.warn("WARNING : SHIRO IS CONFIGURED TO NOT USE SSL!");
-        }
-        else
-        {
+        } else {
             LOG.info("Shiro will use HTTPS redirect to port {}", port);
         }
         return port;
@@ -185,12 +182,10 @@ public class OauthShiroContext {
         return "ssl[" + sslPort() + "]";
     }
 
-    private String addSSL(String value)
-    {
+    private String addSSL(String value) {
         String rval = value;
-        if (value!=null && !NO_SSL_FLAG.equalsIgnoreCase(sslPort()))
-        {
-            rval = value+", "+sslConfigEntry();
+        if (value != null && !NO_SSL_FLAG.equalsIgnoreCase(sslPort())) {
+            rval = value + ", " + sslConfigEntry();
         }
         return rval;
     }

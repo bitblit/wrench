@@ -10,6 +10,7 @@ public class CurrencyUtils {
 
     /**
      * Rounds a bigdecimal half up to the nearest cent (2 decimals)
+     *
      * @param b BigDecimal to round
      * @return BigDecimal containing the rounded value
      */
@@ -22,6 +23,7 @@ public class CurrencyUtils {
 
     /**
      * Rounds a bigdecimal half up to the nearest cent (2 decimals)
+     *
      * @param s String containing the BigDecimal to round
      * @return BigDecimal containing the rounded value
      */
@@ -35,6 +37,7 @@ public class CurrencyUtils {
 
     /**
      * Rounds a bigdecimal half up to the nearest cent (2 decimals)
+     *
      * @param n Number containing the BigDecimal to round
      * @return BigDecimal containing the rounded value
      */
@@ -49,6 +52,7 @@ public class CurrencyUtils {
 
     /**
      * Null-safe add for big decimal (treat null as 0)
+     *
      * @param b1 Bigdecimal operand
      * @param b2 Bigdecimal operand
      * @return Bigdecimal containing the result

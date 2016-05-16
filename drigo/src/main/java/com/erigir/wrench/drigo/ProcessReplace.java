@@ -1,7 +1,6 @@
 package com.erigir.wrench.drigo;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -11,7 +10,7 @@ public class ProcessReplace {
     private String includeRegex;
     private String prefix;
     private String suffix;
-    private LinkedHashMap<Pattern,String> replace;
+    private LinkedHashMap<Pattern, String> replace;
 
     public String getIncludeRegex() {
         return includeRegex;

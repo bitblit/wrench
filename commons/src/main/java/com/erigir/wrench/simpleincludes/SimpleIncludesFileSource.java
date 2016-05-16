@@ -26,22 +26,17 @@ public class SimpleIncludesFileSource implements SimpleIncludesSource {
     public String findContent(String name) {
         String rval = null;
         File contents = new File(includeSourceParentDirectory, name);
-        if (contents.exists() && contents.isFile())
-        {
+        if (contents.exists() && contents.isFile()) {
             try {
                 FileInputStream fis = new FileInputStream(contents);
                 byte[] data = ZipUtils.toByteArray(fis);
                 fis.close();
-                rval =  new String(data);
-            }
-            catch (IOException ioe)
-            {
+                rval = new String(data);
+            } catch (IOException ioe) {
                 LOG.warn("Error occurred trying to read file, returning null", ioe);
-                rval=null;
+                rval = null;
             }
-        }
-        else
-        {
+        } else {
             LOG.warn("Requested file {}, but not found in {}", name, includeSourceParentDirectory);
         }
 

@@ -52,7 +52,6 @@ public class VersionCheckFilter extends AbstractSimpleFilter {
     }
 
 
-
     public final String removeVersionFromURI(String input) {
         String rval = input;
         Integer foundVersion = null;

@@ -17,9 +17,8 @@ import java.util.TreeMap;
  * Created by chrweiss on 5/30/15.
  */
 public class ProviderRegistry {
-    private static final Logger LOG = LoggerFactory.getLogger(ProviderRegistry.class);
     public static final String DYNAMIC_SERVICE_PROVIDER_NAME_KEY = "shiro-oauth-dynamic-service-provider-name";
-
+    private static final Logger LOG = LoggerFactory.getLogger(ProviderRegistry.class);
     private Map<String, OauthProvider> providerMap = new TreeMap<>();
 
     public void addProvider(OauthProvider provider) {

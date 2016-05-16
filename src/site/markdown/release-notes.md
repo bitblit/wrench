@@ -1,5 +1,17 @@
 ## Release Notes
 
+# Version 1.2.0
+Code is backwards compatible, but tokens created with previous versions
+of TokenService will not parse correctly.  Not making this a major 
+release is a judgement call - the tokens will invalidate, but they
+are short-term tokens and this upgrade will look from that point of view
+like a forced token expiration which is a normal operation
+* Added a Crockford Base32 class to commons
+* Switched TokenService to use Crockford Base32 for easier cross-language compatibility
+* Upgraded versions for AWS, Spring, Jackson
+* Did NOT upgrade servlet version as that requires Tomcat 8.5 - currently not supported by plugin
+* Global reformat/cleanup of code
+
 # Version 1.1.8
 Backwards compatible bugfix/feature release
 * Small tweak to cleanup of connections used by SimpleHttpUtils

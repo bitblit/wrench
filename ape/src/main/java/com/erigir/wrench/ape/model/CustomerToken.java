@@ -9,7 +9,7 @@ public class CustomerToken {
     private String key;
     private Long expires;
     private Long created = System.currentTimeMillis();
-    private Map<String,Object> otherData;
+    private Map<String, Object> otherData;
 
     public CustomerToken() {
     }

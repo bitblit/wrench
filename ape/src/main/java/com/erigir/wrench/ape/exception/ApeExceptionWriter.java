@@ -57,8 +57,7 @@ public class ApeExceptionWriter {
 
             // If gzip has already been set, use it
             OutputStream os = resp.getOutputStream();
-            if ("gzip".equalsIgnoreCase(resp.getHeader("Content-Encoding")))
-            {
+            if ("gzip".equalsIgnoreCase(resp.getHeader("Content-Encoding"))) {
                 os = new GZIPOutputStream(os);
             }
 
@@ -83,10 +82,9 @@ public class ApeExceptionWriter {
             rval.initCause(input);
         }
 
-        if (NestedServletException.class.isAssignableFrom(rval.getClass()))
-        {
+        if (NestedServletException.class.isAssignableFrom(rval.getClass())) {
             LOG.debug("Unwrapping NestedServletException");
-            rval = (Exception)((NestedServletException)rval).getCause();
+            rval = (Exception) ((NestedServletException) rval).getCause();
         }
         return rval;
     }

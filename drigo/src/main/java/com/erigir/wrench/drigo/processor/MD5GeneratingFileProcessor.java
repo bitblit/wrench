@@ -4,11 +4,12 @@ import com.erigir.wrench.drigo.DrigoException;
 import com.erigir.wrench.drigo.DrigoResults;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Base64;
 
 /**

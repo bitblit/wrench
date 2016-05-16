@@ -7,23 +7,22 @@ import java.io.OutputStream;
 
 /**
  * Thin wrapper around MysqlDump Command
- *
+ * <p>
  * Created by chrweiss on 6/24/15.
  */
 public class DumpDatabase {
 
     public static void main(String[] args) {
-        dumpDatabase(args[0],args[1],args[2],System.out);
+        dumpDatabase(args[0], args[1], args[2], System.out);
     }
 
-    public static void dumpDatabase(String username, String password, String database, OutputStream output)
-    {
+    public static void dumpDatabase(String username, String password, String database, OutputStream output) {
         Runtime runtime = Runtime.getRuntime();
         String[] cmd = new String[]{
                 "mysqldump",
                 "-u",
                 username,
-                "-p"+password,
+                "-p" + password,
                 database
         };
 
@@ -34,17 +33,14 @@ public class DumpDatabase {
             BufferedInputStream bis = new BufferedInputStream(is);
 
             int read = bis.read();
-            while (read!=-1)
-            {
+            while (read != -1) {
                 output.write(read);
                 read = bis.read();
             }
             bis.close();
 
-        }
-        catch (IOException ioe)
-        {
-            throw new RuntimeException("Error processing mysqldump",ioe);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Error processing mysqldump", ioe);
         }
     }
 

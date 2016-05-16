@@ -16,6 +16,7 @@ public class DateUtils {
 
     /**
      * Returns a date object that is N days ago (relative to now (ie, new Date())
+     *
      * @param days int number of days to set in the past
      * @return Date containing the date that many days ago
      */
@@ -27,6 +28,7 @@ public class DateUtils {
 
     /**
      * Returns a date object that is N years ago (relative to now (ie, new Date())
+     *
      * @param years int number of years to set in the past
      * @return Date containing the date that many days ago
      */
@@ -39,6 +41,7 @@ public class DateUtils {
 
     /**
      * Returns a date object that is N years ago (relative to now (ie, new Date())
+     *
      * @param months int number of years to set in the past
      * @return Date containing the date that many days ago
      */

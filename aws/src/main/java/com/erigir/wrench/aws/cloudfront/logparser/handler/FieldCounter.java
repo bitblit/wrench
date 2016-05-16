@@ -1,6 +1,5 @@
 package com.erigir.wrench.aws.cloudfront.logparser.handler;
 
-import com.erigir.wrench.CollectionUtils;
 import com.erigir.wrench.aws.cloudfront.logparser.CloudFrontAccessLogEntry;
 import com.erigir.wrench.aws.cloudfront.logparser.CloudFrontAccessLogField;
 import com.erigir.wrench.aws.cloudfront.logparser.CloudFrontAccessLogHandler;
@@ -8,7 +7,6 @@ import com.erigir.wrench.aws.cloudfront.logparser.CloudFrontAccessLogHandler;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 
 /**
  * Created by chrweiss on 3/16/15.
@@ -22,7 +20,7 @@ public class FieldCounter implements CloudFrontAccessLogHandler {
     }
 
     public FieldCounter(CloudFrontAccessLogField field) {
-         this.field = field;
+        this.field = field;
     }
 
     @Override
@@ -30,7 +28,7 @@ public class FieldCounter implements CloudFrontAccessLogHandler {
         String value = entry.field(field);
         Integer x = counts.get(value);
 
-        int newVal = (x==null)?1:x+1;
+        int newVal = (x == null) ? 1 : x + 1;
         counts.put(value, newVal);
 
         return true;

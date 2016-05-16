@@ -9,7 +9,7 @@ import java.util.Date;
  * work on a clock schedule but need to be tested against static data.  Only
  * downside is that the consuming system must call SystemClock.nowTime instead of
  * System.currentTimeMillis everywhere in the code.
- *
+ * <p>
  * Created by cweiss on 2/10/16.
  */
 public class SystemClock {

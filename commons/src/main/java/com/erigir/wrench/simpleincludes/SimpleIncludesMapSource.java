@@ -7,7 +7,7 @@ import java.util.Objects;
  * Created by cweiss on 8/4/15.
  */
 public class SimpleIncludesMapSource implements SimpleIncludesSource {
-    private Map<String,String> data;
+    private Map<String, String> data;
 
     public SimpleIncludesMapSource() {
     }

@@ -1,7 +1,5 @@
 package com.erigir.wrench.aws.s3;
 
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -21,14 +19,14 @@ import java.util.Objects;
 /**
  * An implementation of cached object that uses S3 as its
  * backing object.
- *
+ * <p>
  * Note that for small objects often DynamoCachedObject will
  * be faster/more consistent in read/write times, but S3
  * can hold much bigger objects
- *
+ * <p>
  * Created by cweiss1271 on 2/29/16.
  */
-public class S3CachedObject<T> extends AbstractAWSCachedObject<T>{
+public class S3CachedObject<T> extends AbstractAWSCachedObject<T> {
     private static final Logger LOG = LoggerFactory.getLogger(S3CachedObject.class);
     private AmazonS3 s3;
     private String bucket;
@@ -43,8 +41,7 @@ public class S3CachedObject<T> extends AbstractAWSCachedObject<T>{
         Objects.requireNonNull(applicationId);
         Objects.requireNonNull(objectId);
 
-        if (applicationId.startsWith("/") || objectId.startsWith("/") || objectId.endsWith("/"))
-        {
+        if (applicationId.startsWith("/") || objectId.startsWith("/") || objectId.endsWith("/")) {
             throw new IllegalArgumentException("Neither applicationId nor objectId may start with / and objectId may not end with it");
         }
 
@@ -64,8 +61,7 @@ public class S3CachedObject<T> extends AbstractAWSCachedObject<T>{
         Objects.requireNonNull(applicationId);
         Objects.requireNonNull(objectId);
 
-        if (applicationId.startsWith("/") || objectId.startsWith("/") || objectId.endsWith("/"))
-        {
+        if (applicationId.startsWith("/") || objectId.startsWith("/") || objectId.endsWith("/")) {
             throw new IllegalArgumentException("Neither applicationId nor objectId may start with / and objectId may not end with it");
         }
 
@@ -78,17 +74,14 @@ public class S3CachedObject<T> extends AbstractAWSCachedObject<T>{
         forceCacheReload();
     }
 
-    private String fullPath()
-    {
+    private String fullPath() {
         StringBuilder sb = new StringBuilder();
         sb.append(prefix);
-        if (!prefix.endsWith("/"))
-        {
+        if (!prefix.endsWith("/")) {
             sb.append("/");
         }
         sb.append(applicationId);
-        if (!applicationId.endsWith("/"))
-        {
+        if (!applicationId.endsWith("/")) {
             sb.append("/");
         }
         sb.append(objectId);
@@ -105,17 +98,12 @@ public class S3CachedObject<T> extends AbstractAWSCachedObject<T>{
             S3Object sob = s3.getObject(bucket, path);
 
             rval = deserialize(IOUtils.toString(sob.getObjectContent()));
-        }
-        catch (AmazonS3Exception ase)
-        {
-            if (ase.getErrorCode().equals("404"))
-            {
+        } catch (AmazonS3Exception ase) {
+            if (ase.getErrorCode().equals("404")) {
                 LOG.debug("No such file, returning null");
             }
-        }
-        catch (IOException ioe)
-        {
-            throw new RuntimeException("Error reading content",ioe);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Error reading content", ioe);
         }
         return rval;
     }
@@ -123,21 +111,18 @@ public class S3CachedObject<T> extends AbstractAWSCachedObject<T>{
     @Override
     protected final void saveCacheToStore(String jsonValue) {
         String fullPath = fullPath();
-        if (jsonValue==null)
-        {
+        if (jsonValue == null) {
             LOG.warn("Removing value from s3");
             s3.deleteObject(bucket, fullPath);
-            LOG.info("Deleted object for {}/{} ({})",applicationId,objectId,fullPath);
-        }
-        else
-        {
+            LOG.info("Deleted object for {}/{} ({})", applicationId, objectId, fullPath);
+        } else {
             byte[] data = jsonValue.getBytes();
             ObjectMetadata omd = new ObjectMetadata();
             omd.setContentType("application/json");
             omd.setContentLength(data.length);
-            PutObjectRequest por = new PutObjectRequest(bucket, fullPath, new ByteArrayInputStream(data),omd);
+            PutObjectRequest por = new PutObjectRequest(bucket, fullPath, new ByteArrayInputStream(data), omd);
             s3.putObject(por);
-            LOG.info("Updated object for {}/{} ({})",applicationId,objectId,fullPath);
+            LOG.info("Updated object for {}/{} ({})", applicationId, objectId, fullPath);
         }
     }
 

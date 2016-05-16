@@ -24,17 +24,17 @@ public class RequireHTTPSFilter extends AbstractSimpleFilter {
     private static Logger LOG = LoggerFactory.getLogger(RequireHTTPSFilter.class);
     private List<Pattern> excludePatterns;
     private boolean allowProxyTermination = true;
-    private String proxyTerminationHeader="X-Forwarded-Proto";
+    private String proxyTerminationHeader = "X-Forwarded-Proto";
 
     @Override
     public void innerFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
             throws IOException, ServletException {
         String scheme = req.getScheme();
         String uri = req.getRequestURI();
-        boolean proxyTerminated = (allowProxyTermination && proxyTerminationHeader!=null && "https".equalsIgnoreCase(req.getHeader(proxyTerminationHeader)));
+        boolean proxyTerminated = (allowProxyTermination && proxyTerminationHeader != null && "https".equalsIgnoreCase(req.getHeader(proxyTerminationHeader)));
 
         if (!"https".equalsIgnoreCase(scheme) && !proxyTerminated && !matchesAtLeastOne(excludePatterns, uri)) {
-            LOG.warn("Non-HTTPS request made (scheme was '{}' uri was '{}')",scheme,uri);
+            LOG.warn("Non-HTTPS request made (scheme was '{}' uri was '{}')", scheme, uri);
             throw new HttpsRequiredException();
         }
 

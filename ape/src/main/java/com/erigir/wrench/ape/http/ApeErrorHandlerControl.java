@@ -3,7 +3,6 @@ package com.erigir.wrench.ape.http;
 import com.erigir.wrench.ape.exception.ApeExceptionWriter;
 import com.erigir.wrench.ape.exception.DataValidationException;
 import com.erigir.wrench.ape.exception.NoSuchResourceException;
-import com.erigir.wrench.ape.http.ApeErrorHandlerControl;
 import com.erigir.wrench.aws.sns.ServerErrorNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
@@ -34,21 +32,16 @@ public class ApeErrorHandlerControl {
 
     @RequestMapping(value = "/ErrorHandler")
     public void
-    errorHandler(HttpServletRequest req, HttpServletResponse resp)
-    {
+    errorHandler(HttpServletRequest req, HttpServletResponse resp) {
         Exception main = (Exception) req.getAttribute("javax.servlet.error.exception");
         int currentStatus = resp.getStatus();
-        if (main==null)
-        {
-            if (currentStatus==400)
-            {
+        if (main == null) {
+            if (currentStatus == 400) {
                 // This is typically caused by Spring not being able to parse the supplied
                 // body into the needed object.  Fake that instead
                 LOG.warn("No exception and status 400 - treating as spring parse error");
-                main = new DataValidationException(Collections.singletonMap("request-body","bad or mismatched json"));
-            }
-            else
-            {
+                main = new DataValidationException(Collections.singletonMap("request-body", "bad or mismatched json"));
+            } else {
                 LOG.warn("Someone requested the error handler directly.  Faking a 404");
                 main = new NoSuchResourceException();
             }
@@ -67,20 +60,16 @@ public class ApeErrorHandlerControl {
         }
     }
 
-    private void buildAndSendErrorReport(HttpServletRequest req)
-    {
+    private void buildAndSendErrorReport(HttpServletRequest req) {
         LOG.info("Building error report");
-        try
-        {
+        try {
             Map<String, Object> other = new TreeMap<String, Object>();
             Principal principal = req.getUserPrincipal();
             if (principal != null) {
                 other.put("Logged In Principal", principal);
             }
             serverErrorNotifier.reportError(req, other);
-        }
-        catch (Throwable t)
-        {
+        } catch (Throwable t) {
             LOG.error("Didn't send report due to error", t);
         }
     }

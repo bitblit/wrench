@@ -1,7 +1,6 @@
 package com.erigir.wrench.drigo.processor;
 
 import com.erigir.wrench.drigo.DrigoResults;
-import com.erigir.wrench.simpleincludes.SimpleIncludesFileSource;
 import com.erigir.wrench.simpleincludes.SimpleIncludesPatternMapSource;
 import com.erigir.wrench.simpleincludes.SimpleIncludesProcessor;
 import org.apache.commons.io.IOUtils;
@@ -13,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -41,7 +39,7 @@ public class DrigoReplaceProcessor extends AbstractFileProcessor {
     private String suffix;
     private LinkedHashMap<Pattern, String> replace;
 
-    public DrigoReplaceProcessor(String prefix, String suffix,LinkedHashMap<Pattern, String> replace) {
+    public DrigoReplaceProcessor(String prefix, String suffix, LinkedHashMap<Pattern, String> replace) {
         this.prefix = prefix;
         this.suffix = suffix;
         this.replace = replace;

@@ -1,11 +1,10 @@
 package com.erigir.wrench.sos;
 
-import com.erigir.wrench.ZipUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.lang.Class;import java.lang.Exception;import java.lang.IllegalArgumentException;import java.lang.IllegalStateException;import java.lang.Override;import java.lang.String;import java.util.Date;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -27,7 +26,7 @@ public class FileObjectStorageImplementation implements ObjectStorageImplementat
 
     @Override
     public String toFullKey(Class clazz, String key) {
-        return toFile(clazz,key).getAbsolutePath();
+        return toFile(clazz, key).getAbsolutePath();
     }
 
     @Override
@@ -60,7 +59,7 @@ public class FileObjectStorageImplementation implements ObjectStorageImplementat
             rval.put(s, next);
         }
 
-        LOG.info("Fetched {} summaries in {} ms", rval.size(), System.currentTimeMillis()-start);
+        LOG.info("Fetched {} summaries in {} ms", rval.size(), System.currentTimeMillis() - start);
 
         return rval;
     }
@@ -69,13 +68,10 @@ public class FileObjectStorageImplementation implements ObjectStorageImplementat
     public void deleteObject(String fullKey) {
         try {
             File f = new File(fullKey);
-            if (f.exists() && f.isFile())
-            {
+            if (f.exists() && f.isFile()) {
                 f.delete();
-            }
-            else
-            {
-                LOG.warn("Tried to delete non-existing (or non-file) : {}",f);
+            } else {
+                LOG.warn("Tried to delete non-existing (or non-file) : {}", f);
             }
         } catch (Exception e) {
             throw new IllegalStateException("Error deleting object " + fullKey, e);
@@ -89,10 +85,8 @@ public class FileObjectStorageImplementation implements ObjectStorageImplementat
         if (fullKey != null) {
             try {
                 rval = new BufferedInputStream(new FileInputStream(fullKey));
-            }
-            catch (FileNotFoundException fnf)
-            {
-                LOG.info("Tried to read non-exisiting file : {}",fullKey);
+            } catch (FileNotFoundException fnf) {
+                LOG.info("Tried to read non-exisiting file : {}", fullKey);
             }
         }
         return rval;

@@ -7,12 +7,7 @@ import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,18 +23,16 @@ import java.util.UUID;
  * 4) If there is more than one, and no provider parameter, it redirects to the "selector" url
  * (which should be unsecured!)
  * 5) If there is a provider parameter with no matching provider, it throws an exception
- *
+ * <p>
  * Once the provider is selected, it generates the redirect URL, stores the return URL and
  * nonce in session, and redirects to the redirect URL
- *
+ * <p>
  * Created by chrweiss on 1/2/15.
  */
 public class DynamicOauthLoginFilter implements Filter {
-    private static final Logger LOG = LoggerFactory.getLogger(DynamicOauthLoginFilter.class);
-
     public static final String DYNAMIC_RETURN_URL_KEY = "shiro-oauth-dynamic-return-url";
     public static final String DYNAMIC_SERVICE_NONCE_KEY = "shiro-oauth-dynamic-service-nonce";
-
+    private static final Logger LOG = LoggerFactory.getLogger(DynamicOauthLoginFilter.class);
     private String proxyHostHeader = "Host";
     private String proxySchemeHeader = "X-Forwarded-Proto";
 
@@ -99,7 +92,7 @@ public class DynamicOauthLoginFilter implements Filter {
 
     private String buildServiceUrl(ServletRequest request) {
         StringBuilder sb = new StringBuilder();
-        HttpServletRequest req = (HttpServletRequest)request;
+        HttpServletRequest req = (HttpServletRequest) request;
         dumpHeaders(req);
         sb.append(calculateScheme(req));
         sb.append("://");
@@ -116,43 +109,34 @@ public class DynamicOauthLoginFilter implements Filter {
         return sb.toString();
     }
 
-    private void dumpHeaders(HttpServletRequest req)
-    {
-        if (LOG.isDebugEnabled())
-        {
+    private void dumpHeaders(HttpServletRequest req) {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("--- Headers ---");
-            for (String s: Collections.list(req.getHeaderNames()))
-            {
-                LOG.debug("{} = {}",s,req.getHeader(s));
+            for (String s : Collections.list(req.getHeaderNames())) {
+                LOG.debug("{} = {}", s, req.getHeader(s));
             }
             LOG.debug("--- End Headers ---");
         }
     }
 
-    private String calculateScheme(HttpServletRequest req)
-    {
+    private String calculateScheme(HttpServletRequest req) {
         String rval = null;
-        if (useProxyHeaders)
-        {
+        if (useProxyHeaders) {
             rval = req.getHeader(proxySchemeHeader);
         }
-        if (rval==null)
-        {
+        if (rval == null) {
             rval = req.getScheme();
         }
         return rval;
     }
 
-    private String calculateHost(HttpServletRequest req)
-    {
+    private String calculateHost(HttpServletRequest req) {
         String rval = null;
-        if (useProxyHeaders)
-        {
+        if (useProxyHeaders) {
             rval = req.getHeader(proxyHostHeader);
         }
-        if (rval==null)
-        {
-            rval = req.getServerName()+":"+req.getServerPort();
+        if (rval == null) {
+            rval = req.getServerName() + ":" + req.getServerPort();
         }
         return rval;
     }

@@ -32,13 +32,10 @@ import java.util.regex.Pattern;
  * Created by chrweiss on 3/13/2015.
  */
 public class HitMeasuringFilter implements Filter {
-    private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringFilter.class);
-
     public static final String DEFINITION_REPORT_KEY = "definition";
-
     public static final String LAST_HIT_DATE_REPORT_KEY = "last-hit-date";
     public static final String HIT_COUNT_REPORT_KEY = "hit-count";
-
+    private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringFilter.class);
     private List<HitMeasuringEntry> trackingList = new LinkedList<>();
 
     private Map<HitMeasuringEntry, Date> lastHit = new ConcurrentHashMap<>();

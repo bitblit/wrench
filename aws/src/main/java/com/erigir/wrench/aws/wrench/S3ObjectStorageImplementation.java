@@ -6,12 +6,10 @@ import com.erigir.wrench.sos.ObjectStorageImplementation;
 import com.erigir.wrench.sos.StoredObjectMetadata;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.TreeMap;

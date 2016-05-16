@@ -23,7 +23,7 @@ public class ZipUtils {
             //baos.flush();
             baos.close();
             byte[] data = baos.toByteArray();
-            LOG.debug("Compressed {} to {}", input.length, data.length);
+            LOG.trace("Compressed {} to {}", input.length, data.length);
             return data;
         } catch (IOException ioe) {
             throw new RuntimeException("Error processing to zip", ioe);
@@ -35,7 +35,7 @@ public class ZipUtils {
             ByteArrayInputStream bais = new ByteArrayInputStream(input);
             GZIPInputStream gz = new GZIPInputStream(bais);
             byte[] data = toByteArray(gz);
-            LOG.debug("Decompressed {} to {}", input.length, data.length);
+            LOG.trace("Decompressed {} to {}", input.length, data.length);
             return data;
         } catch (IOException ioe) {
             throw new RuntimeException("Error processing from zip", ioe);

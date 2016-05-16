@@ -22,10 +22,10 @@ import java.util.List;
 
 /**
  * This realm implementation acts as a OAuth client to a OAuth server for authentication and basic authorization.
- *
+ * <p>
  * This realm functions by inspecting a submitted {@link OauthToken OAuthToken} (which essentially
  * wraps a OAuth service ticket) and validates it against the OAuth server using a configured OAuth Validator
- *
+ * <p>
  * It is based on
  * {@link AuthorizingRealm AuthorizingRealm} for both authentication and authorization. User id and attributes are retrieved from the OAuth
  * ticket validation response during authentication phase. Roles and permissions are computed during authorization phase (according

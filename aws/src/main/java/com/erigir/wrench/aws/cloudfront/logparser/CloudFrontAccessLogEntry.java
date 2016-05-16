@@ -4,10 +4,6 @@ import com.erigir.wrench.QuietUtils;
 import com.erigir.wrench.UTF8Encoder;
 
 import java.math.BigDecimal;
-import java.net.URI;
-import java.net.URLDecoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,7 +12,7 @@ import java.util.TreeMap;
  * Created by chrweiss on 3/16/15.
  */
 public class CloudFrontAccessLogEntry {
-    public static final String DATE_FORMAT="yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     private Map<CloudFrontAccessLogField, String> fields = new TreeMap<>();
     /*private String dateString;
@@ -43,56 +39,51 @@ public class CloudFrontAccessLogEntry {
     
     private BigDecimal timeTaken;*/
 
-    private Map<String,Object> meta;
+    private Map<String, Object> meta;
 
-    public CloudFrontAccessLogEntry()
-    {
+    public CloudFrontAccessLogEntry() {
         super();
     }
 
-    public CloudFrontAccessLogEntry(String inLine)
-    {
+    public CloudFrontAccessLogEntry(String inLine) {
         super();
         populateFromLogLine(inLine);
     }
-    
-    public void populateFromLogLine(String inLine)
-    {
-        if (inLine==null)
-        {
+
+    public void populateFromLogLine(String inLine) {
+        if (inLine == null) {
             throw new IllegalArgumentException("Line may not be null");
         }
         String[] broken = inLine.split("\t");
-        if (broken.length!=19)
-        {
-            throw new IllegalArgumentException("Line requires 19 segments but found "+broken.length+" in "+inLine);
+        if (broken.length != 19) {
+            throw new IllegalArgumentException("Line requires 19 segments but found " + broken.length + " in " + inLine);
         }
 
-       fields.put(CloudFrontAccessLogField.DATE,broken[0]);
-        fields.put(CloudFrontAccessLogField.TIME,broken[1]);
-        fields.put(CloudFrontAccessLogField.EDGE_LOCATION,broken[2]);
-        fields.put(CloudFrontAccessLogField.SC_BYTES,broken[3]);
+        fields.put(CloudFrontAccessLogField.DATE, broken[0]);
+        fields.put(CloudFrontAccessLogField.TIME, broken[1]);
+        fields.put(CloudFrontAccessLogField.EDGE_LOCATION, broken[2]);
+        fields.put(CloudFrontAccessLogField.SC_BYTES, broken[3]);
 
-        fields.put(CloudFrontAccessLogField.IP,broken[4]);
-        fields.put(CloudFrontAccessLogField.METHOD,broken[5]);
-        fields.put(CloudFrontAccessLogField.CS_HOST,broken[6]);
-        fields.put(CloudFrontAccessLogField.URI_STEM,broken[7]);
-        fields.put(CloudFrontAccessLogField.STATUS,broken[8]);
-        fields.put(CloudFrontAccessLogField.REFERER,broken[9]);
-        fields.put(CloudFrontAccessLogField.USER_AGENT,broken[10]);
-        fields.put(CloudFrontAccessLogField.URI_QUERY,broken[11]);
-        fields.put(CloudFrontAccessLogField.COOKIE,broken[12]);
+        fields.put(CloudFrontAccessLogField.IP, broken[4]);
+        fields.put(CloudFrontAccessLogField.METHOD, broken[5]);
+        fields.put(CloudFrontAccessLogField.CS_HOST, broken[6]);
+        fields.put(CloudFrontAccessLogField.URI_STEM, broken[7]);
+        fields.put(CloudFrontAccessLogField.STATUS, broken[8]);
+        fields.put(CloudFrontAccessLogField.REFERER, broken[9]);
+        fields.put(CloudFrontAccessLogField.USER_AGENT, broken[10]);
+        fields.put(CloudFrontAccessLogField.URI_QUERY, broken[11]);
+        fields.put(CloudFrontAccessLogField.COOKIE, broken[12]);
 
-        fields.put(CloudFrontAccessLogField.EDGE_RESULT_TYPE,broken[13]);
-        fields.put(CloudFrontAccessLogField.EDGE_REQUEST_ID,broken[14]);
-        fields.put(CloudFrontAccessLogField.HOST_HEADER,broken[15]);
-        fields.put(CloudFrontAccessLogField.PROTOCOL,broken[16]);
-        fields.put(CloudFrontAccessLogField.CS_BYTES,broken[17]);
+        fields.put(CloudFrontAccessLogField.EDGE_RESULT_TYPE, broken[13]);
+        fields.put(CloudFrontAccessLogField.EDGE_REQUEST_ID, broken[14]);
+        fields.put(CloudFrontAccessLogField.HOST_HEADER, broken[15]);
+        fields.put(CloudFrontAccessLogField.PROTOCOL, broken[16]);
+        fields.put(CloudFrontAccessLogField.CS_BYTES, broken[17]);
 
-        fields.put(CloudFrontAccessLogField.TIME_TAKEN,broken[18]);
+        fields.put(CloudFrontAccessLogField.TIME_TAKEN, broken[18]);
 
         // Special ones now
-        fields.put(CloudFrontAccessLogField.RAW,inLine);
+        fields.put(CloudFrontAccessLogField.RAW, inLine);
 
         /*
         try {
@@ -109,27 +100,26 @@ public class CloudFrontAccessLogEntry {
         fields.put(CloudFrontAccessLogField.USER_AGENT_DECODED, UTF8Encoder.decode(UTF8Encoder.decode(broken[10])));
     }
 
-    public String field(CloudFrontAccessLogField field)
-    {
+    public String field(CloudFrontAccessLogField field) {
         return fields.get(field);
     }
 
     //date time x-edge-location sc-bytes c-ip cs-method cs(Host) cs-uri-stem sc-status cs(Referer) cs(User-Agent) cs-uri-query cs(Cookie)
     //edge-result-type x-edge-request-id x-host-header cs-protocol cs-bytes time-taken
 
-    public Date getDate()
-    {
-        return (field(CloudFrontAccessLogField.DATE)==null || field(CloudFrontAccessLogField.TIME)==null)?null: QuietUtils.quietParse(field(CloudFrontAccessLogField.DATE) + " " + field(CloudFrontAccessLogField.TIME),DATE_FORMAT);
+    public Date getDate() {
+        return (field(CloudFrontAccessLogField.DATE) == null || field(CloudFrontAccessLogField.TIME) == null) ? null : QuietUtils.quietParse(field(CloudFrontAccessLogField.DATE) + " " + field(CloudFrontAccessLogField.TIME), DATE_FORMAT);
     }
 
     public long getCsBytesAsLong() {
         return new Long(field(CloudFrontAccessLogField.CS_BYTES));
     }
+
     public long getScBytesAsLong() {
         return new Long(field(CloudFrontAccessLogField.SC_BYTES));
     }
-    public BigDecimal getDuration()
-    {
+
+    public BigDecimal getDuration() {
         return new BigDecimal(field(CloudFrontAccessLogField.TIME_TAKEN));
     }
 
@@ -141,12 +131,10 @@ public class CloudFrontAccessLogEntry {
         this.meta = meta;
     }
 
-    public void addMeta(String key, Object value)
-    {
-        if (meta==null)
-        {
+    public void addMeta(String key, Object value) {
+        if (meta == null) {
             meta = new TreeMap<>();
         }
-        meta.put(key,value);
+        meta.put(key, value);
     }
 }

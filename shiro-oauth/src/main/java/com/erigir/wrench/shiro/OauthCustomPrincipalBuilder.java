@@ -5,7 +5,7 @@ package com.erigir.wrench.shiro;
  * populate the roles and privileges section of the OauthPrincipal
  * object based on the systems needs  See also
  * DefaultOauthCustomPrincipalBuilder
- *
+ * <p>
  * Created by chrweiss on 2/22/15.
  */
 public interface OauthCustomPrincipalBuilder {

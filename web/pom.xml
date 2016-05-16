@@ -12,7 +12,8 @@
     <packaging>jar</packaging>
     <name>Wrench Web Utilities</name>
     <version>LOCAL-SNAPSHOT</version>
-    <description>A set of utility classes for simplifying common tasks around reading and serving HTTP/HTML</description>
+    <description>A set of utility classes for simplifying common tasks around reading and serving HTTP/HTML
+    </description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2015</inceptionYear>
     <issueManagement>

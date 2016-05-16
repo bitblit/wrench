@@ -8,11 +8,11 @@ import java.security.cert.X509Certificate;
 
 /**
  * Allows java.net.URLConnection to use self signed certs
- *
+ * <p>
  * While this isn't usually a good idea in production, there are many, many times you need this in dev
  * Adds a static method that modifies the default config in java to allow through what are essentially
  * "invalid" certs.
- *
+ * <p>
  * Created by cweiss1271 on 2/3/16.
  */
 public class AllowSelfSignedHttps {

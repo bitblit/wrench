@@ -54,8 +54,9 @@ public abstract class AbstractFileProcessor implements FileProcessor {
 
     /**
      * Return false if the file was modified
-     * @param src File to read from to process
-     * @param dst File to write the results of the process to
+     *
+     * @param src     File to read from to process
+     * @param dst     File to write the results of the process to
      * @param results DrigoResults object to collect any processing metadata
      * @return boolean true if anything changed, false otherwise
      * @throws IOException on failure to read/write files

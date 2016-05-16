@@ -24,14 +24,14 @@ public class DateFilter implements CloudFrontAccessLogHandler {
 
     public DateFilter(String start, String end) {
 
-        this.end = QuietUtils.quietParse(end,CloudFrontAccessLogEntry.DATE_FORMAT);
-        this.start = QuietUtils.quietParse(start,CloudFrontAccessLogEntry.DATE_FORMAT);
+        this.end = QuietUtils.quietParse(end, CloudFrontAccessLogEntry.DATE_FORMAT);
+        this.start = QuietUtils.quietParse(start, CloudFrontAccessLogEntry.DATE_FORMAT);
     }
 
     @Override
     public boolean handleCloudFrontAccessLogEntry(CloudFrontAccessLogEntry entry) {
         Date test = entry.getDate();
-        return (start==null || start.before(test)) && (end==null || end.after(test));
+        return (start == null || start.before(test)) && (end == null || end.after(test));
     }
 
 

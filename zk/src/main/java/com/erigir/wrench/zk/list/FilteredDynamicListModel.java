@@ -11,24 +11,23 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 
 /**
  * A filtered, sorted model that implements page fetch and cache
  * The cache uses a weak hash map to help with memory usage in large cases
- *
+ * <p>
  * T is the type that you'll generate a list of,
  * R is the type that will hold your filter
- *
+ * <p>
  * Created by chrweiss on 4/30/15.
  */
-public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implements Sortable<T> {
+public class FilteredDynamicListModel<T, R> extends AbstractListModel<T> implements Sortable<T> {
     private static final Logger LOG = LoggerFactory.getLogger(FilteredDynamicListModel.class);
 
     private R filter;
-    private FilteredPageDataSource<T,R> dataSource;
-    private Map<String,Boolean> sortDefinition = new LinkedHashMap<>();
+    private FilteredPageDataSource<T, R> dataSource;
+    private Map<String, Boolean> sortDefinition = new LinkedHashMap<>();
 
     private Integer offset;
     /**
@@ -38,8 +37,8 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
      * message on screen if you like).  Hopefully ZK can make this work (or I can figure out how I'm doing
      * Rows on Demand wrong) to make this unnecessary
      */
-    private Integer limitingMaximum=null;
-    private Integer realCount=null;
+    private Integer limitingMaximum = null;
+    private Integer realCount = null;
 
     //private WeakHashMap<Integer, T> cache = new WeakHashMap<>();
     private T[] cache;
@@ -55,8 +54,7 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
      */
     private int fetchPageSize;
 
-    public FilteredDynamicListModel(FilteredPageDataSource<T,R> dataSource, R filter)
-    {
+    public FilteredDynamicListModel(FilteredPageDataSource<T, R> dataSource, R filter) {
         super();
         this.filter = filter;
         this.dataSource = dataSource;
@@ -69,9 +67,33 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
         this.fetchPageSize = fetchPageSize;
     }
 
+    /**
+     * This is a helper function that generates a typical SQL order by clause from the sort map
+     *
+     * @param input Map(String,Boolean) containing the sort defintion
+     * @return A string containing a order by clause such as " order by col1 ASC, col2 DESC"
+     */
+    public static String buildOrderByClause(Map<String, Boolean> input) {
+        StringBuilder order = new StringBuilder();
+
+        if (input.size() > 0) {
+            for (Map.Entry<String, Boolean> e : input.entrySet()) {
+                if (order.length() > 0) {
+                    order.append(", ");
+                }
+                order.append(e.getKey());
+                order.append((e.getValue()) ? " ASC" : " DESC");
+            }
+            order.insert(0, " order by "); // so the comma logic works
+        }
+
+        String rval = order.toString();
+        return rval;
+    }
+
     @Override
     public void sort(Comparator<T> comparator, boolean b) {
-        LOG.info("Asked to sort {} {}",comparator, b);
+        LOG.info("Asked to sort {} {}", comparator, b);
         addSort(((FieldComparator) comparator).getRawOrderBy(), b);
         forceRedraw();
     }
@@ -81,25 +103,20 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
         LOG.info("called getsort {}", comparator);
         Boolean tmp = sortDefinition.get(((FieldComparator) comparator).getRawOrderBy());
         String rval = "natural";
-        if (tmp!=null)
-        {
-            rval = (tmp)?"ascending":"descending";
+        if (tmp != null) {
+            rval = (tmp) ? "ascending" : "descending";
         }
         return rval;
     }
 
     @Override
     public int getSize() {
-        if (cacheSize==null)
-        {
+        if (cacheSize == null) {
             int temp = dataSource.getFilteredCount(filter);
-            if (limitingMaximum==null ||  temp<limitingMaximum)
-            {
+            if (limitingMaximum == null || temp < limitingMaximum) {
                 cacheSize = temp;
                 realCount = null;
-            }
-            else
-            {
+            } else {
                 LOG.debug("Actual size is {} but limiting to {}", temp, limitingMaximum);
                 cacheSize = limitingMaximum;
                 realCount = temp;
@@ -115,10 +132,10 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
             // Index is outside of cache boundaries.  Fetch cache and move boundaries
             int startIdx = (index / fetchPageSize) * fetchPageSize;
 
-            LOG.debug("Cache miss at index {} - loading page from {} to {}",index, startIdx, startIdx + fetchPageSize);
+            LOG.debug("Cache miss at index {} - loading page from {} to {}", index, startIdx, startIdx + fetchPageSize);
             List<T> temp = dataSource.getFilteredPage(filter, sortDefinition, startIdx, fetchPageSize);
 
-            cache = (T[])temp.toArray(new Object[0]);
+            cache = (T[]) temp.toArray(new Object[0]);
             offset = startIdx;
 
             LOG.debug("Finished fetch, offset is now {}", startIdx);
@@ -135,50 +152,21 @@ public class FilteredDynamicListModel<T,R> extends AbstractListModel<T> implemen
         forceRedraw();
     }
 
-    public void forceRedraw()
-    {
+    public void forceRedraw() {
         cacheSize = null;
         cache = null;
         fireEvent(ListDataEvent.CONTENTS_CHANGED, 0, getSize());
     }
 
     /**
-     * This is a helper function that generates a typical SQL order by clause from the sort map
-     * @param input Map(String,Boolean) containing the sort defintion
-     * @return A string containing a order by clause such as " order by col1 ASC, col2 DESC"
-     */
-    public static String buildOrderByClause(Map<String, Boolean> input)
-    {
-        StringBuilder order = new StringBuilder();
-
-        if (input.size()>0)
-        {
-            for (Map.Entry<String,Boolean> e:input.entrySet())
-            {
-                if (order.length()>0)
-                {
-                    order.append(", ");
-                }
-                order.append(e.getKey());
-                order.append((e.getValue())?" ASC":" DESC");
-            }
-            order.insert(0," order by "); // so the comma logic works
-        }
-
-        String rval = order.toString();
-        return rval;
-    }
-
-    /**
      * Add a sort column
      * if singleSortMode is true this also clears any existing sorts
+     *
      * @param name String containing the name of the column to sort by
-     * @param asc boolean containing true if ascending sort, false for descending
+     * @param asc  boolean containing true if ascending sort, false for descending
      */
-    public void addSort(String name, boolean asc)
-    {
-        if (singleSortMode)
-        {
+    public void addSort(String name, boolean asc) {
+        if (singleSortMode) {
             sortDefinition = new LinkedHashMap<>();
         }
         sortDefinition.put(name, asc);

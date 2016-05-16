@@ -16,11 +16,10 @@ import java.util.regex.Pattern;
  * Created by chrweiss on 3/13/15.
  */
 public class HitMeasuringEntry implements Comparable<HitMeasuringEntry> {
-    private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringEntry.class);
     public static final String URL_REPORT_KEY = "url";
     public static final String PARAMS_REPORT_KEY = "params";
     public static final String HEADERS_REPORT_KEY = "headers";
-
+    private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringEntry.class);
     private Pattern uriPattern;
     private Map<String, Pattern> paramPatterns;
     private Map<String, Pattern> headerPatterns;

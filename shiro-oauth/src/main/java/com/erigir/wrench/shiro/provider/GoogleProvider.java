@@ -19,15 +19,13 @@ import java.util.*;
  */
 public class GoogleProvider implements OauthProvider {
     private static final Logger LOG = LoggerFactory.getLogger(GoogleProvider.class);
-    private String googleClientId;
-    private String googleClientSecret;
-    private Set<String> grantedScopes = new TreeSet<>(Arrays.asList("openid", "email"));
-
     private static final String GOOGLE_AUTH = "https://accounts.google.com/o/oauth2/auth";
     private static final String GOOGLE_TOKEN_EXCHANGE = "https://accounts.google.com/o/oauth2/token";
     private static final String GOOGLE_ID_TOKEN_INFO = "https://www.googleapis.com/oauth2/v1/tokeninfo?id_token=%s";
     private static final String GOOGLE_ACCESS_TOKEN_INFO = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s";
-
+    private String googleClientId;
+    private String googleClientSecret;
+    private Set<String> grantedScopes = new TreeSet<>(Arrays.asList("openid", "email"));
     private ObjectMapper objectMapper;
 
     @Override
