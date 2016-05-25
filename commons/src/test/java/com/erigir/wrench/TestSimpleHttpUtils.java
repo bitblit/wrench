@@ -3,6 +3,8 @@ package com.erigir.wrench;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -14,9 +16,46 @@ import static org.junit.Assert.assertTrue;
 public class TestSimpleHttpUtils {
 
     @Test
-    @Ignore
     public void testSimpleQuery() {
-        SimpleHttpUtils.HttpTx tx = SimpleHttpUtils.quietFetchUrlDetails("http://www.yahoo.com", 5000, 3);
+        SimpleHttpUtils.HttpTx tx = SimpleHttpUtils.quietFetchUrlDetails("https://www.google.com", 5000, 3);
+        assertTrue(tx.getStatus() < 300);
+    }
+
+    @Test
+    @Ignore
+    public void testSimpleQuery2() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        SimpleStreamHttpUtils.StreamHttpTx tx = SimpleStreamHttpUtils.http(
+                new SimpleStreamHttpUtils.SimpleStreamHttpRequest()
+                .withUrl("https://www.google.com")
+                .withConnectTimeout(5000)
+                .withTries(3)
+                .withDestination(baos)
+        );
+
+        String body = new String(baos.toByteArray());
+
+        assertTrue(tx.getStatus() < 300);
+    }
+
+    @Test
+    @Ignore
+    public void testSimplePost2() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //ByteArrayInputStream input = new ByteArrayInputStream("THIS IS A TEST".getBytes());
+        SimpleStreamHttpUtils.StreamHttpTx tx = SimpleStreamHttpUtils.http(
+                new SimpleStreamHttpUtils.SimpleStreamHttpRequest()
+                        .withUrl("http://httpbin.org/post")
+                        .withMethod("POST")
+                        .withConnectTimeout(5000)
+                        .withTries(3)
+                        .withDestination(baos)
+                .withSource("TEST2".getBytes())
+                //.withSource(input)
+        );
+
+        String body = new String(baos.toByteArray());
+
         assertTrue(tx.getStatus() < 300);
     }
 

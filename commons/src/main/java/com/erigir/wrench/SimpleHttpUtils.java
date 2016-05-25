@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -13,16 +14,22 @@ import java.util.TreeMap;
 import java.util.zip.GZIPInputStream;
 
 /**
- * A couple of simplistic functions for doing HTTP connections without a full HTTPclient dependency
+ * A couple of simplistic functions for doing HTTP connections without a full HTTPClient dependency
  * <p>
  * cweiss : 1/23/12 6:08 PM
  */
 public class SimpleHttpUtils {
     private static final Logger LOG = LoggerFactory.getLogger(SimpleHttpUtils.class);
-    private static HttpTx LATEST_ERROR = null;
 
+    /*
+     * Yes, yes, I know.  Using this in a multithreaded environment is stupid.  Guess what, not everything is a
+     * multithreaded environment, and using this in a single threaded environment is a much simpler interface.
+     */
     public static HttpTx latestError() {
-        return LATEST_ERROR;
+        // This copy is basically here to keep backwards compatibility.  Should probably toss it next
+        // major release
+        SimpleStreamHttpUtils.StreamHttpTx l = SimpleStreamHttpUtils.latestError();
+        return (HttpTx)SimpleStreamHttpUtils.latestError().copyTo(new HttpTx());
     }
 
     public static byte[] quietFetchUrl(String urlString, int timeoutInMS, int retries) {
@@ -43,70 +50,22 @@ public class SimpleHttpUtils {
     }
 
     public static HttpTx httpRequestWithBody(String sUrl, String method, Map<String, String> headers, byte[] data) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        SimpleStreamHttpUtils.StreamHttpTx tx = SimpleStreamHttpUtils.http(
+                new SimpleStreamHttpUtils.SimpleStreamHttpRequest()
+                        .withUrl(sUrl)
+                        .withMethod(method)
+                        .withHeaders(headers)
+                        .withSource(data)
+                        .withDestination(baos)
+        );
         HttpTx rval = null;
-        HttpURLConnection connection = null;
-
-        try {
-            LOG.info("Sending {} bytes to {}, hash={}", new Object[]{data.length, sUrl});
-
-            URL u = new URL(sUrl);
-            connection = (HttpURLConnection) u.openConnection();
-            connection.setConnectTimeout(2500); // 2.5 seconds to connect
-            connection.setReadTimeout(25000); // 25 seconds to read
-            connection.addRequestProperty("Accept-Encoding", "gzip");
-
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setInstanceFollowRedirects(false);
-            connection.setRequestMethod(method);
-            for (Map.Entry<String, String> e : headers.entrySet()) {
-                connection.setRequestProperty(e.getKey(), e.getValue());
-            }
-            connection.setRequestProperty("Content-Length", "" + data.length);
-            connection.setUseCaches(false);
-
-            connection.getOutputStream().write(data);
-            connection.getOutputStream().flush();
-
-            byte[] bodyData = (connection.getInputStream() == null) ? new byte[0] : ZipUtils.toByteArray(connection.getInputStream());
-            if (bodyData.length > 0 && "gzip".equals(connection.getHeaderField("Content-Encoding"))) {
-                int pre = bodyData.length;
-                bodyData = ZipUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(bodyData)));
-                LOG.trace("Decomp {} to {}", pre, bodyData.length);
-            }
-            rval = new HttpTx();
-            rval.setBodyContents(bodyData);
-            rval.setHeaders(convertHeaders(connection.getHeaderFields()));
-            rval.setStatus(connection.getResponseCode());
-
-        } catch (Exception e) {
-            LOG.error("Error during post", e);
-            updateLatestError(connection);
-            rval = null;
-        } finally {
-            cleanupConnection(connection);
+        if (tx!=null)
+        {
+            rval = (HttpTx)tx.copyTo(new HttpTx());
+            rval.setBodyContents(baos.toByteArray());
         }
         return rval;
-    }
-
-    private static void updateLatestError(HttpURLConnection connection) {
-        if (connection != null) {
-            try {
-                HttpTx update = new HttpTx();
-                update.setStatus(connection.getResponseCode());
-                update.setHeaders(convertHeaders(connection.getHeaderFields()));
-                byte[] bodyData = (connection.getErrorStream() == null) ? new byte[0] : ZipUtils.toByteArray(connection.getErrorStream());
-                if ("gzip".equals(connection.getHeaderField("Content-Encoding"))) {
-                    int pre = bodyData.length;
-                    bodyData = ZipUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(bodyData)));
-                    LOG.trace("Decomp {} to {}", pre, bodyData.length);
-                }
-                update.setBodyContents(bodyData);
-                LATEST_ERROR = update;
-            } catch (IOException ioe) {
-                LOG.warn("Bad - got an IOException while trying to update the latest error");
-            }
-        }
     }
 
     /**
@@ -120,52 +79,20 @@ public class SimpleHttpUtils {
      * @return byte[] containing the body from the HTTP request
      */
     public static HttpTx quietFetchUrlDetails(String urlString, int timeoutInMS, int retries) {
-        int readTimeout = 25000;
-        int retryCount = 0;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        SimpleStreamHttpUtils.StreamHttpTx tx = SimpleStreamHttpUtils.http(
+                new SimpleStreamHttpUtils.SimpleStreamHttpRequest()
+                        .withUrl(urlString)
+                        .withMethod("GET")
+                        .withReadTimeout(timeoutInMS)
+                        .withTries(retries+1)
+                        .withDestination(baos)
+        );
         HttpTx rval = null;
-        HttpURLConnection connection = null;
-
-        while (rval == null && retryCount < retries) {
-            try {
-                retryCount++;
-                URL url = new URL(urlString);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setConnectTimeout(2500); // 2.5 seconds to connect
-                connection.setReadTimeout(readTimeout);
-                connection.addRequestProperty("Accept-Encoding", "gzip");
-                connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:20.0) Gecko/20100101 Firefox/20.0");
-
-                byte[] bodyData = (connection.getInputStream() == null) ? new byte[0] : ZipUtils.toByteArray(connection.getInputStream());
-
-                if (bodyData.length > 0 && "gzip".equals(connection.getHeaderField("Content-Encoding"))) {
-                    int pre = bodyData.length;
-                    bodyData = ZipUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(bodyData)));
-                    LOG.debug("Decomp {} to {}", pre, bodyData.length);
-                }
-                rval = new HttpTx();
-                rval.setBodyContents(bodyData);
-                rval.setHeaders(convertHeaders(connection.getHeaderFields()));
-                rval.setStatus(connection.getResponseCode());
-            } catch (Exception e) {
-                LOG.info("Failed reading {} - try {} of {}", new Object[]{urlString, retryCount, retries});
-                updateLatestError(connection);
-            } finally {
-                cleanupConnection(connection);
-            }
-        }
-        if (rval == null) {
-            throw new IllegalStateException("After " + retries + " tries, was unable to fetch " + urlString + " : Giving up");
-        }
-
-        return rval;
-    }
-
-    private static Map<String, String> convertHeaders(Map<String, List<String>> headersIn) {
-        Map<String, String> rval = new TreeMap<>();
-        for (Map.Entry<String, List<String>> e : headersIn.entrySet()) {
-            if (e.getKey() != null && e.getValue() != null && e.getValue().size() > 0) {
-                rval.put(e.getKey(), e.getValue().get(0));
-            }
+        if (tx!=null)
+        {
+            rval = (HttpTx)tx.copyTo(new HttpTx());
+            rval.setBodyContents(baos.toByteArray());
         }
         return rval;
     }
@@ -177,33 +104,8 @@ public class SimpleHttpUtils {
         return new String(quietFetchUrl(urlString, timeout, retries));
     }
 
-    /**
-     * Shuts down the underlying connection and releases all its resources
-     * I'm well aware that the following code shuts down everything, including occasionally
-     * the underlying TCP connection that would otherwise be cached and/or kept alive
-     * (see http 1.1 keepalive).  This object isn't meant for performance object caching -
-     * if you need that use the excellent HttpClient library.  This library is for very
-     * simplistic url reading, like you would in a thick client situation
-     *
-     * @param connection HTTPUrlConnection to close
-     */
-    private static void cleanupConnection(HttpURLConnection connection) {
-        if (connection != null) {
-            try {
-                if (connection.getInputStream() != null) {
-                    connection.getInputStream().close();
-                }
-            } catch (IOException ioe) {
-                LOG.trace("Error trying to close input stream", ioe);
-            }
-            connection.disconnect();
-        }
-    }
-
-    public static class HttpTx {
+    public static class HttpTx extends SimpleStreamHttpUtils.StreamHttpTx{
         private byte[] bodyContents;
-        private Map<String, String> headers = new TreeMap<>();
-        private int status;
 
         public byte[] getBodyContents() {
             return bodyContents;
@@ -212,23 +114,5 @@ public class SimpleHttpUtils {
         public void setBodyContents(byte[] bodyContents) {
             this.bodyContents = bodyContents;
         }
-
-        public Map<String, String> getHeaders() {
-            return headers;
-        }
-
-        public void setHeaders(Map<String, String> headers) {
-            this.headers = headers;
-        }
-
-        public int getStatus() {
-            return status;
-        }
-
-        public void setStatus(int status) {
-            this.status = status;
-        }
-
-
     }
 }

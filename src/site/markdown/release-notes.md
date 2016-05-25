@@ -1,5 +1,11 @@
 ## Release Notes
 
+# Version 1.2.1
+Backwards compatible feature release
+* Adds the SimpleStreamHttpUtils which is like SimpleHttpUtils but allows you to specify streams to read/write from
+** NOTE : This follows a "you opened them, you close them" model - its up to you to deal with the streams you pass in
+* Also adds the NullOutputStream class for when you really don't care what gets written (typically when calling a ping url)
+
 # Version 1.2.0
 Code is backwards compatible, but tokens created with previous versions
 of TokenService will not parse correctly.  Not making this a major 
@@ -22,7 +28,7 @@ Backwards compatible bugfix/feature release
 * Added InstanceInfo for ec2 instances in the AWS package
 
 # Version 1.1.6
-Backwords compatible bugfix release
+Backwards compatible bugfix release
 * Fixed error with null pointer exception in simplehttputils when there is no error stream
 
 ## Version 1.1.5
