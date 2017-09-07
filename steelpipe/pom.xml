@@ -10,9 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wrench-steelpipe</artifactId>
     <packaging>jar</packaging>
-    <name>Wrench Steel Pipe Tunneled SSH MariaDB Connection</name>
+    <name>Wrench Steel Pipe</name>
     <version>LOCAL-SNAPSHOT</version>
-    <description>Implements a MariaDB connection tunneled over SSH</description>
+    <description>Implements a tunneled SSH MariaDB Connection over SSH</description>
     <url>http://www.erigir.com/Wrench</url>
     <inceptionYear>2017</inceptionYear>
     <issueManagement>
@@ -38,23 +38,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>${mariadb.version}</version>
@@ -63,14 +46,6 @@
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
 
 

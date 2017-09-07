@@ -50,9 +50,43 @@
         </license>
     </licenses>
 
+    <!--
+    Dependencies used by ALL of the wrench modules:
+    * SLF4J - I use logging everywhere (and SLF4J-Simple provides a default logger for testing)
+    * JUNIT and EasyMock - Testing everywhere
+    * Lombok - Simple data objects everywhere
+    -->
+
     <dependencies>
-
-
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -89,6 +123,7 @@
         <module>drigo</module>
         <module>shiro-oauth</module>
         <module>steelpipe</module>
+        <module>fluke</module>
     </modules>
 
     <!--

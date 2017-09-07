@@ -8,13 +8,13 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wrench-aws</artifactId>
+    <artifactId>wrench-fluke</artifactId>
     <packaging>jar</packaging>
-    <name>Wrench AWS Utilities</name>
+    <name>Wrench Flukes</name>
     <version>LOCAL-SNAPSHOT</version>
-    <description>A set of utility classes to simplify common operations on Amazon Web Services</description>
+    <description>Stuff that I want to have around but is really single use one-offs</description>
     <url>http://www.erigir.com/Wrench</url>
-    <inceptionYear>2015</inceptionYear>
+    <inceptionYear>2017</inceptionYear>
     <issueManagement>
     </issueManagement>
     <ciManagement>
@@ -36,53 +36,12 @@
     </developers>
 
     <dependencies>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>${aws.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.erigir</groupId>
-            <artifactId>wrench-commons</artifactId>
-            <version>LOCAL-SNAPSHOT</version>
-        </dependency>
-
-        <!-- Only certain classes depend on web, include it if you use them -->
-        <dependency>
-            <groupId>com.erigir</groupId>
-            <artifactId>wrench-web</artifactId>
-            <version>LOCAL-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
+            <artifactId>commons-csv</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
-
     </dependencies>
 
 
@@ -121,4 +80,3 @@
 
 
 </project>
-
