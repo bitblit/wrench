@@ -1,5 +1,11 @@
 ## Release Notes
 
+# Version 2.0.0
+Code is backwards compatible, but upgrade to underlying libraries means this should be treated with care.
+* Updating a bunch of libraries to new versions
+* Adding "Steelpipe" - a tunneled MariaDB (or Mysql) DB connection over SSH
+* Hopefully upgrading to version 2.0.0 will finally reclaim head on search.maven.org
+
 # Version 1.2.1
 Backwards compatible feature release
 * Adds the SimpleStreamHttpUtils which is like SimpleHttpUtils but allows you to specify streams to read/write from

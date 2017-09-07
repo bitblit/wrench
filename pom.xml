@@ -50,6 +50,11 @@
         </license>
     </licenses>
 
+    <dependencies>
+
+
+    </dependencies>
+
     <properties>
         <site.name>wrench</site.name>
         <jackson2.version>2.7.1</jackson2.version>
@@ -64,6 +69,11 @@
         <itext.version>2.1.7</itext.version>
         <tomcat.version>8.0.15</tomcat.version>
         <easymock.version>3.4</easymock.version>
+        <lombok.version>1.16.18</lombok.version>
+        <logback.version>1.2.3</logback.version>
+        <jsch.version>0.1.54</jsch.version>
+        <mariadb.version>2.0.3</mariadb.version>
+        <lombok.plugin.version>1.16.18.1</lombok.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
         <mytime>${maven.build.timestamp}</mytime>
@@ -78,6 +88,7 @@
         <module>ape</module>
         <module>drigo</module>
         <module>shiro-oauth</module>
+        <module>steelpipe</module>
     </modules>
 
     <!--
@@ -98,6 +109,19 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>${lombok.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
                         </goals>
                     </execution>
                 </executions>

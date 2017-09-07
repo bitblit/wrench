@@ -8,13 +8,13 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wrench-ape</artifactId>
+    <artifactId>wrench-steelpipe</artifactId>
     <packaging>jar</packaging>
-    <name>Wrench Ape</name>
+    <name>Wrench Steel Pipe Tunneled SSH MariaDB Connection</name>
     <version>LOCAL-SNAPSHOT</version>
-    <description>A library to simplify API construction atop Spring MVC</description>
+    <description>Implements a MariaDB connection tunneled over SSH</description>
     <url>http://www.erigir.com/Wrench</url>
-    <inceptionYear>2015</inceptionYear>
+    <inceptionYear>2017</inceptionYear>
     <issueManagement>
     </issueManagement>
     <ciManagement>
@@ -36,22 +36,13 @@
     </developers>
 
     <dependencies>
-        <dependency>
-            <groupId>com.erigir</groupId>
-            <artifactId>wrench-commons</artifactId>
-            <version>LOCAL-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.erigir</groupId>
-            <artifactId>wrench-aws</artifactId>
-            <version>LOCAL-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.erigir</groupId>
-            <artifactId>wrench-web</artifactId>
-            <version>LOCAL-SNAPSHOT</version>
-        </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -63,70 +54,15 @@
             <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>${commons.net.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${javax.servlet.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson2.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${mariadb.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
         </dependency>
 
 
@@ -134,12 +70,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
 
