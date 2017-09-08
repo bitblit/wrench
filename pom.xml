@@ -91,17 +91,25 @@
 
     <properties>
         <site.name>wrench</site.name>
-        <jackson2.version>2.7.1</jackson2.version>
-        <aws.version>1.11.0</aws.version>
-        <shiro.version>1.2.3</shiro.version>
-        <spring.version>4.2.6.RELEASE</spring.version>
+        <jackson2.version>2.9.1</jackson2.version>
+        <aws.version>1.11.191</aws.version>
+        <shiro.version>1.4.0</shiro.version>
+        <spring.version>4.3.10.RELEASE</spring.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <zk.version>7.0.3</zk.version>
-        <commons.net.version>3.3</commons.net.version>
+        <zk.version>8.0.2.2</zk.version>
+        <commons.net.version>3.6</commons.net.version>
+        <commons.lang3.version>3.6</commons.lang3.version>
+        <commons.beanutils.version>1.9.3</commons.beanutils.version>
+        <commons.io.version>2.5</commons.io.version>
+        <commons.codec.version>1.10</commons.codec.version>
+        <commons.csv.version>1.5</commons.csv.version>
+        <closure.compiler.version>v20170806</closure.compiler.version>
+        <yuicompressor.version>2.4.8</yuicompressor.version>
+        <htmlcompressor.version>1.5.2</htmlcompressor.version>
         <javax.servlet.version>3.0.1</javax.servlet.version>
         <junit.version>4.12</junit.version>
         <itext.version>2.1.7</itext.version>
-        <tomcat.version>8.0.15</tomcat.version>
+        <tomcat.version>8.5.20</tomcat.version>
         <easymock.version>3.4</easymock.version>
         <lombok.version>1.16.18</lombok.version>
         <logback.version>1.2.3</logback.version>

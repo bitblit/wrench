@@ -3,7 +3,7 @@ package com.erigir.wrench.aws.sns;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.PublishResult;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class ServerErrorNotifier {
         Throwable main = (Throwable) req.getAttribute("javax.servlet.error.exception");
         if (main != null) {
             sb.append("\n\n------------------- BEGIN MAIN ERROR-------------------------\n\n");
-            sb.append(ExceptionUtils.getFullStackTrace(main));
+            sb.append(ExceptionUtils.getStackTrace(main));
             sb.append("\n\n------------------- END MAIN ERROR---------------------------\n\n");
         }
 
@@ -64,7 +64,7 @@ public class ServerErrorNotifier {
             Object o = req.getAttribute(s);
             if (o != null && Throwable.class.isAssignableFrom(o.getClass())) {
                 sb.append("\n");
-                sb.append(ExceptionUtils.getFullStackTrace((Throwable) o));
+                sb.append(ExceptionUtils.getStackTrace((Throwable) o));
             } else {
                 sb.append(String.valueOf(o));
             }
@@ -78,7 +78,7 @@ public class ServerErrorNotifier {
             Object o = req.getSession().getAttribute(s);
             if (o != null && Throwable.class.isAssignableFrom(o.getClass())) {
                 sb.append("\n");
-                sb.append(ExceptionUtils.getFullStackTrace((Throwable) o));
+                sb.append(ExceptionUtils.getStackTrace((Throwable) o));
             } else {
                 sb.append(String.valueOf(o));
             }
