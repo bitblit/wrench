@@ -24,26 +24,26 @@ import java.util.List;
  */
 public class Exclusion {
 
-    private String includeRegex;
+  private String includeRegex;
 
-    public static boolean excluded(List<Exclusion> exclusionList, File f) {
-        boolean rval = false;
-        if (exclusionList != null && exclusionList.size() > 0) {
-            for (int i = 0; i < exclusionList.size() && !rval; i++) {
-                rval = FileProcessorUtils.matches(f, exclusionList.get(i).getIncludeRegex());
-            }
-        }
-        return rval;
+  public static boolean excluded(List<Exclusion> exclusionList, File f) {
+    boolean rval = false;
+    if (exclusionList != null && exclusionList.size() > 0) {
+      for (int i = 0; i < exclusionList.size() && !rval; i++) {
+        rval = FileProcessorUtils.matches(f, exclusionList.get(i).getIncludeRegex());
+      }
     }
+    return rval;
+  }
 
-    public String getIncludeRegex() {
-        return includeRegex;
-    }
+  public String getIncludeRegex() {
+    return includeRegex;
+  }
 
-    public void setIncludeRegex(String includeRegex) {
-        if (includeRegex == null) {
-            throw new IllegalArgumentException("Cannot set includeRegex to null");
-        }
-        this.includeRegex = includeRegex;
+  public void setIncludeRegex(String includeRegex) {
+    if (includeRegex == null) {
+      throw new IllegalArgumentException("Cannot set includeRegex to null");
     }
+    this.includeRegex = includeRegex;
+  }
 }

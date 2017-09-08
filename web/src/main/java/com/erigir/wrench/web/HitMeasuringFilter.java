@@ -5,11 +5,21 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
@@ -32,105 +42,105 @@ import java.util.regex.Pattern;
  * Created by chrweiss on 3/13/2015.
  */
 public class HitMeasuringFilter implements Filter {
-    public static final String DEFINITION_REPORT_KEY = "definition";
-    public static final String LAST_HIT_DATE_REPORT_KEY = "last-hit-date";
-    public static final String HIT_COUNT_REPORT_KEY = "hit-count";
-    private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringFilter.class);
-    private List<HitMeasuringEntry> trackingList = new LinkedList<>();
+  public static final String DEFINITION_REPORT_KEY = "definition";
+  public static final String LAST_HIT_DATE_REPORT_KEY = "last-hit-date";
+  public static final String HIT_COUNT_REPORT_KEY = "hit-count";
+  private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringFilter.class);
+  private List<HitMeasuringEntry> trackingList = new LinkedList<>();
 
-    private Map<HitMeasuringEntry, Date> lastHit = new ConcurrentHashMap<>();
-    private Map<HitMeasuringEntry, AtomicInteger> hitCount = new ConcurrentHashMap<>();
+  private Map<HitMeasuringEntry, Date> lastHit = new ConcurrentHashMap<>();
+  private Map<HitMeasuringEntry, AtomicInteger> hitCount = new ConcurrentHashMap<>();
 
-    // If this is set, requests matching this pattern will get the status dump instead
-    private Pattern reportingPattern;
+  // If this is set, requests matching this pattern will get the status dump instead
+  private Pattern reportingPattern;
 
-    private ObjectMapper objectMapper = buildDefaultObjectMapper();
+  private ObjectMapper objectMapper = buildDefaultObjectMapper();
 
-    private ObjectMapper buildDefaultObjectMapper() {
-        ObjectMapper rval = new ObjectMapper();
-        rval.configure(SerializationFeature.INDENT_OUTPUT, true);
-        return rval;
+  private ObjectMapper buildDefaultObjectMapper() {
+    ObjectMapper rval = new ObjectMapper();
+    rval.configure(SerializationFeature.INDENT_OUTPUT, true);
+    return rval;
+  }
+
+  @Override
+  public void init(FilterConfig filterConfig) throws ServletException {
+    // Do nothing
+  }
+
+  @Override
+  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    HttpServletRequest req = (HttpServletRequest) servletRequest;
+
+    for (HitMeasuringEntry h : trackingList) {
+      if (h.matches(req)) {
+        lastHit.put(h, new Date());
+        AtomicInteger a = hitCount.get(h);
+        a = (a == null) ? new AtomicInteger(0) : a;
+        a.incrementAndGet();
+        hitCount.put(h, a);
+      }
     }
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        // Do nothing
+    if (reportingPattern != null && reportingPattern.matcher(req.getRequestURI()).matches()) {
+      doReport((HttpServletResponse) servletResponse);
+    } else {
+      filterChain.doFilter(servletRequest, servletResponse);
     }
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest req = (HttpServletRequest) servletRequest;
+  }
 
-        for (HitMeasuringEntry h : trackingList) {
-            if (h.matches(req)) {
-                lastHit.put(h, new Date());
-                AtomicInteger a = hitCount.get(h);
-                a = (a == null) ? new AtomicInteger(0) : a;
-                a.incrementAndGet();
-                hitCount.put(h, a);
-            }
-        }
+  @Override
+  public void destroy() {
+    // Do nothing
+  }
 
-        if (reportingPattern != null && reportingPattern.matcher(req.getRequestURI()).matches()) {
-            doReport((HttpServletResponse) servletResponse);
-        } else {
-            filterChain.doFilter(servletRequest, servletResponse);
-        }
+  public void doReport(HttpServletResponse resp)
+      throws IOException {
+    resp.setContentType("application/json");
+    String out = objectMapper.writeValueAsString(generateReport());
+    resp.setContentLength(out.length());
+    resp.getWriter().print(out);
+  }
 
+  public List<Map<String, Object>> generateReport() {
+    List<Map<String, Object>> rval = new LinkedList<>();
+
+    for (HitMeasuringEntry h : trackingList) {
+      Map<String, Object> next = new TreeMap<>();
+      next.put(DEFINITION_REPORT_KEY, h.toReportMap());
+      if (lastHit.get(h) != null) {
+        next.put(LAST_HIT_DATE_REPORT_KEY, lastHit.get(h));
+      }
+      if (hitCount.get(h) != null) {
+        next.put(HIT_COUNT_REPORT_KEY, hitCount.get(h).get());
+      }
+      rval.add(next);
     }
 
-    @Override
-    public void destroy() {
-        // Do nothing
+
+    return rval;
+  }
+
+  public void setTrackingList(List<HitMeasuringEntry> trackingList) {
+    this.trackingList = trackingList;
+    if (trackingList == null) {
+      this.trackingList = Collections.EMPTY_LIST;
     }
+  }
 
-    public void doReport(HttpServletResponse resp)
-            throws IOException {
-        resp.setContentType("application/json");
-        String out = objectMapper.writeValueAsString(generateReport());
-        resp.setContentLength(out.length());
-        resp.getWriter().print(out);
-    }
+  public Map<HitMeasuringEntry, Date> getLastHit() {
+    return Collections.unmodifiableMap(lastHit);
+  }
 
-    public List<Map<String, Object>> generateReport() {
-        List<Map<String, Object>> rval = new LinkedList<>();
+  public Map<HitMeasuringEntry, AtomicInteger> getHitCount() {
+    return Collections.unmodifiableMap(hitCount);
+  }
 
-        for (HitMeasuringEntry h : trackingList) {
-            Map<String, Object> next = new TreeMap<>();
-            next.put(DEFINITION_REPORT_KEY, h.toReportMap());
-            if (lastHit.get(h) != null) {
-                next.put(LAST_HIT_DATE_REPORT_KEY, lastHit.get(h));
-            }
-            if (hitCount.get(h) != null) {
-                next.put(HIT_COUNT_REPORT_KEY, hitCount.get(h).get());
-            }
-            rval.add(next);
-        }
+  public void setReportingPattern(Pattern reportingPattern) {
+    this.reportingPattern = reportingPattern;
+  }
 
-
-        return rval;
-    }
-
-    public void setTrackingList(List<HitMeasuringEntry> trackingList) {
-        this.trackingList = trackingList;
-        if (trackingList == null) {
-            this.trackingList = Collections.EMPTY_LIST;
-        }
-    }
-
-    public Map<HitMeasuringEntry, Date> getLastHit() {
-        return Collections.unmodifiableMap(lastHit);
-    }
-
-    public Map<HitMeasuringEntry, AtomicInteger> getHitCount() {
-        return Collections.unmodifiableMap(hitCount);
-    }
-
-    public void setReportingPattern(Pattern reportingPattern) {
-        this.reportingPattern = reportingPattern;
-    }
-
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+  public void setObjectMapper(ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
+  }
 }

@@ -3,7 +3,12 @@ package com.erigir.wrench.drigo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -23,64 +28,64 @@ import java.util.regex.Pattern;
  * limitations under the License.
  **/
 public class FileProcessorUtils {
-    private static final Logger LOG = LoggerFactory.getLogger(FileProcessorUtils.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FileProcessorUtils.class);
 
-    public static void copyFolder(File src, File dest, List<Exclusion> exclusionList)
-            throws DrigoException {
+  public static void copyFolder(File src, File dest, List<Exclusion> exclusionList)
+      throws DrigoException {
 
-        try {
+    try {
 
-            if (Exclusion.excluded(exclusionList, src)) {
-                LOG.trace("Skipping {} - it is on the exclusion list", src);
-            } else {
-                if (src.isDirectory()) {
+      if (Exclusion.excluded(exclusionList, src)) {
+        LOG.trace("Skipping {} - it is on the exclusion list", src);
+      } else {
+        if (src.isDirectory()) {
 
-                    //if directory not exists, create it
-                    if (!dest.exists()) {
-                        dest.mkdir();
-                        LOG.trace("Directory copied from {} to {}", src, dest);
-                    }
+          //if directory not exists, create it
+          if (!dest.exists()) {
+            dest.mkdir();
+            LOG.trace("Directory copied from {} to {}", src, dest);
+          }
 
-                    //list all the directory contents
-                    String files[] = src.list();
+          //list all the directory contents
+          String files[] = src.list();
 
-                    for (String file : files) {
-                        //construct the src and dest file structure
-                        File srcFile = new File(src, file);
-                        File destFile = new File(dest, file);
-                        //recursive copy
-                        copyFolder(srcFile, destFile, exclusionList);
-                    }
+          for (String file : files) {
+            //construct the src and dest file structure
+            File srcFile = new File(src, file);
+            File destFile = new File(dest, file);
+            //recursive copy
+            copyFolder(srcFile, destFile, exclusionList);
+          }
 
-                } else {
-                    //if file, then copy it
-                    //Use bytes stream to support all file types
-                    InputStream in = new FileInputStream(src);
-                    OutputStream out = new FileOutputStream(dest);
+        } else {
+          //if file, then copy it
+          //Use bytes stream to support all file types
+          InputStream in = new FileInputStream(src);
+          OutputStream out = new FileOutputStream(dest);
 
-                    byte[] buffer = new byte[1024];
+          byte[] buffer = new byte[1024];
 
-                    int length;
-                    //copy the file content in bytes
-                    while ((length = in.read(buffer)) > 0) {
-                        out.write(buffer, 0, length);
-                    }
+          int length;
+          //copy the file content in bytes
+          while ((length = in.read(buffer)) > 0) {
+            out.write(buffer, 0, length);
+          }
 
-                    in.close();
-                    out.close();
-                }
-            }
-        } catch (IOException ioe) {
-            throw new DrigoException("Error cloning file/directory", ioe);
+          in.close();
+          out.close();
         }
+      }
+    } catch (IOException ioe) {
+      throw new DrigoException("Error cloning file/directory", ioe);
     }
+  }
 
-    public static boolean matches(File f, String regex) {
-        Pattern p = Pattern.compile(regex);
-        boolean rval = (p.matcher(f.getAbsolutePath()).matches());
+  public static boolean matches(File f, String regex) {
+    Pattern p = Pattern.compile(regex);
+    boolean rval = (p.matcher(f.getAbsolutePath()).matches());
 
-        LOG.trace("Tested {} against {} returning {}", f.getName(), regex, rval);
-        return rval;
-    }
+    LOG.trace("Tested {} against {} returning {}", f.getName(), regex, rval);
+    return rval;
+  }
 
 }

@@ -14,21 +14,21 @@ import java.io.IOException;
  */
 public class HeaderSettingClientInterceptor implements ClientHttpRequestInterceptor {
 
-    /** */
-    private final String headerName;
+  /** */
+  private final String headerName;
 
-    /** */
-    private final String headerValue;
+  /** */
+  private final String headerValue;
 
-    public HeaderSettingClientInterceptor(String headerName, String headerValue) {
-        this.headerName = headerName;
-        this.headerValue = headerValue;
-    }
+  public HeaderSettingClientInterceptor(String headerName, String headerValue) {
+    this.headerName = headerName;
+    this.headerValue = headerValue;
+  }
 
-    @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        HttpRequest wrapper = new HttpRequestWrapper(request);
-        wrapper.getHeaders().set(headerName, headerValue);
-        return execution.execute(wrapper, body);
-    }
+  @Override
+  public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+    HttpRequest wrapper = new HttpRequestWrapper(request);
+    wrapper.getHeaders().set(headerName, headerValue);
+    return execution.execute(wrapper, body);
+  }
 }

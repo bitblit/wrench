@@ -12,17 +12,17 @@ import java.util.Map;
  */
 public interface ObjectStorageImplementation {
 
-    String toFullKey(Class clazz, String key);
+  String toFullKey(Class clazz, String key);
 
-    void storeBytes(String fullKey, InputStream bytes)
-            throws Exception;
+  void storeBytes(String fullKey, InputStream bytes)
+      throws Exception;
 
-    InputStream readBytes(String fullKey)
-            throws Exception;
+  InputStream readBytes(String fullKey)
+      throws Exception;
 
-    <T> Map<String, StoredObjectMetadata> listObjects(Class<T> type);
+  <T> Map<String, StoredObjectMetadata> listObjects(Class<T> type);
 
-    void deleteObject(String fullKey);
+  void deleteObject(String fullKey);
 
 
 }

@@ -9,48 +9,50 @@ import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by chrweiss on 6/9/15.
  */
 public class TestFileObjectStorageImplementation {
-    private static final Logger LOG = LoggerFactory.getLogger(TestFileObjectStorageImplementation.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TestFileObjectStorageImplementation.class);
 
-    @Test
-    public void testSimpleStorage() {
-        FileObjectStorageImplementation fos = new FileObjectStorageImplementation();
-        File tempDir = new File(System.getProperty("java.io.tmpdir"));
-        LOG.info("Using tmp dir {}", tempDir);
-        fos.setDir(tempDir);
+  @Test
+  public void testSimpleStorage() {
+    FileObjectStorageImplementation fos = new FileObjectStorageImplementation();
+    File tempDir = new File(System.getProperty("java.io.tmpdir"));
+    LOG.info("Using tmp dir {}", tempDir);
+    fos.setDir(tempDir);
 
-        TreeMap<String, String> toStore = new TreeMap<>();
-        toStore.put("tk-1", "tv-1");
-        toStore.put("tk-2", "tv-2");
+    TreeMap<String, String> toStore = new TreeMap<>();
+    toStore.put("tk-1", "tv-1");
+    toStore.put("tk-2", "tv-2");
 
-        SimpleObjectStorageService sos = new SimpleObjectStorageService();
-        sos.setObjectMapper(new QuietObjectMapper());
-        sos.setObjectStorageImplementation(fos);
+    SimpleObjectStorageService sos = new SimpleObjectStorageService();
+    sos.setObjectMapper(new QuietObjectMapper());
+    sos.setObjectStorageImplementation(fos);
 
-        String key = "my-test-key";
-        sos.storeObject(toStore, key);
+    String key = "my-test-key";
+    sos.storeObject(toStore, key);
 
-        Map<String, String> load = sos.loadObject(TreeMap.class, key);
+    Map<String, String> load = sos.loadObject(TreeMap.class, key);
 
-        assertNotNull(load);
-        assertEquals(load.size(), toStore.size());
+    assertNotNull(load);
+    assertEquals(load.size(), toStore.size());
 
-        for (Map.Entry<String, String> e : toStore.entrySet()) {
-            assertEquals(load.get(e.getKey()), e.getValue());
-        }
-
-        sos.deleteObject(TreeMap.class, key);
-
-        Map<String, String> load2 = sos.loadObject(TreeMap.class, key);
-
-        assertNull(load2);
-
+    for (Map.Entry<String, String> e : toStore.entrySet()) {
+      assertEquals(load.get(e.getKey()), e.getValue());
     }
+
+    sos.deleteObject(TreeMap.class, key);
+
+    Map<String, String> load2 = sos.loadObject(TreeMap.class, key);
+
+    assertNull(load2);
+
+  }
 
 
 }

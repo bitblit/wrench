@@ -11,41 +11,41 @@ import java.util.TreeMap;
  * Created by chrweiss on 6/28/14.
  */
 @ApeException(
-        httpStatusCode = 400,
-        detailCode = 103,
-        message = "There are invalid values in the data submitted",
-        developerMessage = "Data does not pass schema validation - check json schema and details object",
-        detailObjectPropertyName = "errorMap"
+    httpStatusCode = 400,
+    detailCode = 103,
+    message = "There are invalid values in the data submitted",
+    developerMessage = "Data does not pass schema validation - check json schema and details object",
+    detailObjectPropertyName = "errorMap"
 )
 public class DataValidationException extends RuntimeException {
-    private Map<String, String> errorMap = new TreeMap<>();
+  private Map<String, String> errorMap = new TreeMap<>();
 
-    public DataValidationException(BindingResult errors) {
-        super();
-        errorMap = toErrorMap(errors);
+  public DataValidationException(BindingResult errors) {
+    super();
+    errorMap = toErrorMap(errors);
+  }
+
+  public DataValidationException(Map<String, String> errorMap) {
+    super();
+    this.errorMap = errorMap;
+  }
+
+  private static Map<String, String> toErrorMap(BindingResult errors) {
+    TreeMap<String, String> rval = new TreeMap<>();
+
+    for (FieldError fe : errors.getFieldErrors()) {
+      rval.put(fe.getField(), fe.getDefaultMessage());
     }
 
-    public DataValidationException(Map<String, String> errorMap) {
-        super();
-        this.errorMap = errorMap;
-    }
+    return rval;
+  }
 
-    private static Map<String, String> toErrorMap(BindingResult errors) {
-        TreeMap<String, String> rval = new TreeMap<>();
-
-        for (FieldError fe : errors.getFieldErrors()) {
-            rval.put(fe.getField(), fe.getDefaultMessage());
-        }
-
-        return rval;
-    }
-
-    public void addError(String name, String value) {
-        this.errorMap.put(name, value);
-    }
+  public void addError(String name, String value) {
+    this.errorMap.put(name, value);
+  }
 
 
-    public Map<String, String> getErrorMap() {
-        return errorMap;
-    }
+  public Map<String, String> getErrorMap() {
+    return errorMap;
+  }
 }

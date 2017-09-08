@@ -5,20 +5,19 @@ import java.io.OutputStream;
 
 /**
  * Equivalent to /dev/null on unix
- *
+ * <p>
  * Created by cweiss1271 on 5/25/16.
  */
 public class NullOutputStream extends OutputStream {
-    public static NullOutputStream NULL_OUTPUT_STREAM = new NullOutputStream();
+  public static NullOutputStream NULL_OUTPUT_STREAM = new NullOutputStream();
 
-    // No reason to ever have more than one of these
-    private NullOutputStream()
-    {
-        super();
-    }
+  // No reason to ever have more than one of these
+  private NullOutputStream() {
+    super();
+  }
 
-    @Override
-    public void write(int b) throws IOException {
-        // Do nothing
-    }
+  @Override
+  public void write(int b) throws IOException {
+    // Do nothing
+  }
 }

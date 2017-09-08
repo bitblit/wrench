@@ -28,14 +28,14 @@ package com.erigir.wrench.aws.wrench;
  */
 public interface AWSCachedObject<T> {
 
-    /**
-     * Called by the system on construction, but can also be called by other objects who want
-     * to force a cache re-read
-     */
-    void forceCacheReload();
+  /**
+   * Called by the system on construction, but can also be called by other objects who want
+   * to force a cache re-read
+   */
+  void forceCacheReload();
 
-    void value(T value);
+  void value(T value);
 
-    T value();
+  T value();
 
 }

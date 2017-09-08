@@ -21,6 +21,6 @@ import java.io.File;
  **/
 public interface FileProcessor {
 
-    // All files processed IN-PLACE
-    boolean process(File src, DrigoResults results);
+  // All files processed IN-PLACE
+  boolean process(File src, DrigoResults results);
 }

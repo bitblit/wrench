@@ -24,21 +24,21 @@ import java.util.Arrays;
  **/
 public class TestRuntimeExecClosureCompiler {
 
-    @Test
-    public void testCompiler()
-            throws Exception {
-        File t1 = new File(getClass().getResource("/js/test1.js").getFile());
-        //File t2 = new File(getClass().getResource("/js/test2.js").getFile());
-        //List<File> files = Arrays.asList(t1, t2);
+  @Test
+  public void testCompiler()
+      throws Exception {
+    File t1 = new File(getClass().getResource("/js/test1.js").getFile());
+    //File t2 = new File(getClass().getResource("/js/test2.js").getFile());
+    //List<File> files = Arrays.asList(t1, t2);
 
-        //String input = IOUtils.toString(getClass().getResourceAsStream("/js/test1.js"));
+    //String input = IOUtils.toString(getClass().getResourceAsStream("/js/test1.js"));
 
-        JavascriptCompilerFileProcessor cc = new JavascriptCompilerFileProcessor();
+    JavascriptCompilerFileProcessor cc = new JavascriptCompilerFileProcessor();
 
-        String output = cc.compile(CompilationLevel.SIMPLE_OPTIMIZATIONS, Arrays.asList(SourceFile.fromFile(t1)));
+    String output = cc.compile(CompilationLevel.SIMPLE_OPTIMIZATIONS, Arrays.asList(SourceFile.fromFile(t1)));
 
-        System.out.println("out: \n" + output);
-    }
+    System.out.println("out: \n" + output);
+  }
 
 
 }

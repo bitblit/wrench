@@ -27,122 +27,122 @@ import java.util.Objects;
  * Created by cweiss1271 on 2/29/16.
  */
 public class S3CachedObject<T> extends AbstractAWSCachedObject<T> {
-    private static final Logger LOG = LoggerFactory.getLogger(S3CachedObject.class);
-    private AmazonS3 s3;
-    private String bucket;
-    private String prefix;
-    private String applicationId;
-    private String objectId;
+  private static final Logger LOG = LoggerFactory.getLogger(S3CachedObject.class);
+  private AmazonS3 s3;
+  private String bucket;
+  private String prefix;
+  private String applicationId;
+  private String objectId;
 
-    public S3CachedObject(AmazonS3 s3, String bucket, String prefix, String applicationId, String objectId, Class<T> clazz) {
-        super(clazz);
-        Objects.requireNonNull(s3);
-        Objects.requireNonNull(bucket);
-        Objects.requireNonNull(applicationId);
-        Objects.requireNonNull(objectId);
+  public S3CachedObject(AmazonS3 s3, String bucket, String prefix, String applicationId, String objectId, Class<T> clazz) {
+    super(clazz);
+    Objects.requireNonNull(s3);
+    Objects.requireNonNull(bucket);
+    Objects.requireNonNull(applicationId);
+    Objects.requireNonNull(objectId);
 
-        if (applicationId.startsWith("/") || objectId.startsWith("/") || objectId.endsWith("/")) {
-            throw new IllegalArgumentException("Neither applicationId nor objectId may start with / and objectId may not end with it");
-        }
-
-        this.s3 = s3;
-        this.bucket = bucket;
-        this.prefix = StringUtils.trimToEmpty(prefix);
-        this.applicationId = applicationId;
-        this.objectId = objectId;
-
-        forceCacheReload();
+    if (applicationId.startsWith("/") || objectId.startsWith("/") || objectId.endsWith("/")) {
+      throw new IllegalArgumentException("Neither applicationId nor objectId may start with / and objectId may not end with it");
     }
 
-    public S3CachedObject(AmazonS3 s3, String bucket, String prefix, String applicationId, String objectId, TypeReference<T> typeReference) {
-        super(typeReference);
-        Objects.requireNonNull(s3);
-        Objects.requireNonNull(bucket);
-        Objects.requireNonNull(applicationId);
-        Objects.requireNonNull(objectId);
+    this.s3 = s3;
+    this.bucket = bucket;
+    this.prefix = StringUtils.trimToEmpty(prefix);
+    this.applicationId = applicationId;
+    this.objectId = objectId;
 
-        if (applicationId.startsWith("/") || objectId.startsWith("/") || objectId.endsWith("/")) {
-            throw new IllegalArgumentException("Neither applicationId nor objectId may start with / and objectId may not end with it");
-        }
+    forceCacheReload();
+  }
 
-        this.s3 = s3;
-        this.bucket = bucket;
-        this.prefix = StringUtils.trimToEmpty(prefix);
-        this.applicationId = applicationId;
-        this.objectId = objectId;
+  public S3CachedObject(AmazonS3 s3, String bucket, String prefix, String applicationId, String objectId, TypeReference<T> typeReference) {
+    super(typeReference);
+    Objects.requireNonNull(s3);
+    Objects.requireNonNull(bucket);
+    Objects.requireNonNull(applicationId);
+    Objects.requireNonNull(objectId);
 
-        forceCacheReload();
+    if (applicationId.startsWith("/") || objectId.startsWith("/") || objectId.endsWith("/")) {
+      throw new IllegalArgumentException("Neither applicationId nor objectId may start with / and objectId may not end with it");
     }
 
-    private String fullPath() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(prefix);
-        if (!prefix.endsWith("/")) {
-            sb.append("/");
-        }
-        sb.append(applicationId);
-        if (!applicationId.endsWith("/")) {
-            sb.append("/");
-        }
-        sb.append(objectId);
-        return sb.toString();
+    this.s3 = s3;
+    this.bucket = bucket;
+    this.prefix = StringUtils.trimToEmpty(prefix);
+    this.applicationId = applicationId;
+    this.objectId = objectId;
+
+    forceCacheReload();
+  }
+
+  private String fullPath() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(prefix);
+    if (!prefix.endsWith("/")) {
+      sb.append("/");
     }
-
-    @Override
-    protected T loadObjectFromStore() {
-        T rval = null;
-        LOG.debug("Force-reading cache from s3");
-
-        try {
-            String path = fullPath();
-            S3Object sob = s3.getObject(bucket, path);
-
-            rval = deserialize(IOUtils.toString(sob.getObjectContent()));
-        } catch (AmazonS3Exception ase) {
-            if (ase.getErrorCode().equals("404")) {
-                LOG.debug("No such file, returning null");
-            }
-        } catch (IOException ioe) {
-            throw new RuntimeException("Error reading content", ioe);
-        }
-        return rval;
+    sb.append(applicationId);
+    if (!applicationId.endsWith("/")) {
+      sb.append("/");
     }
+    sb.append(objectId);
+    return sb.toString();
+  }
 
-    @Override
-    protected final void saveCacheToStore(String jsonValue) {
-        String fullPath = fullPath();
-        if (jsonValue == null) {
-            LOG.warn("Removing value from s3");
-            s3.deleteObject(bucket, fullPath);
-            LOG.info("Deleted object for {}/{} ({})", applicationId, objectId, fullPath);
-        } else {
-            byte[] data = jsonValue.getBytes();
-            ObjectMetadata omd = new ObjectMetadata();
-            omd.setContentType("application/json");
-            omd.setContentLength(data.length);
-            PutObjectRequest por = new PutObjectRequest(bucket, fullPath, new ByteArrayInputStream(data), omd);
-            s3.putObject(por);
-            LOG.info("Updated object for {}/{} ({})", applicationId, objectId, fullPath);
-        }
-    }
+  @Override
+  protected T loadObjectFromStore() {
+    T rval = null;
+    LOG.debug("Force-reading cache from s3");
 
-    public String getApplicationId() {
-        return applicationId;
-    }
+    try {
+      String path = fullPath();
+      S3Object sob = s3.getObject(bucket, path);
 
-    public String getObjectId() {
-        return objectId;
+      rval = deserialize(IOUtils.toString(sob.getObjectContent()));
+    } catch (AmazonS3Exception ase) {
+      if (ase.getErrorCode().equals("404")) {
+        LOG.debug("No such file, returning null");
+      }
+    } catch (IOException ioe) {
+      throw new RuntimeException("Error reading content", ioe);
     }
+    return rval;
+  }
 
-    public AmazonS3 getS3() {
-        return s3;
+  @Override
+  protected final void saveCacheToStore(String jsonValue) {
+    String fullPath = fullPath();
+    if (jsonValue == null) {
+      LOG.warn("Removing value from s3");
+      s3.deleteObject(bucket, fullPath);
+      LOG.info("Deleted object for {}/{} ({})", applicationId, objectId, fullPath);
+    } else {
+      byte[] data = jsonValue.getBytes();
+      ObjectMetadata omd = new ObjectMetadata();
+      omd.setContentType("application/json");
+      omd.setContentLength(data.length);
+      PutObjectRequest por = new PutObjectRequest(bucket, fullPath, new ByteArrayInputStream(data), omd);
+      s3.putObject(por);
+      LOG.info("Updated object for {}/{} ({})", applicationId, objectId, fullPath);
     }
+  }
 
-    public String getBucket() {
-        return bucket;
-    }
+  public String getApplicationId() {
+    return applicationId;
+  }
 
-    public String getPrefix() {
-        return prefix;
-    }
+  public String getObjectId() {
+    return objectId;
+  }
+
+  public AmazonS3 getS3() {
+    return s3;
+  }
+
+  public String getBucket() {
+    return bucket;
+  }
+
+  public String getPrefix() {
+    return prefix;
+  }
 }

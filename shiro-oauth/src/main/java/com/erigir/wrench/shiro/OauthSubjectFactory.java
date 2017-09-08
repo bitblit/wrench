@@ -10,27 +10,27 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
  */
 public class OauthSubjectFactory extends DefaultWebSubjectFactory {
 
-    @Override
-    public Subject createSubject(SubjectContext context) {
+  @Override
+  public Subject createSubject(SubjectContext context) {
 
-        //the authenticated flag is only set by the SecurityManager after a successful authentication attempt.
-        boolean authenticated = context.isAuthenticated();
+    //the authenticated flag is only set by the SecurityManager after a successful authentication attempt.
+    boolean authenticated = context.isAuthenticated();
 
-        //although the SecurityManager 'sees' the submission as a successful authentication, in reality, the
-        //login might have been just a CAS rememberMe login.  If so, set the authenticated flag appropriately:
-        if (authenticated) {
+    //although the SecurityManager 'sees' the submission as a successful authentication, in reality, the
+    //login might have been just a CAS rememberMe login.  If so, set the authenticated flag appropriately:
+    if (authenticated) {
 
-            AuthenticationToken token = context.getAuthenticationToken();
+      AuthenticationToken token = context.getAuthenticationToken();
 
-            if (token != null && token instanceof OauthToken) {
-                OauthToken oauthtoken = (OauthToken) token;
-                // set the authenticated flag of the context to true only if the CAS subject is not in a remember me mode
-                if (oauthtoken.isRememberMe()) {
-                    context.setAuthenticated(false);
-                }
-            }
+      if (token != null && token instanceof OauthToken) {
+        OauthToken oauthtoken = (OauthToken) token;
+        // set the authenticated flag of the context to true only if the CAS subject is not in a remember me mode
+        if (oauthtoken.isRememberMe()) {
+          context.setAuthenticated(false);
         }
-
-        return super.createSubject(context);
+      }
     }
+
+    return super.createSubject(context);
+  }
 }

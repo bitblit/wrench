@@ -3,7 +3,6 @@ package com.erigir.steelpipe;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,15 +10,12 @@ import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by cweiss on 6/28/17.
@@ -38,12 +34,10 @@ public class TunneledMariaDatabaseDataSource implements DataSource {
   public TunneledMariaDatabaseDataSource(TunneledMariaDatabaseConfig cfg, boolean connectTunnelImmediately) {
     super();
     this.cfg = Objects.requireNonNull(cfg);
-    if (!this.cfg.isFullyConfigured())
-    {
+    if (!this.cfg.isFullyConfigured()) {
       throw new IllegalStateException("Cannot create this data source - the configuration is not complete");
     }
-    if (connectTunnelImmediately)
-    {
+    if (connectTunnelImmediately) {
       this.verifyTunnel();
     }
   }
@@ -69,7 +63,7 @@ public class TunneledMariaDatabaseDataSource implements DataSource {
 
   /**
    * Ripped straight from MariaDB Datasource
-   *
+   * <p>
    * Returns an object that implements the given interface to allow access to non-standard methods, or standard
    * methods not exposed by the proxy.
    * <p>
@@ -99,7 +93,7 @@ public class TunneledMariaDatabaseDataSource implements DataSource {
 
   /**
    * Ripped straight from MariaDB Datasource
-   *
+   * <p>
    * Returns true if this either implements the interface argument or is directly or indirectly a wrapper for an
    * object that does. Returns false otherwise. If this implements the interface then return true, else if this is a
    * wrapper then return the result of recursively calling <code>isWrapperFor</code> on the wrapped object. If this
@@ -177,9 +171,8 @@ public class TunneledMariaDatabaseDataSource implements DataSource {
   }
 
   public Connection getConnection()
-    throws SQLException
-  {
-    return getConnection( cfg.getDbUsername(), cfg.getDbPassword());
+      throws SQLException {
+    return getConnection(cfg.getDbUsername(), cfg.getDbPassword());
   }
 
   private boolean verifyTunnel() {

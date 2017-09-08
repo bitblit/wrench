@@ -18,29 +18,29 @@ package com.erigir.wrench.drigo;
 
 public class ValidationSetting {
 
-    private ValidationType type;
-    private String includeRegex;
+  private ValidationType type;
+  private String includeRegex;
 
-    public ValidationType getType() {
-        return type;
-    }
+  public ValidationType getType() {
+    return type;
+  }
 
-    public void setType(ValidationType type) {
-        this.type = type;
-    }
+  public void setType(ValidationType type) {
+    this.type = type;
+  }
 
-    public String getIncludeRegex() {
-        return includeRegex;
-    }
+  public String getIncludeRegex() {
+    return includeRegex;
+  }
 
-    public void setIncludeRegex(String includeRegex) {
-        if (includeRegex == null) {
-            throw new IllegalArgumentException("Cannot set includeRegex to null");
-        }
-        this.includeRegex = includeRegex;
+  public void setIncludeRegex(String includeRegex) {
+    if (includeRegex == null) {
+      throw new IllegalArgumentException("Cannot set includeRegex to null");
     }
+    this.includeRegex = includeRegex;
+  }
 
-    public static enum ValidationType {
-        XML, JSON
-    }
+  public static enum ValidationType {
+    XML, JSON
+  }
 }

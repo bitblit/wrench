@@ -20,74 +20,74 @@ import java.util.Objects;
  * Created by cweiss1271 on 2/29/16.
  */
 public class DynamoCachedObject<T> extends AbstractAWSCachedObject<T> {
-    private static final Logger LOG = LoggerFactory.getLogger(DynamoCachedObject.class);
-    private Table table;
-    private String applicationId;
-    private String objectId;
+  private static final Logger LOG = LoggerFactory.getLogger(DynamoCachedObject.class);
+  private Table table;
+  private String applicationId;
+  private String objectId;
 
-    public DynamoCachedObject(Table table, String applicationId, String objectId, Class<T> clazz) {
-        super(clazz);
-        Objects.requireNonNull(table);
-        Objects.requireNonNull(applicationId);
-        Objects.requireNonNull(objectId);
+  public DynamoCachedObject(Table table, String applicationId, String objectId, Class<T> clazz) {
+    super(clazz);
+    Objects.requireNonNull(table);
+    Objects.requireNonNull(applicationId);
+    Objects.requireNonNull(objectId);
 
-        this.table = table;
-        this.applicationId = applicationId;
-        this.objectId = objectId;
+    this.table = table;
+    this.applicationId = applicationId;
+    this.objectId = objectId;
 
-        forceCacheReload();
+    forceCacheReload();
+  }
+
+  public DynamoCachedObject(Table table, String applicationId, String objectId, TypeReference<T> typeReference) {
+    super(typeReference);
+    Objects.requireNonNull(table);
+    Objects.requireNonNull(applicationId);
+    Objects.requireNonNull(objectId);
+
+    this.table = table;
+    this.applicationId = applicationId;
+    this.objectId = objectId;
+
+    forceCacheReload();
+  }
+
+  @Override
+  protected T loadObjectFromStore() {
+    T rval = null;
+    LOG.debug("Force-reading cache from table");
+    Item item = table.getItem("applicationId", applicationId, "objectId", objectId);
+    if (item == null) {
+      LOG.warn("Couldnt find entry in table for {}/{} - get requests will be null");
+    } else {
+      rval = deserialize(item.getJSON("document"));
     }
+    return rval;
+  }
 
-    public DynamoCachedObject(Table table, String applicationId, String objectId, TypeReference<T> typeReference) {
-        super(typeReference);
-        Objects.requireNonNull(table);
-        Objects.requireNonNull(applicationId);
-        Objects.requireNonNull(objectId);
-
-        this.table = table;
-        this.applicationId = applicationId;
-        this.objectId = objectId;
-
-        forceCacheReload();
+  @Override
+  protected final void saveCacheToStore(String jsonValue) {
+    if (jsonValue == null) {
+      LOG.warn("Removing value from table");
+      table.deleteItem("applicationId", applicationId, "objectId", objectId);
+      LOG.info("Deleted object for {}/{}", applicationId, objectId);
+    } else {
+      Item item = new Item().withPrimaryKey("applicationId", applicationId, "objectId", objectId)
+          .withJSON("document", jsonValue);
+      table.putItem(item);
+      LOG.info("Updated object for {}/{}", applicationId, objectId);
     }
+  }
 
-    @Override
-    protected T loadObjectFromStore() {
-        T rval = null;
-        LOG.debug("Force-reading cache from table");
-        Item item = table.getItem("applicationId", applicationId, "objectId", objectId);
-        if (item == null) {
-            LOG.warn("Couldnt find entry in table for {}/{} - get requests will be null");
-        } else {
-            rval = deserialize(item.getJSON("document"));
-        }
-        return rval;
-    }
+  public Table getTable() {
+    return table;
+  }
 
-    @Override
-    protected final void saveCacheToStore(String jsonValue) {
-        if (jsonValue == null) {
-            LOG.warn("Removing value from table");
-            table.deleteItem("applicationId", applicationId, "objectId", objectId);
-            LOG.info("Deleted object for {}/{}", applicationId, objectId);
-        } else {
-            Item item = new Item().withPrimaryKey("applicationId", applicationId, "objectId", objectId)
-                    .withJSON("document", jsonValue);
-            table.putItem(item);
-            LOG.info("Updated object for {}/{}", applicationId, objectId);
-        }
-    }
+  public String getApplicationId() {
+    return applicationId;
+  }
 
-    public Table getTable() {
-        return table;
-    }
-
-    public String getApplicationId() {
-        return applicationId;
-    }
-
-    public String getObjectId() {
-        return objectId;
-    }
+  public String getObjectId() {
+    return objectId;
+  }
 
 }

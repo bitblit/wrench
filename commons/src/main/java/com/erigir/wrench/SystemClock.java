@@ -13,41 +13,41 @@ import java.util.Date;
  * Created by cweiss on 2/10/16.
  */
 public class SystemClock {
-    //private static final SystemClock INSTANCE = new SystemClock();
-    // This is the actual clock time when the class started
-    // Needed so that we can track time progress
-    private static long FIXED_START_TIME;
-    private static long START_TIME;
+  //private static final SystemClock INSTANCE = new SystemClock();
+  // This is the actual clock time when the class started
+  // Needed so that we can track time progress
+  private static long FIXED_START_TIME;
+  private static long START_TIME;
 
-    private SystemClock() {
-        super();
-        FIXED_START_TIME = System.currentTimeMillis();
-        START_TIME = FIXED_START_TIME;
-    }
+  private SystemClock() {
+    super();
+    FIXED_START_TIME = System.currentTimeMillis();
+    START_TIME = FIXED_START_TIME;
+  }
 
-    public static void forceStartTime(Date timestamp) {
-        FIXED_START_TIME = System.currentTimeMillis();
-        START_TIME = timestamp.getTime();
-    }
+  public static void forceStartTime(Date timestamp) {
+    FIXED_START_TIME = System.currentTimeMillis();
+    START_TIME = timestamp.getTime();
+  }
 
-    public static Long now() {
-        return START_TIME + delta();
-    }
+  public static Long now() {
+    return START_TIME + delta();
+  }
 
-    public static Date nowDate() {
-        return new Date(now());
-    }
+  public static Date nowDate() {
+    return new Date(now());
+  }
 
-    public static Long delta() {
-        return System.currentTimeMillis() - FIXED_START_TIME;
-    }
+  public static Long delta() {
+    return System.currentTimeMillis() - FIXED_START_TIME;
+  }
 
-    public static void forceStartTimeToSystem() {
-        forceStartTime(new Date());
-    }
+  public static void forceStartTimeToSystem() {
+    forceStartTime(new Date());
+  }
 
-    public static Long startTime() {
-        return START_TIME;
-    }
+  public static Long startTime() {
+    return START_TIME;
+  }
 
 }

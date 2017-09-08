@@ -15,30 +15,30 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestTokenService {
 
-    @Test
-    public void testCreateToken()
-            throws Exception {
+  @Test
+  public void testCreateToken()
+      throws Exception {
 
-        TokenService tokenService1 = new TokenService();
-        tokenService1.setEncryptionKeys(Arrays.asList("0123456789012345"));
-        tokenService1.setObjectMapper(new QuietObjectMapper());
+    TokenService tokenService1 = new TokenService();
+    tokenService1.setEncryptionKeys(Arrays.asList("0123456789012345"));
+    tokenService1.setObjectMapper(new QuietObjectMapper());
 
-        TokenService tokenService2 = new TokenService();
-        tokenService2.setEncryptionKeys(Arrays.asList("5432109876543210", "0123456789012345"));
-        tokenService2.setObjectMapper(new QuietObjectMapper());
+    TokenService tokenService2 = new TokenService();
+    tokenService2.setEncryptionKeys(Arrays.asList("5432109876543210", "0123456789012345"));
+    tokenService2.setObjectMapper(new QuietObjectMapper());
 
-        String key = "TEST";
-        Long expires = System.currentTimeMillis() + (1000 * 60 * 60); // 1 hour
-        Map<String, Object> other = Collections.singletonMap("Testkey", (Object) "Testvalue");
+    String key = "TEST";
+    Long expires = System.currentTimeMillis() + (1000 * 60 * 60); // 1 hour
+    Map<String, Object> other = Collections.singletonMap("Testkey", (Object) "Testvalue");
 
-        String token = tokenService1.createToken(key, expires, other);
-        CustomerToken testToken = tokenService2.extractAndValidateToken(token);
+    String token = tokenService1.createToken(key, expires, other);
+    CustomerToken testToken = tokenService2.extractAndValidateToken(token);
 
-        assertEquals(key, testToken.getKey());
-        assertEquals(expires, testToken.getExpires());
-        assertEquals(other.get("Testkey"), testToken.getOtherData().get("Testkey"));
+    assertEquals(key, testToken.getKey());
+    assertEquals(expires, testToken.getExpires());
+    assertEquals(other.get("Testkey"), testToken.getOtherData().get("Testkey"));
 
-        //tokenService.encryptTest();
+    //tokenService.encryptTest();
 
-    }
+  }
 }
