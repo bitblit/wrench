@@ -1,54 +1,95 @@
 package com.erigir.steelpipe;
 
+import com.erigir.wrench.EnvironmentUtils;
+import lombok.Builder;
 import lombok.Data;
-
-import java.util.Objects;
 
 /**
  * Created by cweiss on 6/28/17.
  */
 @Data
+@Builder
 public class TunneledMariaDatabaseConfig {
+  /**
+   * The SSH port we are connecting to on the host machine (defaults to 22)
+   */
+  @Builder.Default
+  private int sshRemotePort = 22;
+  /**
+   * The port we are opening on the local machine to tunnel through - should be over 1024 (defaults to 33006)
+   */
+  @Builder.Default
+  private int sshLocalPort = 33006;
+  /**
+   * The local host name (defaults to localhost)
+   */
+  @Builder.Default
+  private String sshLocalHost = "localhost";
+  /**
+   * The port on the remote machine the database listens to (defaults to 3306)
+   */
+  @Builder.Default
+  private int dbDatabasePort = 3306;
+  /**
+   * Max time to wait on the database when logging in (defaults to 30)
+   */
+  @Builder.Default
+  private int dbLoginTimeoutInSeconds = 30;
+
+  /**
+   * The hostname of the machine running ssh remotely
+   */
   private String sshRemoteHost;
-  private int sshRemotePort;
+  /**
+   * The SSH username to use for connection (NOT the DB user name)
+   */
   private String sshUsername;
+  /**
+   * A string containing the private key in the case of ssh keypair authentication
+   */
   private String sshPrivateKeyContents;
+  /**
+   * A string containing the public key in the case of ssh keypair authentication
+   */
   private String sshPublicKeyContents;
-  private String sshPrivateKeyPassword; // only thing that is optional for now
-
-  private int sshLocalPort;
-  private String sshLocalHost;
-
-  private String dbUser;
+  /**
+   * A string containing the password guarding the private key in the case of ssh keypair authentication (if not used, leave null)
+   */
+  private String sshPrivateKeyPassword;
+  /**
+   * A string containing the DATABASE username (NOT the SSH username)
+   */
+  private String dbUsername;
+  /**
+   * A string containing the DATABASE password (NOT the SSH password)
+   */
   private String dbPassword;
+  /**
+   * A string containing the name of the database to connect to on the remote host
+   */
   private String dbDatabaseName;
-  private int dbPort;
 
   public static TunneledMariaDatabaseConfig fromEnvironment() {
-    TunneledMariaDatabaseConfig rval = new TunneledMariaDatabaseConfig();
-    rval.setSshRemoteHost(envOrSysProperty("STEELPIPE_SSH_REMOTE_HOST", null));
-    rval.setSshRemotePort(Integer.parseInt(envOrSysProperty("STEELPIPE_SSH_REMOTE_PORT", "22")));
-    rval.setSshLocalHost(envOrSysProperty("STEELPIPE_SSH_LOCAL_HOST", "localhost"));
-    rval.setSshLocalPort(Integer.parseInt(envOrSysProperty("STEELPIPE_SSH_LOCAL_PORT", "33006")));
-    rval.setSshUsername(envOrSysProperty("STEELPIPE_SSH_USERNAME", null));
+    TunneledMariaDatabaseConfig defaults = TunneledMariaDatabaseConfig.builder().build();
 
-    rval.setSshPrivateKeyContents(envOrSysProperty("STEELPIPE_SSH_PRIVATE_KEY_CONTENTS", null));
-    rval.setSshPublicKeyContents(envOrSysProperty("STEELPIPE_SSH_PUBLIC_KEY_CONTENTS", null));
-    rval.setSshPrivateKeyPassword(envOrSysProperty("STEELPIPE_SSH_PRIVATE_KEY_PASSWORD", null));
+    TunneledMariaDatabaseConfig rval = TunneledMariaDatabaseConfig.builder()
+        .sshLocalHost(EnvironmentUtils.envOrSysProperty("STEELPIPE_SSH_LOCAL_HOST", defaults.sshLocalHost))
+        .sshRemoteHost(EnvironmentUtils.envOrSysProperty("STEELPIPE_SSH_REMOTE_HOST", defaults.sshRemoteHost))
+        .sshRemotePort(EnvironmentUtils.envOrSysProperty("STEELPIPE_SSH_REMOTE_PORT", defaults.sshRemotePort, Integer.class))
+        .sshLocalHost(EnvironmentUtils.envOrSysProperty("STEELPIPE_SSH_LOCAL_HOST", defaults.sshLocalHost))
+        .sshLocalPort(EnvironmentUtils.envOrSysProperty("STEELPIPE_SSH_LOCAL_PORT", defaults.sshLocalPort, Integer.class))
+        .sshUsername(EnvironmentUtils.envOrSysProperty("STEELPIPE_SSH_USERNAME", defaults.sshUsername))
 
-    rval.setDbUser(envOrSysProperty("STEELPIPE_DB_USERNAME", null));
-    rval.setDbPassword(envOrSysProperty("STEELPIPE_DB_PASSWORD", null));
-    rval.setDbDatabaseName(envOrSysProperty("STEELPIPE_DB_DATABASE_NAME", null));
-    rval.setDbPort(Integer.parseInt(envOrSysProperty("STEELPIPE_DB_PORT", "3306")));
-    return rval;
-  }
+        .sshPrivateKeyContents(EnvironmentUtils.envOrSysProperty("STEELPIPE_SSH_PRIVATE_KEY_CONTENTS", defaults.sshPrivateKeyContents))
+        .sshPublicKeyContents(EnvironmentUtils.envOrSysProperty("STEELPIPE_SSH_PUBLIC_KEY_CONTENTS", defaults.sshPublicKeyContents))
+        .sshPrivateKeyPassword(EnvironmentUtils.envOrSysProperty("STEELPIPE_SSH_PRIVATE_KEY_PASSWORD", defaults.sshPrivateKeyPassword))
 
-  private static String envOrSysProperty(String propName, String defaultVal) {
-    Objects.requireNonNull(propName);
-    String rval = System.getenv(propName);
-    rval = (rval == null) ? System.getProperty(propName) : rval;
-    rval = (rval == null) ? defaultVal : rval;
-
+        .dbUsername(EnvironmentUtils.envOrSysProperty("STEELPIPE_DB_USERNAME", defaults.dbUsername))
+        .dbPassword(EnvironmentUtils.envOrSysProperty("STEELPIPE_DB_PASSWORD", defaults.dbPassword))
+        .dbDatabaseName(EnvironmentUtils.envOrSysProperty("STEELPIPE_DB_DATABASE_NAME", defaults.dbDatabaseName))
+        .dbDatabasePort(EnvironmentUtils.envOrSysProperty("STEELPIPE_DB_DATABASE_PORT", defaults.dbDatabasePort, Integer.class))
+        .dbLoginTimeoutInSeconds(EnvironmentUtils.envOrSysProperty("STEELPIPE_DB_LOGIN_TIMEOUT", defaults.dbLoginTimeoutInSeconds, Integer.class))
+        .build();
     return rval;
   }
 
@@ -62,25 +103,24 @@ public class TunneledMariaDatabaseConfig {
         sshLocalPort > 0 &&
         sshLocalHost != null &&
 
-        dbUser != null &&
+        dbUsername != null &&
         dbPassword != null &&
         dbDatabaseName != null &&
-        dbPort>0;
+        dbDatabasePort > 0 &&
+        dbLoginTimeoutInSeconds > 0;
   }
 
-  public byte[] getSshPrivateKeyAsBytes()
-  {
-    return (sshPrivateKeyContents==null)?null:sshPrivateKeyContents.getBytes();
-  }
-  public byte[] getSshPublicKeyAsBytes()
-  {
-    return (sshPublicKeyContents==null)?null:sshPublicKeyContents.getBytes();
-  }
-  public byte[] getSshPrivateKeyPasswordAsBytes()
-  {
-    return (sshPrivateKeyPassword==null)?null:sshPrivateKeyPassword.getBytes();
+  public byte[] getSshPrivateKeyAsBytes() {
+    return (sshPrivateKeyContents == null) ? null : sshPrivateKeyContents.getBytes();
   }
 
+  public byte[] getSshPublicKeyAsBytes() {
+    return (sshPublicKeyContents == null) ? null : sshPublicKeyContents.getBytes();
+  }
+
+  public byte[] getSshPrivateKeyPasswordAsBytes() {
+    return (sshPrivateKeyPassword == null) ? null : sshPrivateKeyPassword.getBytes();
+  }
 
 
 }
