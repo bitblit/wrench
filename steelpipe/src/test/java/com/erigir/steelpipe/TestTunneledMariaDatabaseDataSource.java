@@ -17,7 +17,7 @@ public class TestTunneledMariaDatabaseDataSource {
 
   /**
    * Note - this test is ignored since it relies on a local config being setup to hit an actual
-   * mysql instance
+   * mysql instance.
    *
    * @throws Exception
    */
