@@ -18,21 +18,25 @@ deployment:
  report:
    tag: /report-.*/
    commands:
+   # Filter the pom files to actually have the version number in it
+   - find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/LOCAL-SNAPSHOT/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
+   # Now run the results
    - echo Updating documentation
-   - mvn site -P reporting
+   - mvn site -P reporting -Dgpg.skip
    - aws s3 cp target/site s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM --recursive
 
  release:
    tag: /release-.*/
    commands:
-   - echo Updating documentation
-   - mvn site -P reporting
-   - aws s3 cp target/site s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM --recursive
    # Decrypt the keyrings
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/pubring.gpg circleci/pubring.gpg.enc
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg circleci/secring.gpg.enc
    # Filter the pom files to actually have the version number in it
    - find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/LOCAL-SNAPSHOT/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
+   # Update documentation
+   - echo Updating documentation
+   - mvn site -P reporting -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME
+   - aws s3 cp target/site s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM --recursive
    # This is actually significantly easier than trying to use the maven release plugin when you wont be pushing to master,
    # and when the tagging has already happened
    # Build and upload
