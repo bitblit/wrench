@@ -15,9 +15,19 @@ test:
 
 # Using this means that it'll only deploy to artifactory if a release tag is pushed
 deployment:
+ report:
+   tag: /report-.*/
+   commands:
+   - echo Updating documentation
+   - mvn site -P reporting
+   - aws s3 cp target/site s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM --recursive
+
  release:
    tag: /release-.*/
    commands:
+   - echo Updating documentation
+   - mvn site -P reporting
+   - aws s3 cp target/site s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM --recursive
    # Decrypt the keyrings
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/pubring.gpg circleci/pubring.gpg.enc
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg circleci/secring.gpg.enc
