@@ -21,6 +21,7 @@ public class TestTunneledMariaDatabaseDataSource {
    * @throws Exception
    */
   @Test
+  @Ignore
   public void testConnection()
       throws Exception {
     TunneledMariaDatabaseConfig cfg = TunneledMariaDatabaseConfig.fromEnvironment();
