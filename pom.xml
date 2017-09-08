@@ -17,6 +17,8 @@
     </issueManagement>
 
     <ciManagement>
+        <system>circleci</system>
+        <url>https://circleci.com/gh/bitblit/wrench</url>
     </ciManagement>
 
     <organization>
@@ -26,8 +28,8 @@
 
     <scm>
         <url>https://github.com/bitblit/wrench</url>
-        <connection>scm:git:git@github.com:bitblit/wrench.git</connection>
-        <developerConnection>scm:git:git@github.com:bitblit/wrench.git</developerConnection>
+        <connection>scm:https://github.com/bitblit/wrench.git</connection>
+        <developerConnection>scm:https://github.com/bitblit/wrench.git</developerConnection>
     </scm>
 
     <developers>

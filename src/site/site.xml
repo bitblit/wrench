@@ -1,6 +1,6 @@
 <project name="Wrench">
     <bannerLeft>
-        <name>seedy-maven-plugin</name>
+        <name>Wrench</name>
         <href>https://github.com/bitblit/wrench</href>
         <!--<src>header.png</src>-->
     </bannerLeft>
