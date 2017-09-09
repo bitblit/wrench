@@ -25,7 +25,7 @@ deployment:
    - echo Updating documentation
    - mvn site -P reporting -Dgpg.skip
    - bash src/automate-build/sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/${CIRCLE_TAG:8}+$BUILD_NUMBER
-   - aws s3 cp $HOME/src/automate-build/latest-release-link-template.html s3://www.erigir.com/open-source/docs/wrench/index.html
+   - aws s3 cp src/automate-build/latest-release-link-template.html s3://www.erigir.com/open-source/docs/wrench/index.html
 
  release:
    tag: /release-.*/
@@ -38,7 +38,7 @@ deployment:
    # Update documentation
    - echo Updating documentation
    - mvn site -P reporting -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME
-   - bash $HOME/src/automate-build/sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/${CIRCLE_TAG:8}+$BUILD_NUMBER
+   - bash src/automate-build/sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/${CIRCLE_TAG:8}+$BUILD_NUMBER
    - aws s3 cp src/automate-build/latest-release-link-template.html s3://www.erigir.com/open-source/docs/wrench/index.html
    # - aws s3 cp target/site s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM --recursive
    # This is actually significantly easier than trying to use the maven release plugin when you wont be pushing to master,
