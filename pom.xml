@@ -149,9 +149,9 @@
         <module>ape</module>
         <module>drigo</module>
         <module>shiro-oauth</module>
-        <module>steelpipe</module>
         <module>fluke</module>
         -->
+        <module>steelpipe</module>
     </modules>
 
     <!--
