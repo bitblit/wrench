@@ -23,7 +23,7 @@ deployment:
    # Now run the results
    - echo Updating documentation
    - mvn site -P reporting -Dgpg.skip
-   - ./sendDocsToS3 s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM
+   - ./sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM
 
  release:
    tag: /release-.*/
@@ -36,7 +36,7 @@ deployment:
    # Update documentation
    - echo Updating documentation
    - mvn site -P reporting -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME
-   - ./sendDocsToS3 s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM
+   - ./sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM
    # - aws s3 cp target/site s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM --recursive
    # This is actually significantly easier than trying to use the maven release plugin when you wont be pushing to master,
    # and when the tagging has already happened
