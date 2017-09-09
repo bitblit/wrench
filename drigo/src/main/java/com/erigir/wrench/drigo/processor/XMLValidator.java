@@ -30,14 +30,14 @@ import java.io.IOException;
  */
 public class XMLValidator implements Validator {
 
-    @Override
-    public void validate(File input) throws DrigoException {
+  @Override
+  public void validate(File input) throws DrigoException {
 
-        try {
-            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            parser.parse(input);
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            throw new DrigoException("XML Validation failed for:" + input, e);
-        }
+    try {
+      DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      parser.parse(input);
+    } catch (ParserConfigurationException | IOException | SAXException e) {
+      throw new DrigoException("XML Validation failed for:" + input, e);
     }
+  }
 }

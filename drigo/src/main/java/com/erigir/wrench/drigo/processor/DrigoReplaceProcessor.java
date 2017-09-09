@@ -34,45 +34,45 @@ import java.util.regex.Pattern;
  * Uses the Wrench simple includes processor to string based replacing
  */
 public class DrigoReplaceProcessor extends AbstractFileProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(DrigoReplaceProcessor.class);
-    private String prefix;
-    private String suffix;
-    private LinkedHashMap<Pattern, String> replace;
+  private static final Logger LOG = LoggerFactory.getLogger(DrigoReplaceProcessor.class);
+  private String prefix;
+  private String suffix;
+  private LinkedHashMap<Pattern, String> replace;
 
-    public DrigoReplaceProcessor(String prefix, String suffix, LinkedHashMap<Pattern, String> replace) {
-        this.prefix = prefix;
-        this.suffix = suffix;
-        this.replace = replace;
-    }
+  public DrigoReplaceProcessor(String prefix, String suffix, LinkedHashMap<Pattern, String> replace) {
+    this.prefix = prefix;
+    this.suffix = suffix;
+    this.replace = replace;
+  }
 
-    public String getPrefix() {
-        return prefix;
-    }
+  public String getPrefix() {
+    return prefix;
+  }
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
+  }
 
-    public String getSuffix() {
-        return suffix;
-    }
+  public String getSuffix() {
+    return suffix;
+  }
 
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }
+  public void setSuffix(String suffix) {
+    this.suffix = suffix;
+  }
 
-    public boolean innerProcess(File src, File dst, DrigoResults results)
-            throws IOException {
-        SimpleIncludesPatternMapSource sifs = new SimpleIncludesPatternMapSource(replace);
-        SimpleIncludesProcessor sip = new SimpleIncludesProcessor(sifs, prefix, suffix);
+  public boolean innerProcess(File src, File dst, DrigoResults results)
+      throws IOException {
+    SimpleIncludesPatternMapSource sifs = new SimpleIncludesPatternMapSource(replace);
+    SimpleIncludesProcessor sip = new SimpleIncludesProcessor(sifs, prefix, suffix);
 
-        String input = IOUtils.toString(new FileInputStream(src));
-        String output = sip.processIncludes(input);
-        FileWriter fw = new FileWriter(dst);
-        fw.write(output);
-        fw.close();
+    String input = IOUtils.toString(new FileInputStream(src));
+    String output = sip.processIncludes(input);
+    FileWriter fw = new FileWriter(dst);
+    fw.write(output);
+    fw.close();
 
-        return true;
-    }
+    return true;
+  }
 
 }

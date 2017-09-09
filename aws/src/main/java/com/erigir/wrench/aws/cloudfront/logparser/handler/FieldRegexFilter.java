@@ -11,29 +11,29 @@ import java.util.regex.Pattern;
  */
 public class FieldRegexFilter implements CloudFrontAccessLogHandler {
 
-    private CloudFrontAccessLogField field;
-    private Pattern regex;
+  private CloudFrontAccessLogField field;
+  private Pattern regex;
 
-    public FieldRegexFilter() {
-    }
+  public FieldRegexFilter() {
+  }
 
-    public FieldRegexFilter(CloudFrontAccessLogField field, String regex) {
+  public FieldRegexFilter(CloudFrontAccessLogField field, String regex) {
 
-        this.field = field;
-        this.regex = Pattern.compile(regex);
-    }
+    this.field = field;
+    this.regex = Pattern.compile(regex);
+  }
 
-    @Override
-    public boolean handleCloudFrontAccessLogEntry(CloudFrontAccessLogEntry entry) {
-        boolean rval = regex.matcher(entry.field(field)).matches();
-        return rval;
-    }
+  @Override
+  public boolean handleCloudFrontAccessLogEntry(CloudFrontAccessLogEntry entry) {
+    boolean rval = regex.matcher(entry.field(field)).matches();
+    return rval;
+  }
 
-    public Pattern getRegex() {
-        return regex;
-    }
+  public Pattern getRegex() {
+    return regex;
+  }
 
-    public void setRegex(Pattern regex) {
-        this.regex = regex;
-    }
+  public void setRegex(Pattern regex) {
+    this.regex = regex;
+  }
 }

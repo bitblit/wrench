@@ -28,28 +28,28 @@ import java.io.IOException;
 
 public class ValidationProcessor extends AbstractFileProcessor {
 
-    private final Validator validator;
+  private final Validator validator;
 
-    public ValidationProcessor(ValidationSetting.ValidationType type) {
+  public ValidationProcessor(ValidationSetting.ValidationType type) {
 
-        switch (type) {
-            case JSON:
-                validator = new JSONValidator();
-                break;
-            case XML:
-                validator = new XMLValidator();
-                break;
-            default:
-                throw new IllegalArgumentException("Cannot set validator type to: " + type);
-        }
+    switch (type) {
+      case JSON:
+        validator = new JSONValidator();
+        break;
+      case XML:
+        validator = new XMLValidator();
+        break;
+      default:
+        throw new IllegalArgumentException("Cannot set validator type to: " + type);
     }
+  }
 
-    @Override
-    public boolean innerProcess(File src, File dst, DrigoResults results) throws DrigoException, IOException {
-        validator.validate(src);
+  @Override
+  public boolean innerProcess(File src, File dst, DrigoResults results) throws DrigoException, IOException {
+    validator.validate(src);
 
-        String input = IOUtils.toString(new FileInputStream(src));
-        IOUtils.write(input, new FileOutputStream(dst));
-        return true;
-    }
+    String input = IOUtils.toString(new FileInputStream(src));
+    IOUtils.write(input, new FileOutputStream(dst));
+    return true;
+  }
 }

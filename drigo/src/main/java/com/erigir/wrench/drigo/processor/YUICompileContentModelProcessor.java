@@ -27,15 +27,15 @@ import java.io.IOException;
  **/
 public class YUICompileContentModelProcessor extends AbstractFileProcessor {
 
-    @Override
-    public boolean innerProcess(File src, File dst, DrigoResults results)
-            throws DrigoException, IOException {
-        // Run the yahoo compiler
-        CssCompressor css = new CssCompressor(new FileReader(src));
-        FileWriter out = new FileWriter(dst);
-        css.compress(out, 0);
-        IOUtils.closeQuietly(out);
-        return true;
-    }
+  @Override
+  public boolean innerProcess(File src, File dst, DrigoResults results)
+      throws DrigoException, IOException {
+    // Run the yahoo compiler
+    CssCompressor css = new CssCompressor(new FileReader(src));
+    FileWriter out = new FileWriter(dst);
+    css.compress(out, 0);
+    IOUtils.closeQuietly(out);
+    return true;
+  }
 
 }

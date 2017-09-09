@@ -12,38 +12,38 @@ import java.io.IOException;
  * Created by cweiss on 8/4/15.
  */
 public class SimpleIncludesFileSource implements SimpleIncludesSource {
-    private static final Logger LOG = LoggerFactory.getLogger(SimpleIncludesFileSource.class);
-    private File includeSourceParentDirectory;
+  private static final Logger LOG = LoggerFactory.getLogger(SimpleIncludesFileSource.class);
+  private File includeSourceParentDirectory;
 
-    public SimpleIncludesFileSource() {
+  public SimpleIncludesFileSource() {
+  }
+
+  public SimpleIncludesFileSource(File includeSourceParentDirectory) {
+    this.includeSourceParentDirectory = includeSourceParentDirectory;
+  }
+
+  @Override
+  public String findContent(String name) {
+    String rval = null;
+    File contents = new File(includeSourceParentDirectory, name);
+    if (contents.exists() && contents.isFile()) {
+      try {
+        FileInputStream fis = new FileInputStream(contents);
+        byte[] data = ZipUtils.toByteArray(fis);
+        fis.close();
+        rval = new String(data);
+      } catch (IOException ioe) {
+        LOG.warn("Error occurred trying to read file, returning null", ioe);
+        rval = null;
+      }
+    } else {
+      LOG.warn("Requested file {}, but not found in {}", name, includeSourceParentDirectory);
     }
 
-    public SimpleIncludesFileSource(File includeSourceParentDirectory) {
-        this.includeSourceParentDirectory = includeSourceParentDirectory;
-    }
+    return rval;
+  }
 
-    @Override
-    public String findContent(String name) {
-        String rval = null;
-        File contents = new File(includeSourceParentDirectory, name);
-        if (contents.exists() && contents.isFile()) {
-            try {
-                FileInputStream fis = new FileInputStream(contents);
-                byte[] data = ZipUtils.toByteArray(fis);
-                fis.close();
-                rval = new String(data);
-            } catch (IOException ioe) {
-                LOG.warn("Error occurred trying to read file, returning null", ioe);
-                rval = null;
-            }
-        } else {
-            LOG.warn("Requested file {}, but not found in {}", name, includeSourceParentDirectory);
-        }
-
-        return rval;
-    }
-
-    public void setIncludeSourceParentDirectory(File includeSourceParentDirectory) {
-        this.includeSourceParentDirectory = includeSourceParentDirectory;
-    }
+  public void setIncludeSourceParentDirectory(File includeSourceParentDirectory) {
+    this.includeSourceParentDirectory = includeSourceParentDirectory;
+  }
 }

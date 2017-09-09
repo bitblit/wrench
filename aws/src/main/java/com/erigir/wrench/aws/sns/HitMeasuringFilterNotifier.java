@@ -31,123 +31,123 @@ import java.util.TreeMap;
  * Created by chrweiss on 3/13/15.
  */
 public class HitMeasuringFilterNotifier implements Runnable {
-    private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringFilterNotifier.class);
-    private HitMeasuringFilter hitMeasuringFilter;
-    private Map<HitMeasuringEntry, Long> maxHitAge = new TreeMap<>();
-    private Map<HitMeasuringEntry, Long> minHitAge = new TreeMap<>();
-    private Long checkPeriodInMs = 60_000L; // Defaults to minute long checks
-    private Long startupDelay = 300_000L; // 5 minute startup delay to give the system time to start
-    private boolean aborted = false;
-    private AmazonSNSClient sns;
-    private String snsTopicARN;
+  private static final Logger LOG = LoggerFactory.getLogger(HitMeasuringFilterNotifier.class);
+  private HitMeasuringFilter hitMeasuringFilter;
+  private Map<HitMeasuringEntry, Long> maxHitAge = new TreeMap<>();
+  private Map<HitMeasuringEntry, Long> minHitAge = new TreeMap<>();
+  private Long checkPeriodInMs = 60_000L; // Defaults to minute long checks
+  private Long startupDelay = 300_000L; // 5 minute startup delay to give the system time to start
+  private boolean aborted = false;
+  private AmazonSNSClient sns;
+  private String snsTopicARN;
 
-    public HitMeasuringFilterNotifier() {
+  public HitMeasuringFilterNotifier() {
+  }
+
+  @Override
+  public void run() {
+    LOG.info("Starting up HitMeasuringFilterNotifier (Startup delay is {})", startupDelay);
+
+    if (startupDelay != null) {
+      QuietUtils.quietSleep(startupDelay);
     }
 
-    @Override
-    public void run() {
-        LOG.info("Starting up HitMeasuringFilterNotifier (Startup delay is {})", startupDelay);
+    while (!aborted) {
+      LOG.debug("Running HitMeasuringFilterNotifier check");
+      checkConfiguration();
 
-        if (startupDelay != null) {
-            QuietUtils.quietSleep(startupDelay);
+      long now = System.currentTimeMillis();
+
+      Map<HitMeasuringEntry, String> issues = new TreeMap<>();
+      for (Map.Entry<HitMeasuringEntry, Long> e : maxHitAge.entrySet()) {
+        Date last = hitMeasuringFilter.getLastHit().get(e.getKey());
+        Long age = (last == null) ? null : now - last.getTime();
+        if (age == null || age > e.getValue()) {
+          issues.put(e.getKey(), "Max age is " + e.getValue() + "ms but it has been " + age + "ms");
         }
+      }
 
-        while (!aborted) {
-            LOG.debug("Running HitMeasuringFilterNotifier check");
-            checkConfiguration();
-
-            long now = System.currentTimeMillis();
-
-            Map<HitMeasuringEntry, String> issues = new TreeMap<>();
-            for (Map.Entry<HitMeasuringEntry, Long> e : maxHitAge.entrySet()) {
-                Date last = hitMeasuringFilter.getLastHit().get(e.getKey());
-                Long age = (last == null) ? null : now - last.getTime();
-                if (age == null || age > e.getValue()) {
-                    issues.put(e.getKey(), "Max age is " + e.getValue() + "ms but it has been " + age + "ms");
-                }
-            }
-
-            for (Map.Entry<HitMeasuringEntry, Long> e : minHitAge.entrySet()) {
-                Date last = hitMeasuringFilter.getLastHit().get(e.getKey());
-                Long age = (last == null) ? null : now - last.getTime();
-                if (age == null || age < e.getValue()) {
-                    issues.put(e.getKey(), "Min age is " + e.getValue() + "ms but it has been " + age + "ms");
-                }
-            }
-
-            processIssues(issues);
-
-            QuietUtils.quietSleep(checkPeriodInMs);
+      for (Map.Entry<HitMeasuringEntry, Long> e : minHitAge.entrySet()) {
+        Date last = hitMeasuringFilter.getLastHit().get(e.getKey());
+        Long age = (last == null) ? null : now - last.getTime();
+        if (age == null || age < e.getValue()) {
+          issues.put(e.getKey(), "Min age is " + e.getValue() + "ms but it has been " + age + "ms");
         }
-        LOG.info("Stopping HitMeasuringFilterNotifier thread (Aborted)");
-    }
+      }
 
-    public void processIssues(Map<HitMeasuringEntry, String> issues) {
-        if (issues != null && issues.size() > 0) {
-            LOG.info("Sending notification with {} issues", issues.size());
-            // Build the email
-            StringBuffer sb = new StringBuffer();
-            sb.append("The following issues have occurred: \n\n");
-            for (Map.Entry<HitMeasuringEntry, String> e : issues.entrySet()) {
-                sb.append(e.getKey().toString()).append(" : ").append(e.getValue()).append("\n\n");
-            }
+      processIssues(issues);
 
-            try {
-                PublishRequest publishRequest = new PublishRequest(snsTopicARN, sb.toString());
-                PublishResult publishResult = sns.publish(publishRequest);
-            } catch (Exception e) {
-                LOG.warn("An error occurred trying to send notification email", e);
-            }
-        } else {
-            LOG.info("No issues found");
-        }
+      QuietUtils.quietSleep(checkPeriodInMs);
     }
+    LOG.info("Stopping HitMeasuringFilterNotifier thread (Aborted)");
+  }
 
-    private void checkConfiguration() {
-        if (hitMeasuringFilter == null) {
-            throw new IllegalStateException("Cant continue - hitMeasuringFilter not set");
-        }
-        if (sns == null) {
-            throw new IllegalStateException("Cant continue - sns not set");
-        }
-        if (snsTopicARN == null) {
-            throw new IllegalStateException("Cant continue - snsTopicARN not set");
-        }
-    }
+  public void processIssues(Map<HitMeasuringEntry, String> issues) {
+    if (issues != null && issues.size() > 0) {
+      LOG.info("Sending notification with {} issues", issues.size());
+      // Build the email
+      StringBuffer sb = new StringBuffer();
+      sb.append("The following issues have occurred: \n\n");
+      for (Map.Entry<HitMeasuringEntry, String> e : issues.entrySet()) {
+        sb.append(e.getKey().toString()).append(" : ").append(e.getValue()).append("\n\n");
+      }
 
-    public void setHitMeasuringFilter(HitMeasuringFilter hitMeasuringFilter) {
-        this.hitMeasuringFilter = hitMeasuringFilter;
+      try {
+        PublishRequest publishRequest = new PublishRequest(snsTopicARN, sb.toString());
+        PublishResult publishResult = sns.publish(publishRequest);
+      } catch (Exception e) {
+        LOG.warn("An error occurred trying to send notification email", e);
+      }
+    } else {
+      LOG.info("No issues found");
     }
+  }
 
-    public void setMaxHitAge(Map<HitMeasuringEntry, Long> maxHitAge) {
-        this.maxHitAge = maxHitAge;
+  private void checkConfiguration() {
+    if (hitMeasuringFilter == null) {
+      throw new IllegalStateException("Cant continue - hitMeasuringFilter not set");
     }
+    if (sns == null) {
+      throw new IllegalStateException("Cant continue - sns not set");
+    }
+    if (snsTopicARN == null) {
+      throw new IllegalStateException("Cant continue - snsTopicARN not set");
+    }
+  }
 
-    public void setMinHitAge(Map<HitMeasuringEntry, Long> minHitAge) {
-        this.minHitAge = minHitAge;
-    }
+  public void setHitMeasuringFilter(HitMeasuringFilter hitMeasuringFilter) {
+    this.hitMeasuringFilter = hitMeasuringFilter;
+  }
 
-    public void setCheckPeriodInMs(Long checkPeriodInMs) {
-        this.checkPeriodInMs = checkPeriodInMs;
-        if (checkPeriodInMs == null || checkPeriodInMs < 1000) {
-            throw new IllegalArgumentException("Cannot set check period to less than 1000 (once per second)");
-        }
-    }
+  public void setMaxHitAge(Map<HitMeasuringEntry, Long> maxHitAge) {
+    this.maxHitAge = maxHitAge;
+  }
 
-    public void setAborted(boolean aborted) {
-        this.aborted = aborted;
-    }
+  public void setMinHitAge(Map<HitMeasuringEntry, Long> minHitAge) {
+    this.minHitAge = minHitAge;
+  }
 
-    public void setStartupDelay(Long startupDelay) {
-        this.startupDelay = startupDelay;
+  public void setCheckPeriodInMs(Long checkPeriodInMs) {
+    this.checkPeriodInMs = checkPeriodInMs;
+    if (checkPeriodInMs == null || checkPeriodInMs < 1000) {
+      throw new IllegalArgumentException("Cannot set check period to less than 1000 (once per second)");
     }
+  }
 
-    public void setSns(AmazonSNSClient sns) {
-        this.sns = sns;
-    }
+  public void setAborted(boolean aborted) {
+    this.aborted = aborted;
+  }
 
-    public void setSnsTopicARN(String snsTopicARN) {
-        this.snsTopicARN = snsTopicARN;
-    }
+  public void setStartupDelay(Long startupDelay) {
+    this.startupDelay = startupDelay;
+  }
+
+  public void setSns(AmazonSNSClient sns) {
+    this.sns = sns;
+  }
+
+  public void setSnsTopicARN(String snsTopicARN) {
+    this.snsTopicARN = snsTopicARN;
+  }
 
 }

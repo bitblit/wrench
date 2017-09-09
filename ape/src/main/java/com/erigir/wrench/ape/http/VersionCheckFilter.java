@@ -20,52 +20,52 @@ import java.util.List;
  */
 @Component(value = "versionCheckFilter")
 public class VersionCheckFilter extends AbstractSimpleFilter {
-    private static Logger LOG = LoggerFactory.getLogger(VersionCheckFilter.class);
-    private List<Integer> validVersions;
+  private static Logger LOG = LoggerFactory.getLogger(VersionCheckFilter.class);
+  private List<Integer> validVersions;
 
-    @Override
-    public void innerFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
-        Integer foundVersion = fetchVersion(req.getRequestURI());
-        if (foundVersion == null || !validVersions.contains(foundVersion)) {
-            throw new NoSuchVersionException(validVersions);
+  @Override
+  public void innerFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
+    Integer foundVersion = fetchVersion(req.getRequestURI());
+    if (foundVersion == null || !validVersions.contains(foundVersion)) {
+      throw new NoSuchVersionException(validVersions);
+    }
+
+    chain.doFilter(req, resp); // Matched a no-key regex, handle publicly
+  }
+
+  public final Integer fetchVersion(String input) {
+    Integer rval = null;
+    if (input != null && input.startsWith("/v")) {
+      int split = input.indexOf("/", 2);
+      if (split != -1) {
+        String test = input.substring(2, split);
+        try {
+          rval = new Integer(test);
+        } catch (NumberFormatException nfe) {
+          LOG.warn("Couldn't parse version number {}", test);
         }
-
-        chain.doFilter(req, resp); // Matched a no-key regex, handle publicly
+      }
     }
 
-    public final Integer fetchVersion(String input) {
-        Integer rval = null;
-        if (input != null && input.startsWith("/v")) {
-            int split = input.indexOf("/", 2);
-            if (split != -1) {
-                String test = input.substring(2, split);
-                try {
-                    rval = new Integer(test);
-                } catch (NumberFormatException nfe) {
-                    LOG.warn("Couldn't parse version number {}", test);
-                }
-            }
-        }
+    return rval;
 
-        return rval;
+  }
 
+
+  public final String removeVersionFromURI(String input) {
+    String rval = input;
+    Integer foundVersion = null;
+    if (input != null && input.startsWith("/v")) {
+      int split = input.indexOf("/", 2);
+      if (split != -1) {
+        rval = input.substring(split);
+      }
     }
+    return rval;
+  }
 
 
-    public final String removeVersionFromURI(String input) {
-        String rval = input;
-        Integer foundVersion = null;
-        if (input != null && input.startsWith("/v")) {
-            int split = input.indexOf("/", 2);
-            if (split != -1) {
-                rval = input.substring(split);
-            }
-        }
-        return rval;
-    }
-
-
-    public void setValidVersions(List<Integer> validVersions) {
-        this.validVersions = validVersions;
-    }
+  public void setValidVersions(List<Integer> validVersions) {
+    this.validVersions = validVersions;
+  }
 }

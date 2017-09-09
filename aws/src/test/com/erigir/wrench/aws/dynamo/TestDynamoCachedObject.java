@@ -22,42 +22,42 @@ import static org.junit.Assert.assertNull;
  */
 public class TestDynamoCachedObject {
 
-    @Test
-    @Ignore
-    public void testDynamoCachedObject()
-            throws Exception {
-        Map<String, String> test = new TreeMap<>();
-        test.put("a", "b");
-        test.put("c", "d");
+  @Test
+  @Ignore
+  public void testDynamoCachedObject()
+      throws Exception {
+    Map<String, String> test = new TreeMap<>();
+    test.put("a", "b");
+    test.put("c", "d");
 
-        AWSCredentialsProvider awsCredentialsProvider = new DefaultAWSCredentialsProviderChain();
-        AmazonDynamoDB dynamoDB = new AmazonDynamoDBClient(awsCredentialsProvider);
-        DynamoDB dynamoDBV2 = new DynamoDB(dynamoDB);
-        Table sharedCacheObjects = dynamoDBV2.getTable("shared-cached-objects");
+    AWSCredentialsProvider awsCredentialsProvider = new DefaultAWSCredentialsProviderChain();
+    AmazonDynamoDB dynamoDB = new AmazonDynamoDBClient(awsCredentialsProvider);
+    DynamoDB dynamoDBV2 = new DynamoDB(dynamoDB);
+    Table sharedCacheObjects = dynamoDBV2.getTable("shared-cached-objects");
 
-        AWSCachedObject<Map<String, String>> doc = new DynamoCachedObject<Map<String, String>>(sharedCacheObjects, "test", "test", new TypeReference<Map<String, String>>() {
-        });
+    AWSCachedObject<Map<String, String>> doc = new DynamoCachedObject<Map<String, String>>(sharedCacheObjects, "test", "test", new TypeReference<Map<String, String>>() {
+    });
 
-        Map<String, String> toStart = doc.value();
-        assertNull(toStart);
+    Map<String, String> toStart = doc.value();
+    assertNull(toStart);
 
-        doc.value(test);
+    doc.value(test);
 
-        AWSCachedObject<Map<String, String>> doc2 = new DynamoCachedObject<Map<String, String>>(sharedCacheObjects, "test", "test", new TypeReference<Map<String, String>>() {
-        });
+    AWSCachedObject<Map<String, String>> doc2 = new DynamoCachedObject<Map<String, String>>(sharedCacheObjects, "test", "test", new TypeReference<Map<String, String>>() {
+    });
 
-        Map<String, String> afterSave = doc2.value();
+    Map<String, String> afterSave = doc2.value();
 
-        assertEquals(afterSave.get("a"), test.get("a"));
+    assertEquals(afterSave.get("a"), test.get("a"));
 
-        doc2.value(null);
+    doc2.value(null);
 
-        AWSCachedObject<Map<String, String>> doc3 = new DynamoCachedObject<Map<String, String>>(sharedCacheObjects, "test", "test", new TypeReference<Map<String, String>>() {
-        });
-        Map<String, String> afterDelete = doc3.value();
+    AWSCachedObject<Map<String, String>> doc3 = new DynamoCachedObject<Map<String, String>>(sharedCacheObjects, "test", "test", new TypeReference<Map<String, String>>() {
+    });
+    Map<String, String> afterDelete = doc3.value();
 
-        assertNull(afterDelete);
+    assertNull(afterDelete);
 
 
-    }
+  }
 }

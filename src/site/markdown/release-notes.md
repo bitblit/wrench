@@ -1,5 +1,14 @@
 ## Release Notes
 
+# Version 2.0.0
+Code is not backwards compatible due to upping the Java version to 1.8 and upgrading a bunch of libraries to newer
+versions.  Should pretty much straight compile (with the exception of some stuff moved into the fluke package)
+
+* Updating a bunch of libraries to new versions
+* Adding "Fluke" - weirdo one-off stuff pulled out of commons since it just bloated it with dependencies and was uncommon usage
+* Adding "Steelpipe" - a tunneled MariaDB (or Mysql) DB connection over SSH
+* Hopefully upgrading to version 2.0.0 will finally reclaim head on search.maven.org
+
 # Version 1.2.1
 Backwards compatible feature release
 * Adds the SimpleStreamHttpUtils which is like SimpleHttpUtils but allows you to specify streams to read/write from

@@ -26,29 +26,29 @@ import java.util.regex.Pattern;
  * Adds the MD5 of a file to its metadata
  */
 public class MD5Generation {
-    private static final Logger LOG = LoggerFactory.getLogger(MD5Generation.class);
-    private String includeRegex;
+  private static final Logger LOG = LoggerFactory.getLogger(MD5Generation.class);
+  private String includeRegex;
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("MD5Generation[includeRegex=").append(includeRegex)
-                .append("]");
-        return sb.toString();
-    }
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("MD5Generation[includeRegex=").append(includeRegex)
+        .append("]");
+    return sb.toString();
+  }
 
-    public String getIncludeRegex() {
-        return includeRegex;
-    }
+  public String getIncludeRegex() {
+    return includeRegex;
+  }
 
-    public void setIncludeRegex(String includeRegex) {
-        if (includeRegex == null) {
-            throw new IllegalArgumentException("Cannot set includeRegex to null");
-        }
-        this.includeRegex = includeRegex;
+  public void setIncludeRegex(String includeRegex) {
+    if (includeRegex == null) {
+      throw new IllegalArgumentException("Cannot set includeRegex to null");
     }
+    this.includeRegex = includeRegex;
+  }
 
-    public Pattern getIncludeRegexPattern() {
-        return (includeRegex == null) ? null : Pattern.compile(includeRegex);
-    }
+  public Pattern getIncludeRegexPattern() {
+    return (includeRegex == null) ? null : Pattern.compile(includeRegex);
+  }
 
 }

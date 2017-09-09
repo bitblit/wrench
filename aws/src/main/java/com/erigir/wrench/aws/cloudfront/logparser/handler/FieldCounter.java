@@ -13,36 +13,36 @@ import java.util.TreeMap;
  */
 public class FieldCounter implements CloudFrontAccessLogHandler {
 
-    private CloudFrontAccessLogField field;
-    private Map<String, Integer> counts = new TreeMap<>();
+  private CloudFrontAccessLogField field;
+  private Map<String, Integer> counts = new TreeMap<>();
 
-    public FieldCounter() {
-    }
+  public FieldCounter() {
+  }
 
-    public FieldCounter(CloudFrontAccessLogField field) {
-        this.field = field;
-    }
+  public FieldCounter(CloudFrontAccessLogField field) {
+    this.field = field;
+  }
 
-    @Override
-    public boolean handleCloudFrontAccessLogEntry(CloudFrontAccessLogEntry entry) {
-        String value = entry.field(field);
-        Integer x = counts.get(value);
+  @Override
+  public boolean handleCloudFrontAccessLogEntry(CloudFrontAccessLogEntry entry) {
+    String value = entry.field(field);
+    Integer x = counts.get(value);
 
-        int newVal = (x == null) ? 1 : x + 1;
-        counts.put(value, newVal);
+    int newVal = (x == null) ? 1 : x + 1;
+    counts.put(value, newVal);
 
-        return true;
-    }
+    return true;
+  }
 
-    public CloudFrontAccessLogField getField() {
-        return field;
-    }
+  public CloudFrontAccessLogField getField() {
+    return field;
+  }
 
-    public void setField(CloudFrontAccessLogField field) {
-        this.field = field;
-    }
+  public void setField(CloudFrontAccessLogField field) {
+    this.field = field;
+  }
 
-    public Map<String, Integer> getCounts() {
-        return Collections.unmodifiableMap(counts);
-    }
+  public Map<String, Integer> getCounts() {
+    return Collections.unmodifiableMap(counts);
+  }
 }

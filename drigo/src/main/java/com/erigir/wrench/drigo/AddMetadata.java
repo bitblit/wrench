@@ -26,49 +26,49 @@ import java.util.regex.Pattern;
  * Adds an arbitrary piece of metadata to the matching files
  */
 public class AddMetadata {
-    private static final Logger LOG = LoggerFactory.getLogger(AddMetadata.class);
-    private String includeRegex;
-    private String name;
-    private String value;
+  private static final Logger LOG = LoggerFactory.getLogger(AddMetadata.class);
+  private String includeRegex;
+  private String name;
+  private String value;
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("AddMetadata[includeRegex=").append(includeRegex)
-                .append(", name=").append(name)
-                .append(", value=").append(value)
-                .append("]");
-        return sb.toString();
-    }
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("AddMetadata[includeRegex=").append(includeRegex)
+        .append(", name=").append(name)
+        .append(", value=").append(value)
+        .append("]");
+    return sb.toString();
+  }
 
-    public String getIncludeRegex() {
-        return includeRegex;
-    }
+  public String getIncludeRegex() {
+    return includeRegex;
+  }
 
-    public void setIncludeRegex(String includeRegex) {
-        if (includeRegex == null) {
-            throw new IllegalArgumentException("Cannot set includeRegex to null");
-        }
-        this.includeRegex = includeRegex;
+  public void setIncludeRegex(String includeRegex) {
+    if (includeRegex == null) {
+      throw new IllegalArgumentException("Cannot set includeRegex to null");
     }
+    this.includeRegex = includeRegex;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-    public Pattern getIncludeRegexPattern() {
-        return (includeRegex == null) ? null : Pattern.compile(includeRegex);
-    }
+  public Pattern getIncludeRegexPattern() {
+    return (includeRegex == null) ? null : Pattern.compile(includeRegex);
+  }
 
 }

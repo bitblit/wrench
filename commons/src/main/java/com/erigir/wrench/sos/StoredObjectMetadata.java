@@ -8,31 +8,31 @@ import java.util.Date;
  * Time: 10:46 PM
  */
 public class StoredObjectMetadata {
-    private Class type;
-    private String key;
-    private Date modified;
+  private Class type;
+  private String key;
+  private Date modified;
 
-    public Class getType() {
-        return type;
-    }
+  public Class getType() {
+    return type;
+  }
 
-    public void setType(Class type) {
-        this.type = type;
-    }
+  public void setType(Class type) {
+    this.type = type;
+  }
 
-    public String getKey() {
-        return key;
-    }
+  public String getKey() {
+    return key;
+  }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-    public Date getModified() {
-        return modified;
-    }
+  public Date getModified() {
+    return modified;
+  }
 
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
+  public void setModified(Date modified) {
+    this.modified = modified;
+  }
 }

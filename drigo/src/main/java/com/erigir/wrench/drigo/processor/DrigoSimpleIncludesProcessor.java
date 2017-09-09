@@ -32,43 +32,43 @@ import java.io.IOException;
  * Uses the Wrench simple includes processor to handle including
  */
 public class DrigoSimpleIncludesProcessor extends AbstractFileProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(DrigoSimpleIncludesProcessor.class);
-    private String prefix;
-    private String suffix;
+  private static final Logger LOG = LoggerFactory.getLogger(DrigoSimpleIncludesProcessor.class);
+  private String prefix;
+  private String suffix;
 
-    public DrigoSimpleIncludesProcessor(String prefix, String suffix) {
-        this.prefix = prefix;
-        this.suffix = suffix;
-    }
+  public DrigoSimpleIncludesProcessor(String prefix, String suffix) {
+    this.prefix = prefix;
+    this.suffix = suffix;
+  }
 
-    public String getPrefix() {
-        return prefix;
-    }
+  public String getPrefix() {
+    return prefix;
+  }
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
+  }
 
-    public String getSuffix() {
-        return suffix;
-    }
+  public String getSuffix() {
+    return suffix;
+  }
 
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }
+  public void setSuffix(String suffix) {
+    this.suffix = suffix;
+  }
 
-    public boolean innerProcess(File src, File dst, DrigoResults results)
-            throws IOException {
-        SimpleIncludesFileSource sifs = new SimpleIncludesFileSource(results.getSourceConfiguration().getDst());
-        SimpleIncludesProcessor sip = new SimpleIncludesProcessor(sifs, prefix, suffix);
+  public boolean innerProcess(File src, File dst, DrigoResults results)
+      throws IOException {
+    SimpleIncludesFileSource sifs = new SimpleIncludesFileSource(results.getSourceConfiguration().getDst());
+    SimpleIncludesProcessor sip = new SimpleIncludesProcessor(sifs, prefix, suffix);
 
-        String input = IOUtils.toString(new FileInputStream(src));
-        String output = sip.processIncludes(input);
-        FileWriter fw = new FileWriter(dst);
-        fw.write(output);
-        fw.close();
+    String input = IOUtils.toString(new FileInputStream(src));
+    String output = sip.processIncludes(input);
+    FileWriter fw = new FileWriter(dst);
+    fw.write(output);
+    fw.close();
 
-        return true;
-    }
+    return true;
+  }
 
 }

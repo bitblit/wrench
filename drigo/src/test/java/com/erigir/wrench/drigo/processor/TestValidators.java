@@ -23,39 +23,39 @@ import java.io.File;
 
 public class TestValidators {
 
-    @Test
-    public void testValidJSON()
-            throws Exception {
-        File goodJSON = new File(getClass().getResource("/validate/good.json").getFile());
+  @Test
+  public void testValidJSON()
+      throws Exception {
+    File goodJSON = new File(getClass().getResource("/validate/good.json").getFile());
 
-        JSONValidator jsonValidator = new JSONValidator();
-        jsonValidator.validate(goodJSON);
-    }
+    JSONValidator jsonValidator = new JSONValidator();
+    jsonValidator.validate(goodJSON);
+  }
 
-    @Test(expected = DrigoException.class)
-    public void testInValidJSON()
-            throws Exception {
-        File badJSON = new File(getClass().getResource("/validate/bad.json").getFile());
+  @Test(expected = DrigoException.class)
+  public void testInValidJSON()
+      throws Exception {
+    File badJSON = new File(getClass().getResource("/validate/bad.json").getFile());
 
-        JSONValidator jsonValidator = new JSONValidator();
-        jsonValidator.validate(badJSON);
-    }
+    JSONValidator jsonValidator = new JSONValidator();
+    jsonValidator.validate(badJSON);
+  }
 
-    @Test
-    public void testValidXML()
-            throws Exception {
-        File goodXML = new File(getClass().getResource("/validate/good.xml").getFile());
+  @Test
+  public void testValidXML()
+      throws Exception {
+    File goodXML = new File(getClass().getResource("/validate/good.xml").getFile());
 
-        XMLValidator xmlValidator = new XMLValidator();
-        xmlValidator.validate(goodXML);
-    }
+    XMLValidator xmlValidator = new XMLValidator();
+    xmlValidator.validate(goodXML);
+  }
 
-    @Test(expected = DrigoException.class)
-    public void testInValidXML()
-            throws Exception {
-        File badXML = new File(getClass().getResource("/validate/bad.xml").getFile());
+  @Test(expected = DrigoException.class)
+  public void testInValidXML()
+      throws Exception {
+    File badXML = new File(getClass().getResource("/validate/bad.xml").getFile());
 
-        XMLValidator xmlValidator = new XMLValidator();
-        xmlValidator.validate(badXML);
-    }
+    XMLValidator xmlValidator = new XMLValidator();
+    xmlValidator.validate(badXML);
+  }
 }

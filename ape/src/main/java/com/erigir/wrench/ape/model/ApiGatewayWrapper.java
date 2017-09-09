@@ -15,42 +15,42 @@ import java.util.Map;
  * Created by cweiss1271 on 12/10/15.
  */
 public class ApiGatewayWrapper<T> {
-    private Map<String, Object> headers;
-    private Map<String, List<String>> parameters;
-    private T bodyObject;
+  private Map<String, Object> headers;
+  private Map<String, List<String>> parameters;
+  private T bodyObject;
 
-    private String url;
+  private String url;
 
 
-    public Map<String, Object> getHeaders() {
-        return headers;
-    }
+  public Map<String, Object> getHeaders() {
+    return headers;
+  }
 
-    public void setHeaders(Map<String, Object> headers) {
-        this.headers = headers;
-    }
+  public void setHeaders(Map<String, Object> headers) {
+    this.headers = headers;
+  }
 
-    public Map<String, List<String>> getParameters() {
-        return parameters;
-    }
+  public Map<String, List<String>> getParameters() {
+    return parameters;
+  }
 
-    public void setParameters(Map<String, List<String>> parameters) {
-        this.parameters = parameters;
-    }
+  public void setParameters(Map<String, List<String>> parameters) {
+    this.parameters = parameters;
+  }
 
-    public T getBodyObject() {
-        return bodyObject;
-    }
+  public T getBodyObject() {
+    return bodyObject;
+  }
 
-    public void setBodyObject(T bodyObject) {
-        this.bodyObject = bodyObject;
-    }
+  public void setBodyObject(T bodyObject) {
+    this.bodyObject = bodyObject;
+  }
 
-    public String getUrl() {
-        return url;
-    }
+  public String getUrl() {
+    return url;
+  }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+  public void setUrl(String url) {
+    this.url = url;
+  }
 }

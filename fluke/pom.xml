@@ -1,0 +1,47 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <artifactId>wrench</artifactId>
+        <groupId>com.erigir</groupId>
+        <version>LOCAL-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>wrench-fluke</artifactId>
+    <packaging>jar</packaging>
+    <name>Wrench Flukes</name>
+    <version>LOCAL-SNAPSHOT</version>
+    <description>Stuff that I want to have around but is really single use one-offs</description>
+    <url>http://www.erigir.com/Wrench</url>
+    <inceptionYear>2017</inceptionYear>
+    <issueManagement>
+    </issueManagement>
+    <ciManagement>
+    </ciManagement>
+    <organization>
+        <name>Erigir.com</name>
+        <url>http://www.erigir.com</url>
+    </organization>
+    <developers>
+        <developer>
+            <id>cweiss</id>
+            <name>Chris Weiss</name>
+            <email>bitblit@gmail.com</email>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons.csv.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>

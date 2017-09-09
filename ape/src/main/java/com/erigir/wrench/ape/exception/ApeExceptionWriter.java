@@ -24,83 +24,84 @@ import java.util.zip.GZIPOutputStream;
  * Created by chrweiss on 7/6/14.
  */
 public class ApeExceptionWriter {
-    private static final Logger LOG = LoggerFactory.getLogger(ApeExceptionWriter.class);
-    private ObjectMapper objectMapper = createMapper();
-    private String apiDocUrlPrefix;
+  private static final Logger LOG = LoggerFactory.getLogger(ApeExceptionWriter.class);
+  private ObjectMapper objectMapper = createMapper();
+  private String apiDocUrlPrefix;
 
-    private ObjectMapper createMapper() {
-        ObjectMapper rval = new ObjectMapper();
-        rval.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        rval.configure(SerializationFeature.INDENT_OUTPUT, true);
-        return rval;
+  private ObjectMapper createMapper() {
+    ObjectMapper rval = new ObjectMapper();
+    rval.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    rval.configure(SerializationFeature.INDENT_OUTPUT, true);
+    return rval;
+  }
+
+  public void writeExceptionToResponse(HttpServletRequest request, HttpServletResponse resp, Exception inEx) {
+    try {
+      Exception ex = preprocessException(inEx);
+
+
+      LOG.debug("Handling failure to {}", request.getRequestURI(), ex);
+
+      ApeException se = AnnotationUtils.findAnnotation(ex.getClass(), ApeException.class);
+
+      ApeErrorData sed = null;
+      if (se == null) {
+        sed = new ApeErrorData(500, 100, "An unexpected error occurred", ex.getClass().getSimpleName(), apiDocUrlPrefix + 500100, ex.getLocalizedMessage());
+      } else {
+        Object details = (StringUtils.trimToNull(se.detailObjectPropertyName()) == null) ? null : safeGetProperty(ex, se.detailObjectPropertyName());
+        sed = new ApeErrorData(se.httpStatusCode(), se.detailCode(), se.message(), se.developerMessage(), apiDocUrlPrefix + se.httpStatusCode() + se.detailCode(), details);
+      }
+
+      resp.setStatus(sed.getHttpStatusCode());
+      resp.setContentType("application/json");
+
+      // If gzip has already been set, use it
+      OutputStream os = resp.getOutputStream();
+      if ("gzip".equalsIgnoreCase(resp.getHeader("Content-Encoding"))) {
+        os = new GZIPOutputStream(os);
+      }
+
+      objectMapper.writeValue(os, new ApeResponse<ApeErrorData>(sed, sed.getHttpStatusCode()));
+    } catch (Exception e) {
+      LOG.error("Really bad!  Error when trying to write error", e);
+    }
+  }
+
+  /**
+   * Converts certain types of generic exceptions to more usable and secure ones
+   *
+   * @param input
+   * @return
+   */
+  private Exception preprocessException(Exception input) {
+    Exception rval = input;
+
+    if (HttpMessageNotReadableException.class.isAssignableFrom(input.getClass()) && input.getCause() != null && JsonMappingException.class.isAssignableFrom(input.getCause().getClass())) {
+      JsonMappingException jme = (JsonMappingException) input.getCause();
+      rval = new BadJsonException(jme.getLocation());
+      rval.initCause(input);
     }
 
-    public void writeExceptionToResponse(HttpServletRequest request, HttpServletResponse resp, Exception inEx) {
-        try {
-            Exception ex = preprocessException(inEx);
-
-
-            LOG.debug("Handling failure to {}", request.getRequestURI(), ex);
-
-            ApeException se = AnnotationUtils.findAnnotation(ex.getClass(), ApeException.class);
-
-            ApeErrorData sed = null;
-            if (se == null) {
-                sed = new ApeErrorData(500, 100, "An unexpected error occurred", ex.getClass().getSimpleName(), apiDocUrlPrefix + 500100, ex.getLocalizedMessage());
-            } else {
-                Object details = (StringUtils.trimToNull(se.detailObjectPropertyName()) == null) ? null : safeGetProperty(ex, se.detailObjectPropertyName());
-                sed = new ApeErrorData(se.httpStatusCode(), se.detailCode(), se.message(), se.developerMessage(), apiDocUrlPrefix + se.httpStatusCode() + se.detailCode(), details);
-            }
-
-            resp.setStatus(sed.getHttpStatusCode());
-            resp.setContentType("application/json");
-
-            // If gzip has already been set, use it
-            OutputStream os = resp.getOutputStream();
-            if ("gzip".equalsIgnoreCase(resp.getHeader("Content-Encoding"))) {
-                os = new GZIPOutputStream(os);
-            }
-
-            objectMapper.writeValue(os, new ApeResponse<ApeErrorData>(sed, sed.getHttpStatusCode()));
-        } catch (Exception e) {
-            LOG.error("Really bad!  Error when trying to write error", e);
-        }
+    if (NestedServletException.class.isAssignableFrom(rval.getClass())) {
+      LOG.debug("Unwrapping NestedServletException");
+      rval = (Exception) ((NestedServletException) rval).getCause();
     }
+    return rval;
+  }
 
-    /**
-     * Converts certain types of generic exceptions to more usable and secure ones
-     *
-     * @param input
-     * @return
-     */
-    private Exception preprocessException(Exception input) {
-        Exception rval = input;
-
-        if (HttpMessageNotReadableException.class.isAssignableFrom(input.getClass()) && input.getCause() != null && JsonMappingException.class.isAssignableFrom(input.getCause().getClass())) {
-            JsonMappingException jme = (JsonMappingException) input.getCause();
-            rval = new BadJsonException(jme.getLocation());
-            rval.initCause(input);
-        }
-
-        if (NestedServletException.class.isAssignableFrom(rval.getClass())) {
-            LOG.debug("Unwrapping NestedServletException");
-            rval = (Exception) ((NestedServletException) rval).getCause();
-        }
-        return rval;
+  private Object safeGetProperty(Object bean, String propName) {
+    Object rval = null;
+    if (bean != null && propName != null) {
+      try {
+        rval = PropertyUtils.getProperty(bean, propName);
+      } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        LOG.error("Invalid property name '{}' on bean of type '{}' ", propName, bean.getClass());
+      }
     }
+    return rval;
+  }
 
-    private Object safeGetProperty(Object bean, String propName) {
-        Object rval = null;
-        if (bean != null && propName != null)
-            try {
-                rval = PropertyUtils.getProperty(bean, propName);
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                LOG.error("Invalid property name '{}' on bean of type '{}' ", propName, bean.getClass());
-            }
-        return rval;
-    }
-
-    public void setApiDocUrlPrefix(String apiDocUrlPrefix) {
-        this.apiDocUrlPrefix = apiDocUrlPrefix;
-    }
+  public void setApiDocUrlPrefix(String apiDocUrlPrefix) {
+    this.apiDocUrlPrefix = apiDocUrlPrefix;
+  }
 }

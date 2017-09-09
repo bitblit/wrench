@@ -28,23 +28,23 @@ import java.io.IOException;
  * limitations under the License.
  **/
 public class HtmlCompressionProcessor extends AbstractFileProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyHtmlBatchingFilterProcessor.class);
-    public static int totalSaved = 0;
-    private HtmlCompressor htmlCompressor = new HtmlCompressor();
+  private static final Logger LOG = LoggerFactory.getLogger(ApplyHtmlBatchingFilterProcessor.class);
+  public static int totalSaved = 0;
+  private HtmlCompressor htmlCompressor = new HtmlCompressor();
 
-    public boolean innerProcess(File src, File dst, DrigoResults results)
-            throws DrigoException, IOException {
+  public boolean innerProcess(File src, File dst, DrigoResults results)
+      throws DrigoException, IOException {
 
-        String input = IOUtils.toString(new FileInputStream(src));
-        String output = htmlCompressor.compress(input);
-        FileOutputStream fos = new FileOutputStream(dst);
-        IOUtils.write(output, fos);
-        IOUtils.closeQuietly(fos);
+    String input = IOUtils.toString(new FileInputStream(src));
+    String output = htmlCompressor.compress(input);
+    FileOutputStream fos = new FileOutputStream(dst);
+    IOUtils.write(output, fos);
+    IOUtils.closeQuietly(fos);
 
-        long delta = dst.length() - src.length();
-        totalSaved += delta;
+    long delta = dst.length() - src.length();
+    totalSaved += delta;
 
-        return true;
-    }
+    return true;
+  }
 
 }

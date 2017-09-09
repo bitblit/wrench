@@ -23,11 +23,11 @@ import java.io.File;
 
 public interface Validator {
 
-    /**
-     * Validate the input {@link java.io.File}.
-     *
-     * @param input the String to validate
-     * @throws DrigoException the input is invalid
-     */
-    void validate(File input) throws DrigoException;
+  /**
+   * Validate the input {@link java.io.File}.
+   *
+   * @param input the String to validate
+   * @throws DrigoException the input is invalid
+   */
+  void validate(File input) throws DrigoException;
 }

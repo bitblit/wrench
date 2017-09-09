@@ -12,23 +12,23 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestSimpleIncludesPatternMapSource {
 
-    @Test
-    public void testMatching() {
-        LinkedHashMap<Pattern, String> testMap = new LinkedHashMap<>();
-        testMap.put(Pattern.compile("e.*"), "e-start");
-        testMap.put(Pattern.compile(".*f"), "f-end");
+  @Test
+  public void testMatching() {
+    LinkedHashMap<Pattern, String> testMap = new LinkedHashMap<>();
+    testMap.put(Pattern.compile("e.*"), "e-start");
+    testMap.put(Pattern.compile(".*f"), "f-end");
 
-        SimpleIncludesPatternMapSource bean = new SimpleIncludesPatternMapSource(
-                testMap
-        );
+    SimpleIncludesPatternMapSource bean = new SimpleIncludesPatternMapSource(
+        testMap
+    );
 
-        assertEquals("e-start", bean.findContent("e pluribus unum"));
-        assertEquals("f-end", bean.findContent("wheres the beef"));
-        assertEquals("e-start", bean.findContent("eeek wheres the beef"));
-        assertEquals("", bean.findContent("four score and seven years ago"));
+    assertEquals("e-start", bean.findContent("e pluribus unum"));
+    assertEquals("f-end", bean.findContent("wheres the beef"));
+    assertEquals("e-start", bean.findContent("eeek wheres the beef"));
+    assertEquals("", bean.findContent("four score and seven years ago"));
 
 
-    }
+  }
 
 
 }

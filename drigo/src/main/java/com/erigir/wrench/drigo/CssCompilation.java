@@ -16,14 +16,14 @@ package com.erigir.wrench.drigo;
  * limitations under the License.
  **/
 public class CssCompilation {
-    private String includeRegex;
+  private String includeRegex;
 
-    public String getIncludeRegex() {
-        return includeRegex;
-    }
+  public String getIncludeRegex() {
+    return includeRegex;
+  }
 
-    public void setIncludeRegex(String includeRegex) {
-        this.includeRegex = includeRegex;
-    }
+  public void setIncludeRegex(String includeRegex) {
+    this.includeRegex = includeRegex;
+  }
 
 }

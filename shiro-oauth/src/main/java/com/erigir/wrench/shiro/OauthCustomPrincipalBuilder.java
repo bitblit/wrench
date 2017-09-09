@@ -9,5 +9,5 @@ package com.erigir.wrench.shiro;
  * Created by chrweiss on 2/22/15.
  */
 public interface OauthCustomPrincipalBuilder {
-    void updatePrincipal(OauthPrincipal data);
+  void updatePrincipal(OauthPrincipal data);
 }

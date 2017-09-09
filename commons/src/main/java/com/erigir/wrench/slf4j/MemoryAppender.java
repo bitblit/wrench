@@ -26,8 +26,8 @@ import ch.qos.logback.core.AppenderBase;
  * Created by cweiss on 2/14/16.
  */
 public class MemoryAppender extends AppenderBase {
-    @Override
-    protected void append(Object o) {
-        LoggingRingBuffer.INST.addItem(o);
-    }
+  @Override
+  protected void append(Object o) {
+    LoggingRingBuffer.INST.addItem(o);
+  }
 }

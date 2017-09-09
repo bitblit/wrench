@@ -28,42 +28,42 @@ import java.io.IOException;
  * limitations under the License.
  **/
 public class ApplyHtmlBatchingFilterProcessor extends AbstractFileProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyHtmlBatchingFilterProcessor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ApplyHtmlBatchingFilterProcessor.class);
 
-    private HtmlResourceBatching batching;
+  private HtmlResourceBatching batching;
 
-    public ApplyHtmlBatchingFilterProcessor(HtmlResourceBatching batching) {
-        this.batching = batching;
+  public ApplyHtmlBatchingFilterProcessor(HtmlResourceBatching batching) {
+    this.batching = batching;
+  }
+
+  public boolean innerProcess(File src, File dst, DrigoResults results)
+      throws IOException {
+    String contents = IOUtils.toString(new FileInputStream(src));
+
+    String startTag = "<!--" + batching.getFlagName() + "-->";
+    String endTag = "<!--END:" + batching.getFlagName() + "-->";
+
+    LOG.trace("Searching {} for {} to {}", src.getName(), startTag, endTag);
+    int startIdx = contents.indexOf(startTag);
+
+    int count = 0;
+    while (startIdx != -1) {
+      int endIdx = contents.indexOf(endTag);
+      if (endIdx == -1) {
+        throw new DrigoException("Couldn't find end tag : " + endTag);
+      }
+      count++;
+      contents = contents.substring(0, startIdx) + batching.getWrappedReplaceText() + contents.substring(endIdx + (endTag.length()));
+      startIdx = contents.indexOf(startTag);
     }
 
-    public boolean innerProcess(File src, File dst, DrigoResults results)
-            throws IOException {
-        String contents = IOUtils.toString(new FileInputStream(src));
+    FileOutputStream os = new FileOutputStream(dst);
+    IOUtils.write(contents, os);
+    IOUtils.closeQuietly(os);
 
-        String startTag = "<!--" + batching.getFlagName() + "-->";
-        String endTag = "<!--END:" + batching.getFlagName() + "-->";
+    LOG.trace("Found {} instances", count);
 
-        LOG.trace("Searching {} for {} to {}", src.getName(), startTag, endTag);
-        int startIdx = contents.indexOf(startTag);
-
-        int count = 0;
-        while (startIdx != -1) {
-            int endIdx = contents.indexOf(endTag);
-            if (endIdx == -1) {
-                throw new DrigoException("Couldn't find end tag : " + endTag);
-            }
-            count++;
-            contents = contents.substring(0, startIdx) + batching.getWrappedReplaceText() + contents.substring(endIdx + (endTag.length()));
-            startIdx = contents.indexOf(startTag);
-        }
-
-        FileOutputStream os = new FileOutputStream(dst);
-        IOUtils.write(contents, os);
-        IOUtils.closeQuietly(os);
-
-        LOG.trace("Found {} instances", count);
-
-        return true;
-    }
+    return true;
+  }
 
 }

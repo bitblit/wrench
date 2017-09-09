@@ -29,24 +29,24 @@ import java.io.IOException;
  */
 public class BabelCompilationProcessor extends AbstractFileProcessor {
 
-    @Override
-    public boolean innerProcess(File src, File dst, DrigoResults results)
-            throws DrigoException, IOException {
-        try {
-            String[] args = new String[]{"babel", src.getAbsolutePath(), "--compact", "true", "--comments", "false"};
-            Process p = Runtime.getRuntime().exec(args);
-            p.waitFor();
+  @Override
+  public boolean innerProcess(File src, File dst, DrigoResults results)
+      throws DrigoException, IOException {
+    try {
+      String[] args = new String[] {"babel", src.getAbsolutePath(), "--compact", "true", "--comments", "false"};
+      Process p = Runtime.getRuntime().exec(args);
+      p.waitFor();
 
-            String output = IOUtils.toString(p.getInputStream());
-            FileWriter fw = new FileWriter(dst);
-            fw.write(output);
-            fw.close();
+      String output = IOUtils.toString(p.getInputStream());
+      FileWriter fw = new FileWriter(dst);
+      fw.write(output);
+      fw.close();
 
-        } catch (InterruptedException ie) {
-            // do nothing
-        }
-
-        return true;
+    } catch (InterruptedException ie) {
+      // do nothing
     }
+
+    return true;
+  }
 
 }

@@ -6,7 +6,12 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -25,27 +30,27 @@ import java.util.zip.GZIPOutputStream;
  * limitations under the License.
  **/
 public class GZipFileProcessor extends AbstractFileProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyHtmlBatchingFilterProcessor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ApplyHtmlBatchingFilterProcessor.class);
 
-    public static int totalSaved = 0;
+  public static int totalSaved = 0;
 
-    public boolean innerProcess(File src, File dst, DrigoResults results)
-            throws DrigoException, IOException {
+  public boolean innerProcess(File src, File dst, DrigoResults results)
+      throws DrigoException, IOException {
 
-        InputStream is = new FileInputStream(src);
-        OutputStream os = new GZIPOutputStream(new FileOutputStream(dst));
+    InputStream is = new FileInputStream(src);
+    OutputStream os = new GZIPOutputStream(new FileOutputStream(dst));
 
-        IOUtils.copy(is, os);
+    IOUtils.copy(is, os);
 
-        IOUtils.closeQuietly(is);
-        IOUtils.closeQuietly(os);
+    IOUtils.closeQuietly(is);
+    IOUtils.closeQuietly(os);
 
-        long delta = dst.length() - src.length();
-        totalSaved += delta;
+    long delta = dst.length() - src.length();
+    totalSaved += delta;
 
-        results.addMetadata(src, "content-encoding", "gzip");
+    results.addMetadata(src, "content-encoding", "gzip");
 
-        return true;
-    }
+    return true;
+  }
 
 }

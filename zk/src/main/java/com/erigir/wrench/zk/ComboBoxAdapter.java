@@ -9,20 +9,20 @@ import java.util.Set;
  * Created by chrweiss on 12/11/14.
  */
 public class ComboBoxAdapter<T> {
-    private LinkedHashMap<String, T> data;
+  private LinkedHashMap<String, T> data;
 
-    public ComboBoxAdapter(Map<String, T> values) {
-        data = new LinkedHashMap<String, T>();
-        data.putAll(values);
-    }
+  public ComboBoxAdapter(Map<String, T> values) {
+    data = new LinkedHashMap<String, T>();
+    data.putAll(values);
+  }
 
-    public Set<String> getValues() {
-        return data.keySet();
-    }
+  public Set<String> getValues() {
+    return data.keySet();
+  }
 
-    public T getSelectedValue(String key) {
-        return data.get(key);
-    }
+  public T getSelectedValue(String key) {
+    return data.get(key);
+  }
 
 
 }

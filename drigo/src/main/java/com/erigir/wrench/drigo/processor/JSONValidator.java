@@ -28,16 +28,16 @@ import java.io.IOException;
  */
 public class JSONValidator implements Validator {
 
-    @Override
-    public void validate(File input) throws DrigoException {
-        try {
-            final JsonParser parser = new ObjectMapper().getFactory().createParser(input);
+  @Override
+  public void validate(File input) throws DrigoException {
+    try {
+      final JsonParser parser = new ObjectMapper().getFactory().createParser(input);
 
-            while (parser.nextToken() != null) {
-            }
+      while (parser.nextToken() != null) {
+      }
 
-        } catch (IOException e) {
-            throw new DrigoException("JSON validation failed for: " + input, e);
-        }
+    } catch (IOException e) {
+      throw new DrigoException("JSON validation failed for: " + input, e);
     }
+  }
 }
