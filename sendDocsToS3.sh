@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 echo Uploading docs folders to S3
 aws s3 cp target/site $1 --recursive
 aws s3 cp ape/target/site $1/ape --recursive
