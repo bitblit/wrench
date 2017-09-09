@@ -35,7 +35,8 @@ deployment:
    - gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg circleci/secring.gpg.enc
    # Filter the pom files to actually have the version number in it
    - find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/LOCAL-SNAPSHOT/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
-   # Update documentation
+   - find . -type f -regex ".*/latest-release-link-template\.html" -exec sed -i.bak s/LOCAL-SNAPSHOT/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
+    # Update documentation
    - echo Updating documentation
    - mvn site -P reporting -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME
    - bash src/automate-build/sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/${CIRCLE_TAG:8}+$BUILD_NUMBER
