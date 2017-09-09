@@ -150,8 +150,8 @@
         <module>drigo</module>
         <module>shiro-oauth</module>
         <module>fluke</module>
-        -->
         <module>steelpipe</module>
+        -->
     </modules>
 
     <!--
