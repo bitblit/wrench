@@ -142,7 +142,6 @@
 
     <modules>
         <module>commons</module>
-        <!--
         <module>aws</module>
         <module>zk</module>
         <module>web</module>
@@ -151,7 +150,6 @@
         <module>shiro-oauth</module>
         <module>fluke</module>
         <module>steelpipe</module>
-        -->
     </modules>
 
     <!--
