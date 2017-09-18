@@ -1,6 +1,10 @@
 ## Release Notes
 
-# Version 2.0.0
+# Version 2.0.2
+Backwards compatible release that works around a JDK bug when using the AllowSelfSignedHttps adapter on 1.8 JDKs < build 141
+See : http://www.oracle.com/technetwork/java/javase/2col/8u141-bugfixes-3720387.html
+
+# Version 2.0.0 / 2.0.1
 Code is not backwards compatible due to upping the Java version to 1.8 and upgrading a bunch of libraries to newer
 versions.  Should pretty much straight compile (with the exception of some stuff moved into the fluke package)
 

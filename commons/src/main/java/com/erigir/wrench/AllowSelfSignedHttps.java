@@ -7,8 +7,14 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.security.cert.X509Certificate;
 
 /**
@@ -58,7 +64,7 @@ public class AllowSelfSignedHttps {
 
         SSLContext sc = SSLContext.getInstance("SSL");
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        HttpsURLConnection.setDefaultSSLSocketFactory(new SSLSocketFactoryFacade(sc.getSocketFactory()));
 
         // Create all-trusting host name verifier
         HostnameVerifier allHostsValid = new HostnameVerifier() {
@@ -76,4 +82,55 @@ public class AllowSelfSignedHttps {
       // Do nothing, already ran
     }
   }
+
+  /**
+   * This class does not DO anything it is here to work around a bug in the JDK, see:
+   * https://stackoverflow.com/questions/30817934/extended-server-name-sni-extension-not-sent-with-jdk1-8-0-but-send-with-jdk1-7
+   * http://www.oracle.com/technetwork/java/javase/2col/8u141-bugfixes-3720387.html
+   * https://bugs.openjdk.java.net/browse/JDK-8144566
+   */
+  static class SSLSocketFactoryFacade extends SSLSocketFactory {
+
+    SSLSocketFactory sslsf;
+
+    public SSLSocketFactoryFacade(SSLSocketFactory sslsf) {
+      this.sslsf = sslsf;
+    }
+
+    @Override
+    public String[] getDefaultCipherSuites() {
+      return sslsf.getDefaultCipherSuites();
+    }
+
+    @Override
+    public String[] getSupportedCipherSuites() {
+      return sslsf.getSupportedCipherSuites();
+    }
+
+    @Override
+    public Socket createSocket(Socket socket, String s, int i, boolean b) throws IOException {
+      return sslsf.createSocket(socket, s, i, b);
+    }
+
+    @Override
+    public Socket createSocket(String s, int i) throws IOException, UnknownHostException {
+      return sslsf.createSocket(s, i);
+    }
+
+    @Override
+    public Socket createSocket(String s, int i, InetAddress inetAddress, int i1) throws IOException, UnknownHostException {
+      return sslsf.createSocket(s, i, inetAddress, i1);
+    }
+
+    @Override
+    public Socket createSocket(InetAddress inetAddress, int i) throws IOException {
+      return createSocket(inetAddress, i);
+    }
+
+    @Override
+    public Socket createSocket(InetAddress inetAddress, int i, InetAddress inetAddress1, int i1) throws IOException {
+      return createSocket(inetAddress, i, inetAddress1, i1);
+    }
+  }
+
 }
