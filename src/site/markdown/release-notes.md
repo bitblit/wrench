@@ -1,5 +1,9 @@
 ## Release Notes
 
+# Version 2.0.3
+Backwards compatible release that converts coverage tool from Cobertura to Jacoco since Cobertura was throwing unwanted
+classes into the build via compile time decoration.
+
 # Version 2.0.2
 Backwards compatible release that works around a JDK bug when using the AllowSelfSignedHttps adapter on 1.8 JDKs < build 141
 See : http://www.oracle.com/technetwork/java/javase/2col/8u141-bugfixes-3720387.html
