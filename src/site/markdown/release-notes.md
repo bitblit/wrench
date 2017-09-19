@@ -1,6 +1,6 @@
 ## Release Notes
 
-# Version 2.0.3
+# Version 2.0.3 / 2.0.4
 Backwards compatible release that converts coverage tool from Cobertura to Jacoco since Cobertura was throwing unwanted
 classes into the build via compile time decoration.
 
