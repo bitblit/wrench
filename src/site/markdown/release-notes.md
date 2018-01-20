@@ -1,5 +1,12 @@
 ## Release Notes
 
+# Version 2.1.0
+Backwards compatible release that adds the RestartingFileDownloader class to wrench-web, the 
+Cloudwatch/SLF4J log file uploader to wrench-aws, and moves Canonicalizer from wrench-web to 
+wrench-common (patch class left in place for current backwards compatibility.  It will be removed
+in the next major release).  Also upgrading version numbers of all applicable dependant libraries -
+see pom files for details.
+
 # Version 2.0.3 / 2.0.4
 Backwards compatible release that converts coverage tool from Cobertura to Jacoco since Cobertura was throwing unwanted
 classes into the build via compile time decoration.
