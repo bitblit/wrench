@@ -30,6 +30,13 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Yeah, I know I just created this class in the last release.  Deprecating it so that I do not have
+ * to do a major version number for backwards compat - but I recommend you use LogFileSynchronizer
+ * instead - it does everything this one does, but can do real time synchronization.  This class
+ * is no longer maintained (CW - 2018-01-22)
+ */
+@Deprecated
 @Builder
 public class LogFileUploader {
   private static final Logger LOG = LoggerFactory.getLogger(LogFileUploader.class);
