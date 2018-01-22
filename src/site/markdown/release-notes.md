@@ -1,5 +1,10 @@
 ## Release Notes
 
+# Version 2.1.1
+Backwards compatible feature release that deprecates LogFileUploader in favor of LogFileSynchronizer (I know, so soon?).
+LogFileSynchronizer has all the features of the uploader but adds the ability to synchronize active files on a periodic
+basis so you don't have to wait until the end of the day to upload the file.
+
 # Version 2.1.0
 Backwards compatible release that adds the RestartingFileDownloader class to wrench-web, the 
 Cloudwatch/SLF4J log file uploader to wrench-aws, and moves Canonicalizer from wrench-web to 

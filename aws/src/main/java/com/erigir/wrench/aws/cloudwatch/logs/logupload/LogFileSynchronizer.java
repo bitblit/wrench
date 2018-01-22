@@ -99,8 +99,10 @@ public class LogFileSynchronizer {
 
   public void performUpload() {
     LOG.info("Running log file upload");
-    List<File> toUpload = findFilesToUpload();
+    performUpload(findFilesToUpload());
+  }
 
+  public void performUpload(List<File> toUpload) {
     if (toUpload.size() > 0) {
       LOG.info("{} Log files found - checking log group", toUpload.size());
       verifyLogGroup();
@@ -115,10 +117,9 @@ public class LogFileSynchronizer {
     } else {
       LOG.info("Skipping - no files found to upload");
     }
-
   }
 
-  private List<File> findFilesToUpload() {
+    private List<File> findFilesToUpload() {
     List<File> rval = new LinkedList<>();
 
     if (!logFolder.exists() || !logFolder.isDirectory())
