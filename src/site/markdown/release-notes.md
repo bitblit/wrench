@@ -1,6 +1,6 @@
 ## Release Notes
 
-# Version 2.1.2
+# Version 2.1.2  / 2.1.3
 Backwards compatible bug-fix release.  Fixes LogFileSynchronizer using the wrong name in the logs, and also not
 deleting files correctly upon successful upload and quiet time.
 
