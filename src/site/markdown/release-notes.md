@@ -1,5 +1,9 @@
 ## Release Notes
 
+# Version 2.1.2
+Backwards compatible bug-fix release.  Fixes LogFileSynchronizer using the wrong name in the logs, and also not
+deleting files correctly upon successful upload and quiet time.
+
 # Version 2.1.1
 Backwards compatible feature release that deprecates LogFileUploader in favor of LogFileSynchronizer (I know, so soon?).
 LogFileSynchronizer has all the features of the uploader but adds the ability to synchronize active files on a periodic

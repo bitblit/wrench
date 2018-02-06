@@ -36,7 +36,7 @@ import java.util.List;
 
 @Builder
 public class LogFileSynchronizer {
-  private static final Logger LOG = LoggerFactory.getLogger(LogFileUploader.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LogFileSynchronizer.class);
 
   private AWSLogs awsLogs;
   private String logGroup;
@@ -175,6 +175,7 @@ public class LogFileSynchronizer {
     if (bytesToUpload==0)
     {
       LOG.debug("Skipping upload - nothing to upload since last time");
+      deleteFileIfQuietLongEnough(f); // In case we ended it with a marker, which we probably did
     }
     else {
 
@@ -221,20 +222,11 @@ public class LogFileSynchronizer {
         long lastByte = cis.getByteCount();
         br.close();
 
-        long maxLastModified = System.currentTimeMillis() - quietDelayMS;
-        if (f.lastModified() < maxLastModified) {
-          if (deleteFileWhenComplete) {
-            LOG.info("Deleting file {}", f);
-            if (!f.delete()) {
-              LOG.info("Failed to delete {} - will try again on exit");
-              f.deleteOnExit();
-            }
-          }
-        } else {
+        if (!deleteFileIfQuietLongEnough(f))
+        {
           LOG.info("File is too fresh - setting marker");
           writeLastLocationMarker(sequenceToken, logStreamName, lastEventTimestamp, lastByte);
         }
-
 
       } catch (Exception e) {
         LOG.info("Error reading file", e);
@@ -242,6 +234,24 @@ public class LogFileSynchronizer {
 
     }
 
+  }
+
+  private boolean deleteFileIfQuietLongEnough(File f)
+  {
+    boolean deleted = false;
+    long maxLastModified = System.currentTimeMillis() - quietDelayMS;
+    if (f.lastModified() < maxLastModified) {
+      if (deleteFileWhenComplete) {
+        LOG.info("Deleting file {}", f);
+        if (!f.delete()) {
+          LOG.info("Failed to delete {} - will try again on exit");
+          f.deleteOnExit();
+        }
+        deleted = true;
+      }
+    }
+
+    return deleted;
   }
 
   private String retryingPutLogEvents(PutLogEventsRequest pler)
