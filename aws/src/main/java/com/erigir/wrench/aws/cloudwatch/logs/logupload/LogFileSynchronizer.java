@@ -154,9 +154,9 @@ public class LogFileSynchronizer {
     long startFilePos = 0;
 
     if (!createdLogStream) {
-      LOG.info("Log file exists - finding seek pos");
+      LOG.debug("Log file exists - finding seek pos");
       List<OutputLogEvent> events = fetchLastEvents(logStreamName,5);
-      LOG.info("Got : {}",events);
+      LOG.trace("Found last events : {}",events);
       for (int i=events.size()-1;i>=0 && startFilePos==0;i--)
       {
         String msg = events.get(i).getMessage();
@@ -188,7 +188,7 @@ public class LogFileSynchronizer {
       LOG.info("Beginning uploading file {}", f);
       CountingInputStream cis = new CountingInputStream(new FileInputStream(f));
       cis.skip(startFilePos);
-      LOG.info("Pos : {}",cis.getByteCount());
+      LOG.debug("Pos : {}",cis.getByteCount());
 
       try ( BufferedReader br = new BufferedReader(new InputStreamReader(cis))) {
         String sequenceToken = null;
@@ -224,7 +224,7 @@ public class LogFileSynchronizer {
 
         if (!deleteFileIfQuietLongEnough(f))
         {
-          LOG.info("File is too fresh - setting marker");
+          LOG.debug("File is too fresh - setting marker");
           writeLastLocationMarker(sequenceToken, logStreamName, lastEventTimestamp, lastByte);
         }
 
@@ -244,7 +244,7 @@ public class LogFileSynchronizer {
       if (deleteFileWhenComplete) {
         LOG.info("Deleting file {}", f);
         if (!f.delete()) {
-          LOG.info("Failed to delete {} - will try again on exit");
+          LOG.warn("Failed to delete {} - will try again on exit");
           f.deleteOnExit();
         }
         deleted = true;
@@ -301,7 +301,7 @@ public class LogFileSynchronizer {
     for (int i = 1; i < events.size(); i++) {
       if (events.get(i).getTimestamp() < events.get(i - 1).getTimestamp()) {
         rval = false;
-        LOG.info("EOOO : {}\n\n{}\n\n", events.get(i), events.get(i - 1));
+        LOG.debug("EOOO : {}\n\n{}\n\n", events.get(i), events.get(i - 1));
       }
     }
     return rval;
@@ -417,10 +417,10 @@ public class LogFileSynchronizer {
         LOG.info("Created log group {}", this.logGroup);
         logGroupVerified = true;
       } catch (ResourceAlreadyExistsException rae) {
-        LOG.info("Log group is already present");
+        LOG.debug("Log group is already present");
         logGroupVerified = true;
       } catch (Exception e) {
-        LOG.info("Unexpected exception trying to verify log group", e);
+        LOG.warn("Unexpected exception trying to verify log group", e);
       }
     } else {
       LOG.trace("Skipping - log group already verified");
@@ -432,12 +432,13 @@ public class LogFileSynchronizer {
 
     verifyLogGroup();
     try {
-      LOG.info("Attempting create new log stream {}", logStream);
+      LOG.debug("Attempting create new log stream {}", logStream);
       CreateLogStreamRequest r = new CreateLogStreamRequest().withLogGroupName(logGroup).withLogStreamName(logStream);
       awsLogs.createLogStream(r);
       created = true;
+      LOG.info("Created log stream {}",logStream);
     } catch (ResourceAlreadyExistsException ree) {
-      LOG.info("Log stream already exists");
+      LOG.debug("Log stream already exists");
     }
 
     return created;
