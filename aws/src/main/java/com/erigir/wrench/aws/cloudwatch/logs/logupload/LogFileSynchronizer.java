@@ -236,6 +236,43 @@ public class LogFileSynchronizer {
 
   }
 
+  /*
+   * Mainly useful in cases where the synchronizer may or may not be running, and
+   * when its not running the log files will pile up otherwise
+   */
+  public boolean deleteLogFilesModifiedMoreThanThisLongAgo(long maxAgeInMs)
+  {
+    long now = System.currentTimeMillis();
+    long trigger = now-maxAgeInMs;
+    LOG.info("Purging log files older than {} - ",maxAgeInMs, new Date(trigger));
+    boolean rval = true;
+    try {
+      for (String s:this.logFolder.list())
+      {
+        File f = new File(this.logFolder, s);
+        if (f.lastModified()>trigger)
+        {
+          LOG.info("Removing {}, it is older than the trigger",f);
+          try {
+            f.delete();
+          }
+          catch (Exception ioe)
+          {
+            LOG.warn("Could not delete {}",f,ioe.getMessage());
+            rval = false;
+          }
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      LOG.warn("Error cleaning up logfile directory older than {}",maxAgeInMs,e);
+      rval = false;
+    }
+
+    return rval;
+  }
+
   private boolean deleteFileIfQuietLongEnough(File f)
   {
     boolean deleted = false;

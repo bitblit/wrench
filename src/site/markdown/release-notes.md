@@ -1,5 +1,9 @@
 ## Release Notes
 
+# Version 2.1.5
+Backwards compatible feature release.  Adding **deleteLogFilesModifiedMoreThanThisLongAgo** function to 
+LogFileSynchronizer to allow purging of the log file directory explicitly.
+
 # Version 2.1.4
 Backwards compatible logging release.  LogFileSynchronizer was dumping far too much at the info level that should
 be at the debug level.  Cleaned up.  
