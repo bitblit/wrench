@@ -244,13 +244,13 @@ public class LogFileSynchronizer {
   {
     long now = System.currentTimeMillis();
     long trigger = now-maxAgeInMs;
-    LOG.info("Purging log files older than {} - ",maxAgeInMs, new Date(trigger));
+    LOG.info("Purging log files older than {} - {}",maxAgeInMs, new Date(trigger));
     boolean rval = true;
     try {
       for (String s:this.logFolder.list())
       {
         File f = new File(this.logFolder, s);
-        if (f.lastModified()>trigger)
+        if (f.lastModified()<trigger)
         {
           LOG.info("Removing {}, it is older than the trigger",f);
           try {
