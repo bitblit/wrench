@@ -1,7 +1,7 @@
 package com.erigir.steelpipe;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,8 +9,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestTunneledMariaDatabaseDataSource {
   private static final Logger LOG = LoggerFactory.getLogger(TestTunneledMariaDatabaseDataSource.class);
@@ -22,7 +22,7 @@ public class TestTunneledMariaDatabaseDataSource {
    * @throws Exception
    */
   @Test
-  @Ignore
+  @Disabled
   public void testConnection()
       throws Exception {
     TunneledMariaDatabaseConfig cfg = TunneledMariaDatabaseConfig.fromEnvironment();

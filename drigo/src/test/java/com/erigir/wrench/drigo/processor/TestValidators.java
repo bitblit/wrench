@@ -1,9 +1,10 @@
 package com.erigir.wrench.drigo.processor;
 
 import com.erigir.wrench.drigo.DrigoException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Copyright 2014 Christopher Weiss
@@ -32,13 +33,15 @@ public class TestValidators {
     jsonValidator.validate(goodJSON);
   }
 
-  @Test(expected = DrigoException.class)
+  @Test
   public void testInValidJSON()
       throws Exception {
+    DrigoException exception = assertThrows(DrigoException.class, ()->{
     File badJSON = new File(getClass().getResource("/validate/bad.json").getFile());
 
     JSONValidator jsonValidator = new JSONValidator();
     jsonValidator.validate(badJSON);
+    });
   }
 
   @Test
@@ -50,12 +53,14 @@ public class TestValidators {
     xmlValidator.validate(goodXML);
   }
 
-  @Test(expected = DrigoException.class)
+  @Test
   public void testInValidXML()
       throws Exception {
-    File badXML = new File(getClass().getResource("/validate/bad.xml").getFile());
+    DrigoException exception = assertThrows(DrigoException.class, ()-> {
+      File badXML = new File(getClass().getResource("/validate/bad.xml").getFile());
 
-    XMLValidator xmlValidator = new XMLValidator();
-    xmlValidator.validate(badXML);
+      XMLValidator xmlValidator = new XMLValidator();
+      xmlValidator.validate(badXML);
+    });
   }
 }

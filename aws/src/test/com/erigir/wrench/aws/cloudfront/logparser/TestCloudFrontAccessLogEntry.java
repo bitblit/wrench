@@ -3,7 +3,7 @@ package com.erigir.wrench.aws.cloudfront.logparser;
 import com.erigir.wrench.aws.cloudfront.logparser.handler.ChainHandler;
 import com.erigir.wrench.aws.cloudfront.logparser.handler.FieldCounter;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by chrweiss on 3/16/15.

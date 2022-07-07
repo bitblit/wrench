@@ -2,7 +2,7 @@ package com.erigir.wrench.drigo.processor;
 
 import com.google.javascript.jscomp.CompilationLevel;
 import com.google.javascript.jscomp.SourceFile;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class TestRuntimeExecClosureCompiler {
 
     JavascriptCompilerFileProcessor cc = new JavascriptCompilerFileProcessor();
 
-    String output = cc.compile(CompilationLevel.SIMPLE_OPTIMIZATIONS, Arrays.asList(SourceFile.fromFile(t1)));
+    String output = cc.compile(CompilationLevel.SIMPLE_OPTIMIZATIONS, Arrays.asList(SourceFile.fromFile(t1.getAbsolutePath())));
 
     System.out.println("out: \n" + output);
   }

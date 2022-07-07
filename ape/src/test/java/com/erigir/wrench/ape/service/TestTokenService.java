@@ -2,13 +2,13 @@ package com.erigir.wrench.ape.service;
 
 import com.erigir.wrench.QuietObjectMapper;
 import com.erigir.wrench.ape.model.CustomerToken;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by cweiss1271 on 5/15/16.

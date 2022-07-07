@@ -1,13 +1,13 @@
 package com.erigir.wrench;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by cweiss1271 on 3/9/16.
@@ -21,7 +21,7 @@ public class TestSimpleHttpUtils {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void testSimpleQuery2() {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     SimpleStreamHttpUtils.StreamHttpTx tx = SimpleStreamHttpUtils.http(
@@ -38,7 +38,7 @@ public class TestSimpleHttpUtils {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void testSimplePost2() {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     //ByteArrayInputStream input = new ByteArrayInputStream("THIS IS A TEST".getBytes());
@@ -59,7 +59,7 @@ public class TestSimpleHttpUtils {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void testSimplePost() {
     byte[] postData = "This is a test".getBytes();
     Map<String, String> headers = new TreeMap<>();

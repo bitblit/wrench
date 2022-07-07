@@ -40,7 +40,7 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  public <T> T readValue(JsonParser jsonParser, TypeReference<?> typeReference) {
+  public <T> T readValue(JsonParser jsonParser, TypeReference<T> typeReference) {
     try {
       return super.readValue(jsonParser, typeReference);
     } catch (IOException e) {
@@ -94,7 +94,7 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  public <T> MappingIterator<T> readValues(JsonParser jsonParser, TypeReference<?> typeReference) {
+  public <T> MappingIterator<T> readValues(JsonParser jsonParser, TypeReference<T> typeReference) {
     try {
       return super.readValues(jsonParser, typeReference);
     } catch (IOException e) {
@@ -203,7 +203,7 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  public <T> T readValue(File file, TypeReference typeReference) {
+  public <T> T readValue(File file, TypeReference<T> typeReference) {
     try {
       return super.readValue(file, typeReference);
     } catch (IOException e) {
@@ -230,7 +230,7 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  public <T> T readValue(URL url, TypeReference typeReference) {
+  public <T> T readValue(URL url, TypeReference<T> typeReference) {
     try {
       return super.readValue(url, typeReference);
     } catch (IOException e) {
@@ -257,7 +257,7 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  public <T> T readValue(String s, TypeReference typeReference) {
+  public <T> T readValue(String s, TypeReference<T> typeReference) {
     try {
       return super.readValue(s, typeReference);
     } catch (IOException e) {
@@ -284,7 +284,7 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  public <T> T readValue(Reader reader, TypeReference typeReference) {
+  public <T> T readValue(Reader reader, TypeReference<T> typeReference) {
     try {
       return super.readValue(reader, typeReference);
     } catch (IOException e) {
@@ -311,7 +311,7 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  public <T> T readValue(InputStream inputStream, TypeReference typeReference) {
+  public <T> T readValue(InputStream inputStream, TypeReference<T> typeReference) {
     try {
       return super.readValue(inputStream, typeReference);
     } catch (IOException e) {
@@ -347,7 +347,7 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  public <T> T readValue(byte[] bytes, TypeReference typeReference) {
+  public <T> T readValue(byte[] bytes, TypeReference<T> typeReference) {
     try {
       return super.readValue(bytes, typeReference);
     } catch (IOException e) {
@@ -356,7 +356,7 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  public <T> T readValue(byte[] bytes, int i, int i1, TypeReference typeReference) {
+  public <T> T readValue(byte[] bytes, int i, int i1, TypeReference<T> typeReference) {
     try {
       return super.readValue(bytes, i, i1, typeReference);
     } catch (IOException e) {
@@ -474,9 +474,9 @@ public class QuietObjectMapper extends ObjectMapper {
   }
 
   @Override
-  protected JsonToken _initForReading(JsonParser jsonParser) {
+  protected JsonToken _initForReading(JsonParser jsonParser, JavaType javaType) {
     try {
-      return super._initForReading(jsonParser);
+      return super._initForReading(jsonParser, javaType);
     } catch (IOException e) {
       throw new RuntimeException("Quieted Jackson Exception", e);
     }

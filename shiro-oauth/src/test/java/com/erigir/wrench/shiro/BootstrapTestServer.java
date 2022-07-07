@@ -9,6 +9,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
+import org.apache.tomcat.util.net.SSLHostConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.Filter;
@@ -47,11 +48,14 @@ public class BootstrapTestServer {
     httpsConnector.setPort(httpsPort);
     httpsConnector.setSecure(true);
     httpsConnector.setScheme("https");
-    httpsConnector.setAttribute("keystoreFile", new File("shiro-oauth/src/test/config/tomcat-ssl.keystore").getAbsolutePath());
-    httpsConnector.setAttribute("keystorePass", "jetty8");
-    httpsConnector.setAttribute("clientAuth", "false");
-    httpsConnector.setAttribute("sslProtocol", "TLS");
-    httpsConnector.setAttribute("SSLEnabled", true);
+    SSLHostConfig sslHostConfig = new SSLHostConfig();
+    sslHostConfig.setTruststoreFile(new File("shiro-oauth/src/test/config/tomcat-ssl.keystore").getAbsolutePath());
+    sslHostConfig.setTruststorePassword("jetty8");
+    //sslHostConfig.set  setAttribute("clientAuth", "false");
+    sslHostConfig.setSslProtocol("TLS");
+    //sslHostConfig.setsetAttribute("SSLEnabled", true);
+
+    httpsConnector.addSslHostConfig(sslHostConfig);
 
     tomcat.getService().addConnector(httpsConnector);
 
@@ -62,10 +66,8 @@ public class BootstrapTestServer {
     Context rootCtx = tomcat.addContext("/", base.getAbsolutePath()); // "/test"
     // Add the main page servlet to the context
 
-    DumpServlet servlet = new DumpServlet();
-
-    tomcat.addServlet(rootCtx, "DumpServlet", servlet);
-    rootCtx.addServletMapping("/*", "DumpServlet");
+    tomcat.addServlet("/*", "DumpServlet", "DumpServlet");
+    //rootCtx.addServletMapping("/*", "DumpServlet");
 
     AnnotationConfigApplicationContext sCtx = new AnnotationConfigApplicationContext(OauthShiroContext.class);
 
@@ -73,7 +75,7 @@ public class BootstrapTestServer {
 
     FilterDef shiroFilterDef = new FilterDef();
     shiroFilterDef.setFilterName("shiroFilter");
-    shiroFilterDef.setFilter(shiro);
+    shiroFilterDef.setFilter((jakarta.servlet.Filter)shiro);
 
     rootCtx.addFilterDef(shiroFilterDef);
 

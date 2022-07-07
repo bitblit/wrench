@@ -1,12 +1,12 @@
 package com.erigir.wrench.simpleincludes;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by cweiss on 8/4/15.
@@ -18,7 +18,7 @@ public class TestSimpleIncludesProcessor {
 
   private String toParse = "This is a test <!--SI:file1:SI--> and 2, <!--SI:file2:SI--> and 4 <!--SI:file4:SI--> and trailer";
 
-  @Before
+  @BeforeAll
   public void setup() {
     Map<String, String> data = new TreeMap<>();
     data.put("file1", "file1-contents here");

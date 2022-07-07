@@ -6,13 +6,13 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.erigir.wrench.aws.wrench.AWSCachedObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Created by cweiss1271 on 3/1/16.

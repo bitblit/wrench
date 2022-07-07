@@ -3,7 +3,6 @@ package com.erigir.wrench.drigo.processor;
 import com.erigir.wrench.drigo.DrigoException;
 import com.erigir.wrench.drigo.DrigoResults;
 import com.erigir.wrench.drigo.JavascriptCompilation;
-import com.google.common.collect.Lists;
 import com.google.javascript.jscomp.CompilationLevel;
 import com.google.javascript.jscomp.Compiler;
 import com.google.javascript.jscomp.CompilerOptions;
@@ -20,6 +19,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -49,7 +49,7 @@ public class JavascriptCompilerFileProcessor extends AbstractFileProcessor {
   public boolean innerProcess(File src, File dst, DrigoResults results) throws DrigoException, IOException {
     CompilationLevel level = fromMode();
     LOG.trace("ClosureCompile at level {} on :{}", level, src);
-    String out = compile(level, getDefaultExterns(), Arrays.asList(SourceFile.fromFile(src)));
+    String out = compile(level, getDefaultExterns(), Arrays.asList(SourceFile.fromFile(src.getAbsolutePath())));
     IOUtils.write(out, new FileOutputStream(dst));
     return true;
   }
@@ -137,18 +137,7 @@ public class JavascriptCompilerFileProcessor extends AbstractFileProcessor {
     IOUtils.copy(Compiler.class.getResourceAsStream(
         "/externs.zip"), new FileOutputStream(tempFile));
 
-    List<SourceFile> externs = Lists.newLinkedList();
-
-
-    ZipFile zipFile = new ZipFile(tempFile);
-
-    Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-    while (entries.hasMoreElements()) {
-      ZipEntry entry = entries.nextElement();
-      InputStream stream = zipFile.getInputStream(entry);
-      externs.add(SourceFile.fromInputStream(entry.getName(), stream, Charset.forName("UTF-8")));
-    }
+    List<SourceFile> externs = SourceFile.fromZipFile(tempFile.getAbsolutePath(), Charset.forName("UTF-8"));
 
     return externs;
   }
