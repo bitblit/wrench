@@ -1,0 +1,14 @@
+name: 'Java Setup'
+description: 'Initial setup for java'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: ./.github/workflows/actions/job-setup
+    
+    - name: Setup Java
+      uses: actions/setup-java@v2
+      with:
+        distribution: "temurin"
+        java-version: "18"
+

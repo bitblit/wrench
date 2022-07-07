@@ -1,0 +1,8 @@
+name: "Build"
+description: "Builds the library"
+
+runs:
+  using: "composite"
+  steps:
+    - run: mvn clean compile
+      shell: bash

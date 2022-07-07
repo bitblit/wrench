@@ -1,0 +1,52 @@
+name: Build and Deploy Production Library
+
+on:
+  push:
+    tags:
+      - "report-*"
+
+jobs:
+  build-and-deploy-api:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure environment
+        uses: ./.github/workflows/actions/build-env-setup
+
+      - name: Build, Test, Package
+        run: mvn clean compile
+        shell: bash
+
+      # Filter the pom files to actually have the version number in it
+      - name: Update pom file
+        run: find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/LOCAL-SNAPSHOT/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
+        shell: bash
+
+      - name: Update link template
+        run: find . -type f -regex ".*/latest-release-link-template\.html" -exec sed -i.bak s/LOCAL-SNAPSHOT/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
+        shell: bash
+
+        # Now run the results
+      - name: Run reporting
+        run: mvn site -P reporting -Dgpg.skip
+        shell: bash
+
+      - name: Upload docs
+        run: bash src/automate-build/sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/${CIRCLE_TAG:8}+$BUILD_NUMBER
+        shell: bash
+
+      - name: Upload docs part 2
+        run: aws s3 cp src/automate-build/latest-release-link-template.html s3://www.erigir.com/open-source/docs/wrench/index.html
+        shell: bash
+
+
+
+
+      - name: Save coverage reports
+        uses: ./.github/workflows/actions/test-report
