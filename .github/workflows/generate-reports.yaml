@@ -23,13 +23,17 @@ jobs:
         run: mvn clean compile
         shell: bash
 
+      - name: Using upload target
+        run: echo ${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER
+        shell: bash
+
       # Filter the pom files to actually have the version number in it
       - name: Update pom file
-        run: find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/LOCAL-SNAPSHOT/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
+        run: find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/LOCAL-SNAPSHOT/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER/ {} \;
         shell: bash
 
       - name: Update link template
-        run: find . -type f -regex ".*/latest-release-link-template\.html" -exec sed -i.bak s/LOCAL-SNAPSHOT/${CIRCLE_TAG:8}+$BUILD_NUMBER/ {} \;
+        run: find . -type f -regex ".*/latest-release-link-template\.html" -exec sed -i.bak s/LOCAL-SNAPSHOT/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER/ {} \;
         shell: bash
 
         # Now run the results
@@ -38,7 +42,7 @@ jobs:
         shell: bash
 
       - name: Upload docs
-        run: bash src/automate-build/sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/${CIRCLE_TAG:8}+$BUILD_NUMBER
+        run: bash src/automate-build/sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER
         shell: bash
 
       - name: Upload docs part 2
