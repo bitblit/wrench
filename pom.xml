@@ -99,12 +99,12 @@
         <spring.version>5.3.21</spring.version>
         <slf4j.version>1.7.25</slf4j.version>
         <zk.version>8.5.0</zk.version>
-        <commons.net.version>3.6</commons.net.version>
-        <commons.lang3.version>3.7</commons.lang3.version>
-        <commons.beanutils.version>1.9.3</commons.beanutils.version>
+        <commons.net.version>3.8.0</commons.net.version>
+        <commons.lang3.version>3.12.0</commons.lang3.version>
+        <commons.beanutils.version>1.9.4</commons.beanutils.version>
         <commons.io.version>2.11.0</commons.io.version>
-        <commons.codec.version>1.11</commons.codec.version>
-        <commons.csv.version>1.5</commons.csv.version>
+        <commons.codec.version>1.15</commons.codec.version>
+        <commons.csv.version>1.9.0</commons.csv.version>
         <closure.compiler.version>v20220601</closure.compiler.version>
         <yuicompressor.version>2.4.8</yuicompressor.version>
         <htmlcompressor.version>1.5.2</htmlcompressor.version>
@@ -127,7 +127,8 @@
         <gpg.plugin.version>3.0.1</gpg.plugin.version>
         <source.plugin.version>3.2.1</source.plugin.version>
         <compiler.plugin.version>3.7.0</compiler.plugin.version>
-        <jxr.plugin.version>2.5</jxr.plugin.version>
+        <jxr.plugin.version>3.2.0</jxr.plugin.version>
+        <maven.site.plugin.version>3.12.0</maven.site.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
         <mytime>${maven.build.timestamp}</mytime>
@@ -150,10 +151,15 @@
     </modules>
 
     <!--
-   These plugins are needed so I can sign the jar(s) to send them to Maven Central, and for maven itself
+   These plugins are needed so that I can sign the jar(s) to send them to Maven Central, and for maven itself
    -->
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -172,6 +178,11 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${maven.site.plugin.version}</version>
+            </plugin>
+            <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
                 <version>${lombok.plugin.version}</version>
@@ -184,6 +195,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -198,6 +210,7 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>${source.plugin.version}</version>
                 <executions>
@@ -208,11 +221,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -237,25 +245,10 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
-                        <configuration>
-                            <rules>
-                                <!--  implementation is needed only for Maven 2  -->
-                                <rule implementation="org.jacoco.maven.RuleConfiguration">
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <!--  implementation is needed only for Maven 2  -->
-                                        <limit implementation="org.jacoco.report.check.Limit">
-                                            <counter>COMPLEXITY</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.0</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+            -->
         </plugins>
     </build>
 
@@ -265,10 +258,9 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-
-
             <reporting>
                 <plugins>
+                    <!--
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-report-plugin</artifactId>
@@ -329,6 +321,7 @@
                             </reportSet>
                         </reportSets>
                     </plugin>
+                    -->
                 </plugins>
             </reporting>
         </profile>

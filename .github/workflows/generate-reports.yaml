@@ -1,4 +1,4 @@
-name: Build and Deploy Production Library
+name: Build Reports for Library
 
 on:
   push:
