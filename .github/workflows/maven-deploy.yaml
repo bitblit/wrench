@@ -33,11 +33,11 @@ jobs:
 
       # Decrypt the keyrings
       - name: Build, Test, Package
-        run: gpg --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/pubring.gpg .github/pubring.gpg.enc
+        run: gpg --batch --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/pubring.gpg .github/pubring.gpg.enc
         shell: bash
 
       - name: Build, Test, Package
-        run: gpg --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/secring.gpg .github/secring.gpg.enc
+        run: gpg --batch --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/secring.gpg .github/secring.gpg.enc
         shell: bash
 
       - name: Using upload target
