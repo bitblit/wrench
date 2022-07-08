@@ -33,11 +33,11 @@ jobs:
 
       # Decrypt the keyrings
       - name: Build, Test, Package
-        run: gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/pubring.gpg .github/pubring.gpg.enc
+        run: gpg --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/pubring.gpg .github/pubring.gpg.enc
         shell: bash
 
       - name: Build, Test, Package
-        run: gpg --passphrase $GPG_KEYFILE_ENCRYPT_PASSPHRASE --decrypt --output $HOME/secring.gpg .github/secring.gpg.enc
+        run: gpg --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/secring.gpg .github/secring.gpg.enc
         shell: bash
 
       - name: Using upload target
@@ -55,7 +55,7 @@ jobs:
 
         # Update documentation
       - name: Build, Test, Package
-        run: mvn site -P reporting -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME
+        run: mvn site -P reporting -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE}} -Dgpg.keyname=${{ secrets.GPG_KEYNAME}} -Dgpg.homedir=$HOME
         shell: bash
 
       - name: Build, Test, Package
@@ -71,7 +71,7 @@ jobs:
         # and when the tagging has already happened
         # Build and upload
       - name: Build, Test, Package
-        run: mvn --settings .github/build_server_maven_settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.keyname=$GPG_KEYNAME -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
+        run: mvn --settings .github/build_server_maven_settings.xml -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE}} -Dgpg.keyname=${{ secrets.GPG_KEYNAME}} -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
         shell: bash
 
       - name: Build, Test, Package
