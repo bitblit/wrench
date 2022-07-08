@@ -27,42 +27,42 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      # Decrypt the keyrings
+      - name: Decrypt public key
+        run: gpg --batch --ignore-mdc-error --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/pubring.gpg .github/pubring.gpg.enc
+        shell: bash
+
+      - name: Decrypt private key
+        run: gpg --batch r --ignore-mdc-erro--passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/secring.gpg .github/secring.gpg.enc
+        shell: bash
+
       - name: Build, Test, Package
         run: mvn clean compile
         shell: bash
 
-      # Decrypt the keyrings
-      - name: Build, Test, Package
-        run: gpg --batch --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/pubring.gpg .github/pubring.gpg.enc
-        shell: bash
-
-      - name: Build, Test, Package
-        run: gpg --batch --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/secring.gpg .github/secring.gpg.enc
-        shell: bash
-
-      - name: Using upload target
+      - name: Echo build
         run: echo ${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER
         shell: bash
 
         # Filter the pom files to actually have the version number in it
-      - name: Build, Test, Package
+      - name: Update POM
         run: find . -type f -regex ".*/pom\.xml" -exec sed -i.bak s/LOCAL-SNAPSHOT/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER/ {} \;
         shell: bash
 
-      - name: Build, Test, Package
+      - name: Update link template
         run: find . -type f -regex ".*/latest-release-link-template\.html" -exec sed -i.bak s/LOCAL-SNAPSHOT/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER/ {} \;
         shell: bash
 
         # Update documentation
-      - name: Build, Test, Package
+      - name: Build website
         run: mvn site -P reporting -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE}} -Dgpg.keyname=${{ secrets.GPG_KEYNAME}} -Dgpg.homedir=$HOME
         shell: bash
 
-      - name: Build, Test, Package
+      - name: Send website to S3
         run: bash src/automate-build/sendDocsToS3.sh s3://erigir-website/open-source/docs/wrench/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER
         shell: bash
 
-      - name: Build, Test, Package
+      - name: Update link in S3
         run: aws s3 cp src/automate-build/latest-release-link-template.html s3://erigir-website/open-source/docs/wrench/index.html
         shell: bash
 
@@ -70,15 +70,15 @@ jobs:
         # This is actually significantly easier than trying to use the maven release plugin when you wont be pushing to master,
         # and when the tagging has already happened
         # Build and upload
-      - name: Build, Test, Package
+      - name: Publish to sonatype
         run: mvn --settings .github/build_server_maven_settings.xml -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE}} -Dgpg.keyname=${{ secrets.GPG_KEYNAME}} -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
         shell: bash
 
-      - name: Build, Test, Package
+      - name: Remove public key
         run: rm $HOME/pubring.gpg
         shell: bash
 
-      - name: Build, Test, Package
+      - name: Remove private key
         run: rm $HOME/secring.gpg
         shell: bash
 
