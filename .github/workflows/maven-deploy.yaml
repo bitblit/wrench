@@ -59,14 +59,14 @@ jobs:
         shell: bash
 
       - name: Build, Test, Package
-        run: bash src/automate-build/sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER
+        run: bash src/automate-build/sendDocsToS3.sh s3://erigir-website/open-source/docs/wrench/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER
         shell: bash
 
       - name: Build, Test, Package
-        run: aws s3 cp src/automate-build/latest-release-link-template.html s3://www.erigir.com/open-source/docs/wrench/index.html
+        run: aws s3 cp src/automate-build/latest-release-link-template.html s3://erigir-website/open-source/docs/wrench/index.html
         shell: bash
 
-        # - aws s3 cp target/site s3://www.erigir.com/open-source/docs/wrench/$CIRCLE_BUILD_NUM --recursive
+        # - aws s3 cp target/site s3://erigir-website/open-source/docs/wrench/$CIRCLE_BUILD_NUM --recursive
         # This is actually significantly easier than trying to use the maven release plugin when you wont be pushing to master,
         # and when the tagging has already happened
         # Build and upload

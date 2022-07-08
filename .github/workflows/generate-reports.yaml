@@ -50,11 +50,11 @@ jobs:
         shell: bash
 
       - name: Upload docs
-        run: bash src/automate-build/sendDocsToS3.sh s3://www.erigir.com/open-source/docs/wrench/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER
+        run: bash src/automate-build/sendDocsToS3.sh s3://erigir-website/open-source/docs/wrench/${GITHUB_REF_NAME:8}+$GITHUB_RUN_NUMBER
         shell: bash
 
       - name: Upload docs part 2
-        run: aws s3 cp src/automate-build/latest-release-link-template.html s3://www.erigir.com/open-source/docs/wrench/index.html
+        run: aws s3 cp src/automate-build/latest-release-link-template.html s3://erigir-website/open-source/docs/wrench/index.html
         shell: bash
 
 
