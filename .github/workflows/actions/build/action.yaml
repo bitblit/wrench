@@ -5,8 +5,5 @@ runs:
   using: "composite"
   steps:
 
-    - run: echo {{secrets.GPG_KEYNAME}}
-      shell: bash
-
     - run: mvn clean compile
       shell: bash
