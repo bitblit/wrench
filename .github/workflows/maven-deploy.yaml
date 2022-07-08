@@ -33,7 +33,7 @@ jobs:
         shell: bash
 
       - name: Decrypt private key
-        run: gpg --batch r --ignore-mdc-erro--passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/secring.gpg .github/secring.gpg.enc
+        run: gpg --batch --ignore-mdc-error --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/secring.gpg .github/secring.gpg.enc
         shell: bash
 
       - name: Build, Test, Package
