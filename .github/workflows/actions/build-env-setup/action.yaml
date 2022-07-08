@@ -12,7 +12,4 @@ runs:
         distribution: "temurin"
         java-version: "18"
 
-    - run: echo ${{secrets.GPG_KEYNAME}}
-      shell: bash
-
 
