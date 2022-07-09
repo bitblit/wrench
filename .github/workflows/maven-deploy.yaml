@@ -73,6 +73,10 @@ jobs:
       - name: Publish to sonatype
         run: mvn --settings .github/build_server_maven_settings.xml -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE}} -Dgpg.keyname=${{ secrets.GPG_KEYNAME}} -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
         shell: bash
+        with:
+          - SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
+          - SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
+          - GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
 
       - name: Remove public key
         run: rm $HOME/pubring.gpg
