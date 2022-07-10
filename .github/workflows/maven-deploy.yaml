@@ -80,7 +80,7 @@ jobs:
         # Build and upload
       - name: Publish to sonatype
         #run: mvn --settings .github/build_server_maven_settings.xml -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE}} -Dgpg.keyname=${{ secrets.GPG_KEYNAME}} -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
-        run: mvn --settings .github/build_server_maven_settings.xml -DSONATYPE_USERNAME=${{secrets.DSONATYPE_USERNAME}} -DSONATYPE_PASSWORD=${{secrets.DSONATYPE_PASSWORD}} -Dpgp.secretkey=keyfile:$HOME/pgp_secret.asc -Dpgp.passphrase=${{ secrets.PGP_PASSPHRASE}} -DskipTests javadoc:jar source:jar deploy
+        run: mvn --settings .github/build_server_maven_settings.xml -DSONATYPE_USERNAME=${{secrets.DSONATYPE_USERNAME}} -DSONATYPE_PASSWORD=${{secrets.DSONATYPE_PASSWORD}} -Dpgp.secretkey=keyfile:$HOME/pgp_secret.asc -Dpgp.passphrase=literal:${{ secrets.PGP_PASSPHRASE}} -DskipTests javadoc:jar source:jar deploy
         shell: bash
 #        with:
 #          - SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
