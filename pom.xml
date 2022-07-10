@@ -180,7 +180,9 @@
             </plugin>
             -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
+                <version>${gpg.plugin.version}</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
