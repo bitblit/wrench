@@ -188,6 +188,7 @@
             <plugin>
                 <groupId>org.kohsuke</groupId>
                 <artifactId>pgp-maven-plugin</artifactId>
+                <version>3.8.6</version>
                 <executions>
                     <execution>
                         <goals>

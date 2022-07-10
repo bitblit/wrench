@@ -87,12 +87,16 @@ jobs:
 #          - SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
 #          - GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
 
-      - name: Remove public key
-        run: rm $HOME/pubring.gpg
-        shell: bash
+      #- name: Remove public key
+      #  run: rm $HOME/pubring.gpg
+      #  shell: bash
 
-      - name: Remove private key
-        run: rm $HOME/secring.gpg
+      #- name: Remove private key
+      #  run: rm $HOME/secring.gpg
+      #  shell: bash
+
+      - name: cleanup
+        run: rm $HOME/pgp_secret_b64.txt $HOME/pgp_secret.asc
         shell: bash
 
       # Will add this later once I figure out how on github-Actions
