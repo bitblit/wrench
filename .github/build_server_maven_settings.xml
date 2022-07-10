@@ -8,13 +8,6 @@
         </server>
     </servers>
     <profiles>
-        <!--
-        <profile>
-            <id>gpg</id>
-            <properties>
-                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-            </properties>
-        </profile>-->
         <profile>
             <id>sonatype</id>
             <repositories>
@@ -30,7 +23,6 @@
         </profile>
     </profiles>
     <activeProfiles>
-        <!--<activeProfile>gpg</activeProfile>-->
         <activeProfile>sonatype</activeProfile>
     </activeProfiles>
 </settings>

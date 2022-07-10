@@ -160,25 +160,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>${gpg.plugin.version}</version>
-                <configuration>
-                    <passphrase>${GPG_PASSPHRASE}</passphrase>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -370,10 +351,8 @@
 </project>
 
         <!--
-
-                   Submitting following the instructions at:
-                   http://wickedsource.org/2013/09/23/releasing-your-project-to-maven-central-guide/
-                   mvn clean javadoc:jar source:jar gpg:sign deploy -Dgpg.passphrase=your_passphrase
-                   https://oss.sonatype.org/
+        Ref: https://infra.apache.org/publishing-maven-artifacts.html
+        Using pgp plugin to simplify signing : https://www.cloudbees.com/blog/continuous-deployment-maven-central-apache-maven
+        Login to https://oss.sonatype.org/#stagingRepositories after deploying
 
                 -->

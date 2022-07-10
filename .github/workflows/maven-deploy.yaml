@@ -27,20 +27,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # Decrypt the keyrings
-      #- name: Decrypt public key
-      #  run: gpg --batch --ignore-mdc-error --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/pubring.gpg .github/pubring.gpg.enc
-      #  shell: bash
-
-      #- name: Decrypt private key
-      #  run: gpg --batch --ignore-mdc-error --passphrase ${{ secrets.GPG_KEYFILE_ENCRYPT_PASSPHRASE}} --decrypt --output $HOME/secring.gpg .github/secring.gpg.enc
-      #  shell: bash
-
-      - name: Dump key to file
+      - name: Dump private key to file
         run: printf '%s\n' "${{secrets.PGP_SECRET_KEY_BASE_64}}" > $HOME/pgp_secret_b64.txt
         shell: bash
 
-      - name: Decode key
+      - name: Decode private key
         run: base64 -d $HOME/pgp_secret_b64.txt > $HOME/pgp_secret.asc
         shell: bash
 
@@ -79,21 +70,8 @@ jobs:
         # and when the tagging has already happened
         # Build and upload
       - name: Publish to sonatype
-        #run: mvn --settings .github/build_server_maven_settings.xml -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE}} -Dgpg.keyname=${{ secrets.GPG_KEYNAME}} -Dgpg.homedir=$HOME -DskipTests javadoc:jar source:jar deploy
         run: mvn --settings .github/build_server_maven_settings.xml -Dsonatype.username=${{secrets.SONATYPE_USERNAME}} -Dsonatype.password=${{secrets.SONATYPE_PASSWORD}} -Dpgp.secretkey=keyfile:$HOME/pgp_secret.asc -Dpgp.passphrase=literal:${{ secrets.PGP_PASSPHRASE}} -DskipTests javadoc:jar source:jar deploy
         shell: bash
-#        with:
-#          - SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}
-#          - SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
-#          - GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
-
-      #- name: Remove public key
-      #  run: rm $HOME/pubring.gpg
-      #  shell: bash
-
-      #- name: Remove private key
-      #  run: rm $HOME/secring.gpg
-      #  shell: bash
 
       - name: cleanup
         run: rm $HOME/pgp_secret_b64.txt $HOME/pgp_secret.asc
